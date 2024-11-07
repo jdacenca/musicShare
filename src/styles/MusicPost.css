@@ -21,7 +21,10 @@
   
   .music-cover {
     width: 100%;
-    height: auto;
+    height: 100%;
+    max-height: 520px;
+    background-color: black;
+    object-fit: contain;
   }
   
   .post-body {
@@ -38,7 +41,6 @@
     background: none;
     border: none;
     cursor: pointer;
-    color: #007bff;
   }
   
   .comments-section {
