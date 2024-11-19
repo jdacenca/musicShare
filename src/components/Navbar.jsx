@@ -7,6 +7,14 @@ function Navbar() {
         <i className="fas fa-home"></i>
         <i className="fas fa-music"></i>
         <i className="fas fa-user"></i>
+            <ul>
+                <li>Home</li>
+                <li>Search</li>
+                <li>Create</li>
+                <li>History</li>
+                <li>Friends</li>
+                <li>Playlists</li>
+            </ul>
       </div>
 
     </div>

@@ -1,16 +1,23 @@
-import React, { useState } from "react";
+ import React, { useState } from "react";
 import Comment from "./Comment";
 import "../styles/MusicPost.css";
 import { Heart, MessageCircle, Share2 } from "react-feather";
 
-function MusicPost({ post }) {
+function MusicPost({ isDarkMode, post }) {
+
+  const [isLiked, setIsLiked] = useState(false); // Tracks whether the post is liked
   const [likes, setLikes] = useState(post.likes);
   const [comments, setComments] = useState(post.comments);
   const [commentText, setCommentText] = useState("");
   const [showComments, setShowComments] = useState(false);
 
-  const handleLike = () => {
-    setLikes(likes + 1);
+  const handleLikeToggle = () => {
+    if (isLiked) {
+      setLikes(likes - 1); // Remove like
+    } else {
+      setLikes(likes + 1); // Add like
+    }
+    setIsLiked(!isLiked); // Toggle like state
   };
 
   const handleCommentSubmit = (e) => {
@@ -29,7 +36,7 @@ function MusicPost({ post }) {
   };
 
   return (
-    <div className="music-post card shadow-xss rounded-xxl border-0 p-4 mb-3">
+    <div className={`music-post card shadow-xss rounded-xxl border-0 p-4 mb-3  ${isDarkMode ? "dark-mode" : ""}`}>
       <div className="post-header">
         <img
           src={post.userImage || "default-user.png"}
@@ -37,6 +44,7 @@ function MusicPost({ post }) {
           className="user-avatar"
         />
         <h3>{post.username || "Anonymous"}</h3>
+   
       </div>
       <div className="post-body">
         {post.videoUrl ? (
@@ -67,7 +75,7 @@ function MusicPost({ post }) {
         <p>{post.description}</p>
       </div>
       <div className="post-footer">
-        <button onClick={handleLike} className="like-button">
+        <button onClick={handleLikeToggle} className={`like-button ${isLiked ? "liked" : ""}`}>
           <Heart /> Like ({likes})
         </button>
         <button onClick={toggleComments} className="comment-button">
@@ -88,8 +96,13 @@ function MusicPost({ post }) {
               placeholder="Add a comment..."
               value={commentText}
               onChange={(e) => setCommentText(e.target.value)}
+              style={{ width: "80%" }} 
             />
-            <button type="submit">Post</button>
+            <button
+              type="submit"
+              className={`post-button ${isDarkMode ? "dark-mode" : "light-mode"}`}
+            >
+              Post</button>
           </form>
         </div>
       )}
@@ -98,3 +111,4 @@ function MusicPost({ post }) {
 }
 
 export default MusicPost;
+

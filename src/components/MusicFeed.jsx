@@ -5,7 +5,7 @@ import user2 from "../assets/images/user2.jpg";
 import user3 from "../assets/images/user3.jpg";
 import album2 from "../assets/images/album2.jpg";
 
-function MusicFeed() {
+function MusicFeed({ isDarkMode}) {
   const [posts, setPosts] = useState([]);
 
   useEffect(() => {
@@ -51,7 +51,7 @@ function MusicFeed() {
   return (
     <>
       {posts.map((post) => (
-        <MusicPost key={post.id} post={post} />
+        <MusicPost key={post.id} isDarkMode={isDarkMode} post={post} />
       ))}
     </>
   );

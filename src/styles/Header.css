@@ -1,0 +1,83 @@
+/* Default Light Mode Styles */
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 20px;           /* Added padding for better spacing */
+  background-color: #ffffff;    /* Light mode background */
+  color: #000;                  /* Light mode text color */
+  box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+  border-bottom: 1px solid #ddd; /* Light border for separation */
+}
+
+.header .icon-container {
+  display: flex;
+  align-items: center;
+  gap: 15px;                   /* Equal spacing between icons */
+  cursor: pointer;
+}
+
+.header .notification-count {
+  position: relative;
+  top: -10px;                 /* Adjust position to align with icons */
+  right: -10px;               
+  background-color: red;
+  color: white;
+  border-radius: 50%;
+  padding: 0.2em 0.5em;
+  font-size: 12px;
+  font-weight: bold;
+  box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.2); /* Add depth for notification */
+}
+
+/* Header Title or Logo */
+.header-title {
+  font-size: 20px;
+  font-weight: bold;
+  margin: 0;
+}
+
+/* Dark Mode Styles */
+.dark-mode {
+  background-color: #1a2236; /* Dark mode background */
+  color: white;             /* Dark mode text color */
+}
+
+.dark-mode .header {
+  background-color: #141718; /* Dark header background */
+  box-shadow: none;          /* Remove light shadow in dark mode */
+  border-bottom: 1px solid #444; /* Subtle dark border */
+}
+
+.dark-mode .notification-count {
+  background-color: #ff4d4d; /* Softer red for dark mode */
+  color: black;             /* Text contrast in dark mode */
+}
+
+/* Dark Mode Button Style */
+.dark-mode-button {
+  padding: 10px;
+  background-color: #444;
+  color: white;
+  cursor: pointer;
+  border-radius: 5px;
+  border: none;
+  transition: background-color 0.3s, transform 0.2s;
+}
+
+.dark-mode-button:hover {
+  background-color: #555;
+  transform: scale(1.05); /* Slight zoom effect on hover */
+}
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+  .header {
+    flex-direction: column;   /* Stack elements on smaller screens */
+    text-align: center;
+  }
+
+  .icon-container {
+    margin-top: 10px;         /* Add space below the title/logo */
+  }
+}
