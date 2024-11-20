@@ -43,6 +43,11 @@ body {
   color: #888;
 }
 
+body {
+  background-color: #f9f9f9; 
+  color: #333; /* Default text color */
+}
+
 body.dark-mode {
   background-color: #181818; /* Dark background for body */
   color: white; /* Light text color */
@@ -59,7 +64,7 @@ body, .music-post {
   flex-direction: column; /* Stacks header and main content vertically */
   height: 100%; /* Makes it fill the entire viewport */
   width: 100%; /* Full width of the screen */
-  background-color: #fff; /* Default light background */
+  background-color: #f9f9f9; /* Default light background */
   color: #333; /* Default text color */
   overflow: hidden; /* Prevents accidental scrolling */
 }
