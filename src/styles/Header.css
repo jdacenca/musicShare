@@ -18,7 +18,7 @@
 }
 
 .header .notification-count {
-  position: relative;
+  position: absolute;
   top: -10px;                 /* Adjust position to align with icons */
   right: -10px;               
   background-color: red;
@@ -44,7 +44,7 @@
 }
 
 .dark-mode .header {
-  background-color: #141718; /* Dark header background */
+  background-color: #181818; /* Dark header background */
   box-shadow: none;          /* Remove light shadow in dark mode */
   border-bottom: 1px solid #444; /* Subtle dark border */
 }

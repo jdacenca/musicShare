@@ -44,7 +44,7 @@ body {
 }
 
 body.dark-mode {
-  background-color: #141718; /* Dark background for body */
+  background-color: #181818; /* Dark background for body */
   color: white; /* Light text color */
 }
 
@@ -66,6 +66,6 @@ body, .music-post {
 
 /* Dark mode styling for app-container */
 .app-container.dark-mode {
-  background-color: #141718; /* Dark background */
+  background-color: #181818; /* Dark background */
   color: #fff; /* Light text color for readability */
 }

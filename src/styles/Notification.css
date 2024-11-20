@@ -45,13 +45,14 @@
   
   .notification-count {
     position: absolute;
-    top: 5px;
-    right: 5px;
     background-color: red;
     color: white;
     font-size: 12px;
     font-weight: bold;
-    padding: 2px 6px;
     border-radius: 50%;
-  }
-  
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 20px; /* Ensure circular shape for single-digit counts */
+    height: 20px; /* Keep height uniform */
+}

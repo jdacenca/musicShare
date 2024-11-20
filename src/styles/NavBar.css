@@ -1,0 +1,126 @@
+
+/* General Styles */
+.left-nav-bar {
+    width: 300px;
+    height: 100vh;
+    padding: 10px;
+    font-family: Arial, sans-serif;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.nav-item {
+    display: flex;
+    align-items: center;
+    padding: 10px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.nav-icon {
+    font-size: 20px;
+    margin-right: 10px;
+}
+
+.nav-label {
+    flex-grow: 1;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.shortcut {
+    font-size: 12px;
+    margin-left: auto;
+}
+
+/* Submenu Styles */
+.sub-menu {
+    padding-left: 30px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.sub-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 14px;
+}
+
+.sub-icon {
+    font-size: 16px;
+}
+
+/* Light Mode */
+.left-nav-bar {
+    background-color: #fff;
+    color: #000;
+}
+
+.nav-item {
+    background-color: transparent;
+    color: #333;
+}
+.nav-item:hover {
+    background-color: #d7d6d6;
+}
+
+.nav-icon {
+    color: #333;
+}
+
+.shortcut {
+    color: #555;
+}
+
+.sub-item {
+    color: #555;
+}
+
+.sub-item:hover {
+    color: #000;
+}
+
+.sub-icon {
+    color: #555;
+}
+
+/* Dark Mode */
+.dark-mode .left-nav-bar {
+    background-color: #181818;
+    color: #fff;
+}
+
+.dark-mode .nav-item {
+    background-color: transparent;
+    color: #fff;
+}
+
+.dark-mode .nav-item:hover {
+    background-color: #232627;
+}
+
+.dark-mode .nav-icon {
+    color: #fff;
+}
+
+.dark-mode .shortcut {
+    color: #888;
+}
+
+.dark-mode .sub-item {
+    color: #aaa;
+}
+
+.dark-mode .sub-item:hover {
+    color: #fff;
+}
+
+.dark-mode .sub-icon {
+    color: #aaa;
+}
+
