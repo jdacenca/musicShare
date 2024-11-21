@@ -1,7 +1,7 @@
 import React from "react";
 import "../styles/TrendingCard.css";
-import trending1 from "../assets/images/trending1.jpg";
-import trending2 from "../assets/images/trending2.jpg";
+import trending1 from "../assets/images/Trending1.jpg";
+import trending2 from "../assets/images/Trending2.jpg";
 import { Share2 } from "react-feather";
 
 const trendingData = [
