@@ -1,54 +1,118 @@
+/* Container for the trending cards */
 .trending-post-container {
-  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
 }
 
+/* Light mode styling (default) */
 .trending-post {
-  min-width: 0;
+  background-color: #fff;
+  color: #000;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
   padding: 15px;
-  border: 1px solid #ccc;
-  border-radius: 8px;
-  background-color: rgba(255, 255, 255, 0.8);
-  /* Adjust for light mode */
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
 }
 
-.trending-post.dark-mode {
-  background-color: rgba(0, 0, 0, 0.8);
-  /* Adjust for dark mode */
-  color: white;
+/* Dark mode styling */
+.trending-post-container.dark-mode .trending-post {
+  background-color: #232627;
+  color: #ffffff;
 }
 
-.trending-post-list {
-  list-style-type: none;
-  padding: 0;
+/* Header styling */
+.trending-post-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.trending-post-title-container {
+  display: flex;
+  flex-direction: column;
+}
+
+.trending-post-title {
+  font-size: 16px;
+  color: #000; /* Default for light mode */
+  margin: 0;
+  font-weight: bold;
+}
+
+.trending-post-container.dark-mode .trending-post-title {
+  color: #ffffff; /* Dark mode title color */
+}
+
+.trending-post-artist {
+  font-size: 14px;
+  color: #666; /* Default for light mode */
   margin: 0;
 }
 
-.trending-post-header {
-  display: flex;
-  align-items: center;
-  padding: 10px;
+.trending-post-container.dark-mode .trending-post-artist {
+  color: #a1a1a1; /* Dark mode artist color */
 }
 
-.trending-post-user-avatar {
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  margin-right: 10px;
+/* Follow button styling */
+.trending-post-follow-button {
+  background-color: transparent;
+  color: #ffcc00;
+  border: 1px solid #ffcc00;
+  padding: 5px 10px;
+  border-radius: 20px;
+  font-size: 14px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.3s;
 }
 
+.trending-post-follow-button:hover {
+  background-color: #ffcc00;
+  color: #1e1e1e;
+}
+
+/* Body styling */
 .trending-post-body {
-  padding: 10px;
-  min-width: 0;
-}
-
-.trending-post-footer {
   display: flex;
-  justify-content: space-between;
-  padding: 10px;
+  justify-content: center;
+  align-items: center;
 }
 
 .trending-post-image {
-  height: 100%;
   width: 100%;
-  object-fit: contain
+  height: 160px;
+  object-fit: cover;
+  border-radius: 8px;
+}
+
+/* Footer styling */
+.trending-post-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.trending-footer-icons {
+  display: flex;
+  gap: 10px;
+}
+
+.trending-icon {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.trending-rank {
+  font-size: 14px;
+  color: #666; /* Default for light mode */
+}
+
+.trending-post-container.dark-mode .trending-rank {
+  color: #a1a1a1; /* Dark mode color */
 }

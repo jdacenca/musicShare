@@ -5,7 +5,7 @@ import user2 from "../assets/images/user2.jpg";
 import user3 from "../assets/images/user3.jpg";
 import album2 from "../assets/images/album2.jpg";
 
-function MusicFeed({ isDarkMode}) {
+function MusicFeed({ isDarkMode }) {
   const [posts, setPosts] = useState([]);
 
   useEffect(() => {
@@ -13,7 +13,7 @@ function MusicFeed({ isDarkMode}) {
     setPosts([
       {
         id: 1,
-        username: "dj_breezy",
+        username: "Priya Gounalan",
         userImage: user1,
         description: "Check out this awesome track!",
         likes: 10,
@@ -25,11 +25,12 @@ function MusicFeed({ isDarkMode}) {
       },
       {
         id: 2,
-        username: "melody_lover",
+        username: "Melody_lover",
         userImage: user2,
         description: "This song hits different!",
         likes: 5,
-        comments: [{ username: "user3", text: "Can’t stop listening!" }
+        comments: [
+          { username: "user3", text: "Can’t stop listening!" },
         ],
         musicImage: album2,
       },

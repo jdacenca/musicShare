@@ -93,3 +93,72 @@
 .like-button:hover {
   color: #1db954; /* Hover effect */
 }
+.post-header-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-left: auto;
+}
+
+.close-button, .menu-button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 5px;
+}
+
+.menu-popup {
+  position: absolute;
+  top: 40px;
+  right: 20px;
+  background: #fff;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  z-index: 10;
+}
+
+.menu-popup ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.menu-popup li {
+  padding: 10px 15px;
+  cursor: pointer;
+  border-bottom: 1px solid #eee;
+}
+
+.menu-popup li:hover {
+  background-color: #f5f5f5;
+}
+
+.menu-popup li:last-child {
+  border-bottom: none;
+}
+
+/* Menu Popup for Dark Mode */
+.dark-mode .menu-popup {
+  background-color: #2e2e2e; /* Dark background for menu */
+  border: 1px solid #444; /* Subtle border */
+  color: #ffffff; /* Light text color */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5); /* Adjust shadow for dark mode */
+}
+
+.dark-mode .menu-popup li {
+  border-bottom: 1px solid #444;
+}
+
+.dark-mode .menu-popup li:hover {
+  background-color: #444; /* Highlight effect */
+}
+
+
+/* Dark Mode for Close and 3-Dot Buttons */
+.music-post.dark-mode .menu-button,
+.music-post.dark-mode .close-button {
+  background: transparent;
+  color: #e0e0e0; /* Light icons in dark mode */
+  border: none;
+}

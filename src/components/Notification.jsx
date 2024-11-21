@@ -47,11 +47,14 @@ function Notification({ isDarkMode }) {
 
       {/* Notification Dropdown */}
       {showNotifications && (
-        <div className={`notification-dropdown ${isDarkMode ? "dark-mode" : ""}`}>
+        <div
+          className={`notification-dropdown ${isDarkMode ? "dark-mode" : ""}`}
+        >
           {notifications.length > 0 ? (
             notifications.map((notification) => (
               <div key={notification.id} className="notification-item">
-                <strong>{notification.user}</strong>: {notification.message} <span className="notification-time">{notification.time}</span>
+                <strong>{notification.user}</strong>: {notification.message}{" "}
+                <span className="notification-time">{notification.time}</span>
               </div>
             ))
           ) : (
@@ -62,6 +65,5 @@ function Notification({ isDarkMode }) {
     </div>
   );
 }
-
 
 export default Notification;
