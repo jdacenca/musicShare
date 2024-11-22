@@ -1,12 +1,8 @@
 'use strict';
 
 import axios from 'axios';
-import crypto from 'crypto';
 
-const generateRandomString = (length) => {
-    return crypto.randomBytes(60).toString('hex').slice(0, length);
-}
-
+export let authToken = "";
 
 export const spotifyAuth = async function(req, res) {
     let clientID = process.env.SPOTIFY_CLIENT_ID;
@@ -26,10 +22,17 @@ export const spotifyAuth = async function(req, res) {
 
     axios.post(url, body, headers)
     .then((response) => {
-        return res.status(200).send(response.data)
+        if (response.status === 200) {
+            authToken = response.data["access_token"];
+            return res.status(200).send(response.data);
+        } else {
+            console.log("Access Denied.");
+            return res.status(401).send("Access Denied");
+        }
+        
     })
     .catch((error) => {
-        console.log("Error getting the authorization token. " +  error)
+        console.log("Error getting the authorization token. " +  error);
         return res.status(500).send("Internal Server Error");
     }) 
     
