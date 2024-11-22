@@ -25,11 +25,12 @@ export const spotifyAuth = async function(req, res) {
     }
 
     axios.post(url, body, headers)
-    .then(response => console.log(
-        response.data))
-    .catch(error => {
-        console.log("catch")
+    .then((response) => {
+        return res.status(200).send(response.data)
+    })
+    .catch((error) => {
+        console.log("Error getting the authorization token. " +  error)
+        return res.status(500).send("Internal Server Error");
     }) 
-
-    return res.status(200).send("OKAY");
+    
 };
