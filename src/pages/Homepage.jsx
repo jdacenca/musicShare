@@ -1,4 +1,4 @@
-import Navbar from "../components/NavBar";
+import NavBar from "../components/Navbar";
 import MusicFeed from "../components/MusicFeed";
 import Header from "../components/Header";
 import SideBar from "../components/SideBar";
@@ -23,7 +23,7 @@ const Homepage = () => {
             <div className="row g-0"> {/* Removes Bootstrap grid gap */}
             {/* Navbar (Left Sidebar) */}
             <div className="d-none d-md-block p-4 pe-0 col-md-3 navbar-container">
-                <Navbar isDarkMode={isDarkMode}/>
+                <NavBar isDarkMode={isDarkMode}/>
             </div>
 
             {/* Music Feed (Center Content) */}
