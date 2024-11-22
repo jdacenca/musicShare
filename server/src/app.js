@@ -3,6 +3,7 @@ import express from 'express';
 import axios from 'axios';
 import { spotifyAuth } from './utils/spotifyAuth.js';
 import { spotifyGlobalTopHits } from './utils/spotifyGlobalTopHits.js';
+import { spotifyGenreRecommendation } from './utils/spotifyGenreRecommendation.js';
 
 dotenv.config({path: '../.env'});
 
@@ -12,6 +13,7 @@ const port = process.env.PORT || 3000;
 
 app.post('/spotify/connect', spotifyAuth);
 app.get('/spotify/trending', spotifyGlobalTopHits);
+app.get('/spotify/recommendations', spotifyGenreRecommendation);
 
 app.listen(port, () => {
     console.log('Server is running on port: ' + port)
