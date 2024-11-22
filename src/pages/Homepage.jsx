@@ -5,7 +5,7 @@ import SideBar from "../components/SideBar";
 import React, { useState } from "react";
 import "bootstrap/dist/css/bootstrap.css";
 
-import "./Homepage.css";
+import "../styles/Homepage.css";
 
 const Homepage = () => {
     const [isDarkMode, setIsDarkMode] = useState(false);
@@ -22,7 +22,7 @@ const Homepage = () => {
 
             <div className="row g-0"> {/* Removes Bootstrap grid gap */}
             {/* Navbar (Left Sidebar) */}
-            <div className="d-none d-md-block p-4 col-md-3 navbar-container">
+            <div className="d-none d-md-block p-4 pe-0 col-md-3 navbar-container">
                 <Navbar isDarkMode={isDarkMode}/>
             </div>
 
@@ -32,7 +32,7 @@ const Homepage = () => {
             </div>
 
             {/* Trending Section (Right Sidebar) */}
-            <div className="d-none d-md-block p-4 col-md-3 trending-container">
+            <div className="d-none d-md-block col-md-3 trending-container">
                 <SideBar isDarkMode={isDarkMode} />
             </div>
             </div>

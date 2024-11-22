@@ -24,20 +24,25 @@ const TrendingCard = ({ isDarkMode }) => {
       {trendingData.map((item, index) => (
         <div
           key={index}
-          className="trending-post card shadow-xss rounded-xxl border-0"
+          className="trending-post card shadow-xss rounded-xxl border-0 mt-4 me-4"
         >
-          <div className="trending-post-header">
-          <img
-                src="https://via.placeholder.com/30"
-                alt="icon3"
-                className="trending-icon"
+          <div className="trending-post-header d-flex flex-row">
+            <div className="user-info flex-grow-1">
+              <img
+                src="https://via.placeholder.com/40" // Replace with user profile image URL
+                alt="User"
+                className="user-avatar"
               />
-            <div className="trending-post-title-container">
-              <p className="trending-post-title">{item.title}</p>
-              <p className="trending-post-artist">{item.artist}</p>
+              <div>
+                <h4 className="user-name">{item.title}</h4>
+                <p className="user-role">{item.artist}</p>
+              </div>
             </div>
-            <button className="trending-post-follow-button">Follow</button>
+            <div className="ms-auto ps-4 align-self-start">
+              <button className={`btn btn-secondary ${isDarkMode ? "dark-mode" : ""}`}>Follow</button>
+            </div>
           </div>
+
           <div className="trending-post-body">
             <img
               src={item.image}
@@ -45,26 +50,7 @@ const TrendingCard = ({ isDarkMode }) => {
               className="trending-post-image"
             />
           </div>
-          <div className="trending-post-footer">
-            <div className="trending-footer-icons">
-              <img
-                src="https://via.placeholder.com/30"
-                alt="icon1"
-                className="trending-icon"
-              />
-              <img
-                src="https://via.placeholder.com/30"
-                alt="icon2"
-                className="trending-icon"
-              />
-              <img
-                src="https://via.placeholder.com/30"
-                alt="icon3"
-                className="trending-icon"
-              />
-            </div>
-            <p className="trending-rank">{item.rank}</p>
-          </div>
+          <p className="ms-auto">{item.rank}</p>
         </div>
       ))}
     </div>
