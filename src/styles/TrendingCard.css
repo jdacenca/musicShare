@@ -2,7 +2,6 @@
 .trending-post-container {
   display: flex;
   flex-direction: column;
-  gap: 20px;
 }
 
 /* Light mode styling (default) */
@@ -22,13 +21,6 @@
 .trending-post-container.dark-mode .trending-post {
   background-color: #232627;
   color: #ffffff;
-}
-
-/* Header styling */
-.trending-post-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
 }
 
 .trending-post-title-container {

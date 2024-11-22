@@ -2,6 +2,8 @@ import React from "react";
 import { User, Moon } from "react-feather"; // Import icons
 import Notification from "./Notification"; // Import the Notification component
 import "../styles/Header.css";
+import logo from "../assets/images/logo.svg";
+import user1 from "../assets/images/user1.jpg";
 
 function Header({ isDarkMode, toggleDarkMode }) {
   return (
@@ -10,8 +12,10 @@ function Header({ isDarkMode, toggleDarkMode }) {
         className={`header d-flex flex-row ${isDarkMode ? "dark-mode" : ""}`}
       >
         {/* Brand Name */}
-        <div className="col-3 p-4">
-          <h2>BeatSnap</h2>
+        <div className="col-3">
+          <div className="logo-container">
+            <img src={logo} alt="BeatSnap" className="header-logo" />
+          </div>
         </div>
 
         {/* User Controls */}
@@ -26,7 +30,11 @@ function Header({ isDarkMode, toggleDarkMode }) {
 
           {/* User Profile Icon */}
           <div className="icon-container">
-            <User size={24} className="header-icon" />
+            <img
+              src={user1}
+              alt="User"
+              className="user-avatar"
+            />
           </div>
         </div>
       </header>

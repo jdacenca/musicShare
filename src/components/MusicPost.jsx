@@ -19,7 +19,10 @@ function MusicPost({ isDarkMode, post }) {
   const handleCommentSubmit = (e) => {
     e.preventDefault();
     if (commentText) {
-      setComments([...comments, { username: "current_user", text: commentText }]);
+      setComments([
+        ...comments,
+        { username: "current_user", text: commentText },
+      ]);
       setCommentText("");
     }
   };
@@ -48,18 +51,24 @@ function MusicPost({ isDarkMode, post }) {
 
   return (
     <div
-      className={`music-post card shadow-xss rounded-xxl border-0 p-4 mb-3 ${
+      className={`music-post card shadow-xss rounded-xxl border-0 p-4 m-4 ${
         isDarkMode ? "dark-mode" : ""
       }`}
     >
       {/* Post Header */}
       <div className="post-header">
-        <img
-          src={post.userImage || "default-user.png"}
-          alt="User"
-          className="user-avatar"
-        />
-              <p>{post.username || "Anonymous"}</p>
+        <div className="user-info">
+          <img
+            src={post.userImage || "default-user.png"}
+            alt="User"
+            className="user-avatar"
+          />
+          <div>
+            <h4 className="user-name">{post.username || "Anonymous"}</h4>
+            <p className="user-role">{post.title} . {post.time}</p>
+          </div>
+        </div>
+        <p></p>
         <div className="post-header-actions">
           <button className="menu-button" onClick={toggleMenu}>
             <MoreHorizontal />
@@ -135,21 +144,24 @@ function MusicPost({ isDarkMode, post }) {
             <Comment key={index} comment={comment} />
           ))}
           <form onSubmit={handleCommentSubmit}>
-            <input
-              type="text"
-              placeholder="Add a comment..."
-              value={commentText}
-              onChange={(e) => setCommentText(e.target.value)}
-              style={{ width: "80%" }}
-            />
-            <button
-              type="submit"
-              className={`post-button ${
-                isDarkMode ? "dark-mode" : "light-mode"
-              }`}
-            >
-              Post
-            </button>
+            <div className="w-100 d-flex flex-row align-items-center mt-4">
+              {/* Input Field: Takes full width */}
+              <div className="flex-grow-1">
+                <input
+                  className="w-100 beatsnap-input"
+                  type="text"
+                  placeholder="Add a comment..."
+                  value={commentText}
+                  onChange={(e) => setCommentText(e.target.value)}
+                />
+              </div>
+              <div className="ms-auto ps-4">
+                {/* Post Button: Aligned to the right */}
+                <button type="submit" className="btn btn-primary text-nowrap">
+                  <span className="p-2">Post</span>
+                </button>
+              </div>
+            </div>
           </form>
         </div>
       )}

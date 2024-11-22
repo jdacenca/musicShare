@@ -5,11 +5,11 @@ import "../styles/SideBar.css";
 
 const SideBar = ({ isDarkMode }) => {
   return (
-    <div className="sidebar">
-      <h2 className="sidebar-heading">Trending</h2>
+    <div className="sidebar mt-4">
+      <span className="sidebar-heading">Trending</span>
       <TrendingCard isDarkMode={isDarkMode} />
-      <h2 className="sidebar-heading">Top Creators</h2>
-      <TopCreators isDarkMode={isDarkMode}/>
+      {/* <span className="sidebar-heading mt-4">Top Creators</span>
+      <TopCreators isDarkMode={isDarkMode}/> */}
     </div>
   );
 };
