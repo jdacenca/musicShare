@@ -5,19 +5,30 @@ import '../styles/UserPage.css';
 
 const UserPage = () => {
   const navigate = useNavigate();
+  const [isDarkMode, setIsDarkMode] = useState(false);
   
-  // Use state hooks to manage user data
+  // State for user data
   const [username, setUsername] = useState('');
   const [displayName, setDisplayName] = useState('');
   const [bio, setBio] = useState('');
   const [profilePic, setProfilePic] = useState('');
-  const [showEditModal, setShowEditModal] = useState(false);
-  const [followingCount, setFollowingCount] = useState(0); // Track following count
-  const [followersCount, setFollowersCount] = useState(0); // Track followers count
-  const [isFollowing, setIsFollowing] = useState(false); // Track follow/unfollow status
+  const [followingCount, setFollowingCount] = useState(0);
+  const [followersCount, setFollowersCount] = useState(0);
+  const [isFollowing, setIsFollowing] = useState(false);
 
-  // Retrieve user data from localStorage when the component mounts
+  // State for editing
+  const [showEditModal, setShowEditModal] = useState(false);
+  const [editUsername, setEditUsername] = useState('');
+  const [editDisplayName, setEditDisplayName] = useState('');
+  const [editBio, setEditBio] = useState('');
+  const [editProfilePic, setEditProfilePic] = useState('');
+
   useEffect(() => {
+    // Retrieve dark mode preference
+    const darkModePreference = localStorage.getItem('darkMode') === 'true';
+    setIsDarkMode(darkModePreference);
+
+    // Retrieve user data from localStorage
     const storedUsername = localStorage.getItem('username');
     const storedDisplayName = localStorage.getItem('displayName');
     const storedBio = localStorage.getItem('bio');
@@ -29,68 +40,73 @@ const UserPage = () => {
     setUsername(storedUsername || 'username');
     setDisplayName(storedDisplayName || 'User Name');
     setBio(storedBio || 'This is a short bio about the user.');
-    setProfilePic(storedProfilePic || '/path-to-profile-pic'); // fallback to a default profile picture
+    setProfilePic(storedProfilePic || '/path-to-profile-pic');
     setFollowingCount(parseInt(storedFollowingCount) || 0);
     setFollowersCount(parseInt(storedFollowersCount) || 0);
     setIsFollowing(storedIsFollowing);
   }, []);
 
-  // Handle profile picture change
+  const toggleDarkMode = () => {
+    const newDarkMode = !isDarkMode;
+    setIsDarkMode(newDarkMode);
+    localStorage.setItem('darkMode', newDarkMode.toString());
+  };
+
+  const handleEditClick = () => {
+    setEditUsername(username);
+    setEditDisplayName(displayName);
+    setEditBio(bio);
+    setEditProfilePic(profilePic);
+    setShowEditModal(true);
+  };
+
   const handleProfilePicChange = (e) => {
     const file = e.target.files[0];
     if (file) {
       const reader = new FileReader();
       reader.onloadend = () => {
-        const base64String = reader.result;
-        setProfilePic(base64String); // store the base64 in the state
-        localStorage.setItem('profilePic', base64String); // save the base64 to localStorage
+        setEditProfilePic(reader.result);
       };
-      reader.readAsDataURL(file); // Convert to base64
+      reader.readAsDataURL(file);
     }
   };
 
-  // Handle profile edit submission
   const handleSaveChanges = () => {
-    localStorage.setItem('username', username);
-    localStorage.setItem('displayName', displayName);
-    localStorage.setItem('bio', bio);
-    localStorage.setItem('profilePic', profilePic); // Store base64 in localStorage
-    localStorage.setItem('followingCount', followingCount);
-    localStorage.setItem('followersCount', followersCount);
-    localStorage.setItem('isFollowing', isFollowing.toString()); // Store follow status
-    setShowEditModal(false); // Close the edit modal
+    setUsername(editUsername);
+    setDisplayName(editDisplayName);
+    setBio(editBio);
+    setProfilePic(editProfilePic);
+
+    localStorage.setItem('username', editUsername);
+    localStorage.setItem('displayName', editDisplayName);
+    localStorage.setItem('bio', editBio);
+    localStorage.setItem('profilePic', editProfilePic);
+    setShowEditModal(false);
   };
 
-  // Handle Follow/Unfollow button click
   const handleFollowClick = () => {
     if (isFollowing) {
-      setFollowersCount(followersCount - 1); // Decrease followers count when unfollowing
-      setFollowingCount(followingCount - 1); // Decrease following count when unfollowing
+      setFollowersCount(followersCount - 1);
+      setFollowingCount(followingCount - 1);
     } else {
-      setFollowersCount(followersCount + 1); // Increase followers count when following
-      setFollowingCount(followingCount + 1); // Increase following count when following
+      setFollowersCount(followersCount + 1);
+      setFollowingCount(followingCount + 1);
     }
-    setIsFollowing(!isFollowing); // Toggle follow/unfollow status
+    setIsFollowing(!isFollowing);
   };
 
   return (
-    <div>
-      <Header />
+    <div className={isDarkMode ? 'dark-mode' : 'light-mode'}>
+      <Header isDarkMode={isDarkMode} toggleDarkMode={toggleDarkMode} />
       <div className="user-page-container">
-        {/* Profile Card */}
         <div className="left-sidebar">
           <div className="profile-card">
             <div className="profile-header">
-              <img 
-                src={profilePic} 
-                alt="Profile" 
-                className="profile-pic" 
-              />
-              <h2 className="username">{displayName}</h2> {/* Display name in bold */}
-              <p className="user-handle">@{username}</p> {/* Username in small text */}
+              <img src={profilePic} alt="Profile" className="profile-pic" />
+              <h2 className="username">{displayName}</h2>
+              <p className="user-handle">@{username}</p>
               <p className="bio">{bio}</p>
             </div>
-            
             <div className="stats-container">
               <div className="stat-item">
                 <span className="stat-number">{followingCount}</span>
@@ -101,78 +117,56 @@ const UserPage = () => {
                 <span className="stat-label">Followers</span>
               </div>
             </div>
-
-            <button 
-              className="edit-profile-btn"
-              onClick={() => setShowEditModal(true)}
-            >
+            <button className="edit-profile-btn" onClick={handleEditClick}>
               Edit Profile
             </button>
-
-            {/* Follow/Unfollow Button */}
-            <button 
-              className={`follow-btn ${isFollowing ? 'following' : ''}`} 
+            <button
+              className={`follow-btn ${isFollowing ? 'following' : ''}`}
               onClick={handleFollowClick}
             >
               {isFollowing ? 'Unfollow' : 'Follow'}
             </button>
-
-            {/* Separate Logout Button */}
-            <button 
-              className="logout-btn"
-              onClick={() => navigate('/login')}
-            >
+            <button className="logout-btn" onClick={() => navigate('/login')}>
               Log Out
             </button>
           </div>
         </div>
-
-        {/* Posts Section */}
         <div className="posts-section">
           <h3>My Posts</h3>
           <div className="posts-grid">
             <p>No posts yet</p>
           </div>
         </div>
-
-        {/* Edit Profile Modal */}
         {showEditModal && (
           <div className="modal-overlay">
-            <div className="modal-content">
+            <div className={`modal-content ${isDarkMode ? 'dark-mode' : ''}`}>
               <h3>Edit Profile</h3>
               <div className="edit-form">
                 <div className="form-group">
                   <label>Profile Picture</label>
-                  <input 
-                    type="file" 
-                    accept="image/*" 
-                    onChange={handleProfilePicChange} 
-                  />
+                  <input type="file" accept="image/*" onChange={handleProfilePicChange} />
                 </div>
                 <div className="form-group">
                   <label>Display Name</label>
-                  <input 
-                    type="text" 
-                    placeholder="Update display name" 
-                    value={displayName} 
-                    onChange={(e) => setDisplayName(e.target.value)} 
+                  <input
+                    type="text"
+                    value={editDisplayName}
+                    onChange={(e) => setEditDisplayName(e.target.value)}
                   />
                 </div>
                 <div className="form-group">
                   <label>Username</label>
-                  <input 
-                    type="text" 
-                    placeholder="Update username" 
-                    value={username} 
-                    onChange={(e) => setUsername(e.target.value)} 
+                  <input
+                    type="text"
+                    value={editUsername}
+                    onChange={(e) => setEditUsername(e.target.value)}
                   />
                 </div>
                 <div className="form-group">
                   <label>Bio</label>
-                  <textarea 
-                    placeholder="Update bio" 
-                    value={bio} 
-                    onChange={(e) => setBio(e.target.value)} 
+                  <textarea
+                    value={editBio}
+                    onChange={(e) => setEditBio(e.target.value)}
                   />
                 </div>
                 <div className="button-group">
