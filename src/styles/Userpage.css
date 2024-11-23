@@ -38,7 +38,7 @@
 
 .profile-header {
   text-align: center;
-  margin-bottom: 2rem;
+  margin-bottom: 1rem;
 }
 
 .profile-pic {
@@ -138,6 +138,22 @@
 .logout-btn:hover {
   background: #ff3b30;
   color: white;
+}
+
+.remove-pic-btn {
+  background-color: #f0f0f0; 
+  color: black;
+  border: none;
+  padding: 8px 16px;
+  cursor: pointer;
+  font-size: 15px;
+  text-align: center;
+  margin-top: 10px; 
+}
+
+.remove-pic-btn:active {
+  background-color: #A9A9A9; 
+  color: white; 
 }
 
 /* Posts Section */

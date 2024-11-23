@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Header from '../components/Header';
+import defaultUserImage from '../assets/images/defaultuser.png';
 import '../styles/UserPage.css';
 
 const UserPage = () => {
@@ -11,7 +12,7 @@ const UserPage = () => {
   const [username, setUsername] = useState('');
   const [displayName, setDisplayName] = useState('');
   const [bio, setBio] = useState('');
-  const [profilePic, setProfilePic] = useState('');
+  const [profilePic, setProfilePic] = useState(defaultUserImage);
   const [followingCount, setFollowingCount] = useState(0);
   const [followersCount, setFollowersCount] = useState(0);
   const [isFollowing, setIsFollowing] = useState(false);
@@ -22,6 +23,7 @@ const UserPage = () => {
   const [editDisplayName, setEditDisplayName] = useState('');
   const [editBio, setEditBio] = useState('');
   const [editProfilePic, setEditProfilePic] = useState('');
+  const [previewProfilePic, setPreviewProfilePic] = useState('');
 
   useEffect(() => {
     // Retrieve dark mode preference
@@ -40,7 +42,7 @@ const UserPage = () => {
     setUsername(storedUsername || 'username');
     setDisplayName(storedDisplayName || 'User Name');
     setBio(storedBio || 'This is a short bio about the user.');
-    setProfilePic(storedProfilePic || '/path-to-profile-pic');
+    setProfilePic(storedProfilePic || defaultUserImage);
     setFollowingCount(parseInt(storedFollowingCount) || 0);
     setFollowersCount(parseInt(storedFollowersCount) || 0);
     setIsFollowing(storedIsFollowing);
@@ -57,6 +59,7 @@ const UserPage = () => {
     setEditDisplayName(displayName);
     setEditBio(bio);
     setEditProfilePic(profilePic);
+    setPreviewProfilePic(profilePic); // Set initial preview
     setShowEditModal(true);
   };
 
@@ -66,9 +69,16 @@ const UserPage = () => {
       const reader = new FileReader();
       reader.onloadend = () => {
         setEditProfilePic(reader.result);
+        setPreviewProfilePic(reader.result);
       };
       reader.readAsDataURL(file);
     }
+  };
+
+  const handleRemoveProfilePic = () => {
+    setPreviewProfilePic(defaultUserImage); 
+    setEditProfilePic(defaultUserImage); 
+    setIsProfilePicRemoved(true);
   };
 
   const handleSaveChanges = () => {
@@ -82,6 +92,16 @@ const UserPage = () => {
     localStorage.setItem('bio', editBio);
     localStorage.setItem('profilePic', editProfilePic);
     setShowEditModal(false);
+  };
+
+  const handleCancelEdit = () => {
+    setShowEditModal(false);
+    // Reset edit states when canceling
+    setEditUsername(username);
+    setEditDisplayName(displayName);
+    setEditBio(bio);
+    setEditProfilePic(profilePic);
+    setPreviewProfilePic(profilePic); 
   };
 
   const handleFollowClick = () => {
@@ -102,7 +122,9 @@ const UserPage = () => {
         <div className="left-sidebar">
           <div className="profile-card">
             <div className="profile-header">
-              <img src={profilePic} alt="Profile" className="profile-pic" />
+              <div className="profile-pic-container">
+                <img src={profilePic} alt="Profile" className="profile-pic" />
+              </div>
               <h2 className="username">{displayName}</h2>
               <p className="user-handle">@{username}</p>
               <p className="bio">{bio}</p>
@@ -144,7 +166,12 @@ const UserPage = () => {
               <div className="edit-form">
                 <div className="form-group">
                   <label>Profile Picture</label>
-                  <input type="file" accept="image/*" onChange={handleProfilePicChange} />
+                  <div className="profile-pic-container">
+                    <input type="file" accept="image/*" onChange={handleProfilePicChange} />
+                    <button className="remove-pic-btn" onClick={handleRemoveProfilePic}>
+                      Remove Profile
+                    </button>
+                  </div>
                 </div>
                 <div className="form-group">
                   <label>Display Name</label>
@@ -170,7 +197,7 @@ const UserPage = () => {
                   />
                 </div>
                 <div className="button-group">
-                  <button className="cancel-btn" onClick={() => setShowEditModal(false)}>
+                  <button className="cancel-btn" onClick={handleCancelEdit}>
                     Cancel
                   </button>
                   <button className="save-btn" onClick={handleSaveChanges}>

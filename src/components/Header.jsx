@@ -3,7 +3,7 @@ import { User, Moon } from "react-feather"; // Import icons
 import Notification from "./Notification"; // Import the Notification component
 import "../styles/Header.css";
 import logo from "../assets/images/logo.svg";
-import user1 from "../assets/images/defaultuser.jpg";
+import user1 from "../assets/images/defaultuser.png";
 import { useNavigate } from 'react-router-dom';
 
 function Header({ isDarkMode, toggleDarkMode }) {
