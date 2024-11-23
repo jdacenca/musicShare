@@ -8,6 +8,9 @@ import { useNavigate } from 'react-router-dom';
 
 function Header({ isDarkMode, toggleDarkMode }) {
   const navigate = useNavigate();
+
+  const profilePic = localStorage.getItem('profilePic') || '/assets/images/user1.jpg'; 
+
   return (
     <div>
       <header
@@ -33,7 +36,7 @@ function Header({ isDarkMode, toggleDarkMode }) {
           {/* User Profile Icon */}
           <div className="icon-container" onClick={() => navigate('/userpage')}>
             <img
-              src={user1}
+              src={profilePic}
               alt="User"
               className="user-avatar"
             />
