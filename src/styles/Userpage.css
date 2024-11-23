@@ -1,0 +1,166 @@
+.user-page-container {
+    max-width: 1200px;
+    margin: 2rem auto;
+    padding: 0 1rem;
+    display: grid;
+    grid-template-columns: 300px 1fr;
+    gap: 2rem;
+  }
+  
+  .profile-card {
+    background: white;
+    border-radius: 12px;
+    padding: 2rem;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    margin-bottom: 1rem;
+  }
+  
+  .profile-header {
+    text-align: center;
+    margin-bottom: 2rem;
+  }
+  
+  .profile-pic {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    margin-bottom: 1rem;
+    object-fit: cover;
+  }
+  
+  .username {
+    margin: 0;
+    font-size: 1.5rem;
+  }
+  
+  .user-handle {
+    color: #666;
+    margin: 0.5rem 0;
+  }
+  
+  .stats-container {
+    display: flex;
+    justify-content: space-around;
+    margin: 1.5rem 0;
+  }
+  
+  .stat-item {
+    text-align: center;
+  }
+  
+  .stat-number {
+    display: block;
+    font-weight: bold;
+    font-size: 1.2rem;
+  }
+  
+  .stat-label {
+    color: #666;
+    font-size: 0.9rem;
+  }
+  
+  .edit-profile-btn {
+    width: 100%;
+    padding: 0.8rem;
+    background: #0095f6;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: bold;
+    margin-bottom: 1rem;
+  }
+  
+  .logout-btn {
+    width: 100%;
+    padding: 0.8rem;
+    background: white;
+    color: #ff3b30;
+    border: 2px solid #ff3b30;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: all 0.3s ease;
+  }
+  
+  .logout-btn:hover {
+    background: #ff3b30;
+    color: white;
+  }
+  
+  .modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+  }
+  
+  .modal-content {
+    background: white;
+    padding: 2rem;
+    border-radius: 12px;
+    width: 90%;
+    max-width: 500px;
+  }
+  
+  .form-group {
+    margin-bottom: 1.5rem;
+  }
+  
+  .form-group label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: 500;
+  }
+  
+  .form-group input {
+    width: 100%;
+    padding: 0.8rem;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+  }
+  
+  .button-group {
+    display: flex;
+    gap: 1rem;
+    margin-top: 2rem;
+  }
+  
+  .button-group button {
+    flex: 1;
+    padding: 0.8rem;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+  
+  .save-btn {
+    background: #0095f6;
+    color: white;
+    border: none;
+  }
+  
+  .cancel-btn {
+    background: #f0f0f0;
+    border: none;
+    color: #333;
+  }
+  
+  .posts-section {
+    background: white;
+    border-radius: 12px;
+    padding: 2rem;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  }
+  
+  /* Responsive Design */
+  @media (max-width: 768px) {
+    .user-page-container {
+      grid-template-columns: 1fr;
+    }
+  }

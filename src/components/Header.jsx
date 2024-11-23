@@ -4,8 +4,10 @@ import Notification from "./Notification"; // Import the Notification component
 import "../styles/Header.css";
 import logo from "../assets/images/logo.svg";
 import user1 from "../assets/images/user1.jpg";
+import { useNavigate } from 'react-router-dom';
 
 function Header({ isDarkMode, toggleDarkMode }) {
+  const navigate = useNavigate();
   return (
     <div>
       <header
@@ -29,7 +31,7 @@ function Header({ isDarkMode, toggleDarkMode }) {
           </div>
 
           {/* User Profile Icon */}
-          <div className="icon-container">
+          <div className="icon-container" onClick={() => navigate('/userpage')}>
             <img
               src={user1}
               alt="User"
