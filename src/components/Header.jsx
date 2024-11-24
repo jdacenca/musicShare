@@ -11,11 +11,8 @@ import Notification from "./Notification";
 function Header() {
   const isDarkMode = useSelector((state) => state.beatSnapApp.isDarkMode);
   const dispatch = useDispatch();
-
   const navigate = useNavigate();
-
-  const profilePic = localStorage.getItem('profilePic') || '/assets/images/defaultuser.jpg';
-
+  const profilePic = localStorage.getItem('profilePic') || user1;
 
   const toggleDarkModeHandler = () => {
     dispatch(toggleDarkMode());
