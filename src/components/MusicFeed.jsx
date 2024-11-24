@@ -1,17 +1,19 @@
-import React, { useState, useEffect } from "react";
-import MusicPost from "./MusicPost";
-import CreatePostPopup from "./CreatePostPopup";
+import React, { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
+import album2 from "../assets/images/album2.jpg";
 import user1 from "../assets/images/user1.jpg";
 import user2 from "../assets/images/user2.jpg";
 import user3 from "../assets/images/user3.jpg";
-import album2 from "../assets/images/album2.jpg";
 import "../styles/MusicFeed.css";
+import CreatePostPopup from "./CreatePostPopup";
+import MusicPost from "./MusicPost";
 
-function MusicFeed({ isDarkMode }) {
+function MusicFeed() {
+  const isDarkMode = useSelector((state) => state.beatSnapApp.isDarkMode);
+
   const [posts, setPosts] = useState([]);
   const [postContent, setPostContent] = useState("");
   const [isPopupVisible, setPopupVisible] = useState(false);
-
 
   const handleInputChange = (event) => {
     setPostContent(event.target.value);
@@ -96,22 +98,27 @@ function MusicFeed({ isDarkMode }) {
               onChange={handleInputChange}
             />
           </div>
-          <div className="post-actions ms-auto ps-4 align-self-start" onClick={() => setPopupVisible(true)}>
-            <button className="btn btn-primary w-100 text-nowrap" onClick={handlePost}>
+          <div
+            className="post-actions ms-auto ps-4 align-self-start"
+            onClick={() => setPopupVisible(true)}
+          >
+            <button
+              className="btn btn-primary w-100 text-nowrap"
+              onClick={handlePost}
+            >
               + Create a Post
             </button>
           </div>
           {isPopupVisible && (
             <CreatePostPopup onClose={() => setPopupVisible(false)} />
-            )}
+          )}
         </div>
       </div>
       {posts.map((post) => (
-        <MusicPost key={post.id} isDarkMode={isDarkMode} post={post} />
+        <MusicPost key={post.id} post={post} />
       ))}
     </>
   );
 }
-
 
 export default MusicFeed;

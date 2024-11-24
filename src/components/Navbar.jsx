@@ -1,18 +1,21 @@
-import React, { useState, useEffect } from "react";
-import "../styles/NavBar.css";
-import CreatePostPopup from "./CreatePostPopup";
-import SearchPopup from "./SearchPopup";
+import React, { useEffect, useState } from "react";
 import {
-  Home,
-  Search,
-  Plus,
   Clock,
+  Home,
   MessageCircle,
+  Plus,
+  Search,
   User,
   Users,
 } from "react-feather";
+import { useSelector } from "react-redux";
+import "../styles/NavBar.css";
+import CreatePostPopup from "./CreatePostPopup";
+import SearchPopup from "./SearchPopup";
 
-const NavBar = ({ isDarkMode }) => {
+const NavBar = () => {
+  const isDarkMode = useSelector((state) => state.beatSnapApp.isDarkMode);
+
   const [showFriends, setShowFriends] = useState(false);
   const [isPopupVisible, setPopupVisible] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
@@ -46,9 +49,7 @@ const NavBar = ({ isDarkMode }) => {
 
       <div className="nav-item" onClick={openSearch}>
         <Search className="nav-icon" />
-        <span className="nav-label">
-          Search <span className="shortcut">ctrl + k</span>
-        </span>
+        <span className="nav-label">Search</span>
       </div>
 
       <div className="nav-item" onClick={() => setPopupVisible(true)}>
@@ -92,11 +93,7 @@ const NavBar = ({ isDarkMode }) => {
       )}
 
       {/* Search Popup */}
-      <SearchPopup
-        isDarkMode={isDarkMode}
-        isOpen={isSearchOpen}
-        closePopup={closeSearch}
-      />
+      <SearchPopup isOpen={isSearchOpen} closePopup={closeSearch} />
     </div>
   );
 };

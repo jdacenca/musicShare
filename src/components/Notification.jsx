@@ -1,8 +1,10 @@
 import React, { useState } from "react";
 import { Bell } from "react-feather"; // Import Bell icon
+import { useSelector } from "react-redux";
 import "../styles/Notification.css";
 
-function Notification({ isDarkMode }) {
+function Notification() {
+  const isDarkMode = useSelector((state) => state.beatSnapApp.isDarkMode);
   const [showNotifications, setShowNotifications] = useState(false);
 
   // Mock notification data

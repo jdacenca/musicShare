@@ -1,7 +1,8 @@
 import React from "react";
-import "../styles/TrendingCard.css";
+import { useSelector } from "react-redux";
 import trending1 from "../assets/images/trending1.jpg";
 import trending2 from "../assets/images/trending2.jpg";
+import "../styles/TrendingCard.css";
 
 const trendingData = [
   {
@@ -18,7 +19,9 @@ const trendingData = [
   },
 ];
 
-const TrendingCard = ({ isDarkMode }) => {
+const TrendingCard = () => {
+  const isDarkMode = useSelector((state) => state.beatSnapApp.isDarkMode);
+
   return (
     <div className={`trending-post-container ${isDarkMode ? "dark-mode" : ""}`}>
       {trendingData.map((item, index) => (
@@ -39,7 +42,11 @@ const TrendingCard = ({ isDarkMode }) => {
               </div>
             </div>
             <div className="ms-auto ps-4 align-self-start">
-              <button className={`btn btn-secondary ${isDarkMode ? "dark-mode" : ""}`}>Follow</button>
+              <button
+                className={`btn btn-secondary ${isDarkMode ? "dark-mode" : ""}`}
+              >
+                Follow
+              </button>
             </div>
           </div>
 

@@ -1,8 +1,11 @@
 import React, { useState } from "react";
 import { Search, X } from "react-feather";
+import { useSelector } from "react-redux";
 import "../styles/SearchPopup.css";
 
-const SearchPopup = ({ isDarkMode, isOpen, closePopup }) => {
+const SearchPopup = ({ isOpen, closePopup }) => {
+  const isDarkMode = useSelector((state) => state.beatSnapApp.isDarkMode);
+
   const [searchQuery, setSearchQuery] = useState("");
   const suggestions = ["Imagine", "Imagine Dragons", "Imagine Scenarios"];
   const profiles = [

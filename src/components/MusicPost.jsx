@@ -1,15 +1,20 @@
 import React, { useState } from "react";
-import Comment from "./Comment";
+import { Heart, MessageCircle, MoreHorizontal, Share2, X } from "react-feather";
+import { useSelector } from "react-redux";
 import "../styles/MusicPost.css";
-import { Heart, MessageCircle, Share2, MoreHorizontal, X } from "react-feather";
+import Comment from "./Comment";
 
-function MusicPost({ isDarkMode, post }) {
+function MusicPost({ post }) {
+  const isDarkMode = useSelector((state) => state.beatSnapApp.isDarkMode);
+
   const [isLiked, setIsLiked] = useState(false); // Tracks whether the post is liked
   const [likes, setLikes] = useState(post.likes);
   const [comments, setComments] = useState(post.comments);
   const [commentText, setCommentText] = useState("");
   const [showComments, setShowComments] = useState(false);
   const [showMenu, setShowMenu] = useState(false); // Tracks whether the menu is visible
+
+  const currentUser = useSelector((state) => state.beatSnapApp.currentUser);
 
   const handleLikeToggle = () => {
     setLikes(isLiked ? likes - 1 : likes + 1); // Increment or decrement likes
@@ -65,7 +70,9 @@ function MusicPost({ isDarkMode, post }) {
           />
           <div>
             <h4 className="user-name">{post.username || "Anonymous"}</h4>
-            <p className="user-role">{post.title} . {post.time}</p>
+            <p className="user-role">
+              {post.title} . {post.time}
+            </p>
           </div>
         </div>
         <p></p>
@@ -76,8 +83,12 @@ function MusicPost({ isDarkMode, post }) {
           {showMenu && (
             <div className="menu-popup">
               <ul>
-                <li onClick={() => handleAction("edit")}>Edit</li>
-                <li onClick={() => handleAction("delete")}>Delete</li>
+                {currentUser === post.username && (
+                  <>
+                    <li onClick={() => handleAction("edit")}>Edit</li>
+                    <li onClick={() => handleAction("delete")}>Delete</li>
+                  </>
+                )}
                 <li onClick={() => handleAction("account-details")}>
                   Account Details
                 </li>

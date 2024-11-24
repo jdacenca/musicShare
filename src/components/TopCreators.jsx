@@ -1,5 +1,6 @@
 import React from "react";
 import { User } from "react-feather";
+import { useSelector } from "react-redux";
 import "../styles/SideBar.css";
 
 const creatorsData = [
@@ -8,7 +9,9 @@ const creatorsData = [
   { name: "User 3", icon: <User /> },
 ];
 
-const TopCreators = ({isDarkMode}) => {
+const TopCreators = () => {
+  const isDarkMode = useSelector((state) => state.beatSnapApp.isDarkMode);
+
   return (
     <div className={`top-creators ${isDarkMode ? "dark-mode" : ""}`}>
       {creatorsData.map((creator, index) => (

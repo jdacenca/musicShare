@@ -1,11 +1,21 @@
 import React from "react";
-import { User, Moon } from "react-feather"; // Import icons
-import Notification from "./Notification"; // Import the Notification component
-import "../styles/Header.css";
+import { Moon } from "react-feather";
+import { useDispatch, useSelector } from "react-redux";
 import logo from "../assets/images/logo.svg";
 import user1 from "../assets/images/user1.jpg";
+import { toggleDarkMode } from "../redux/slice";
+import "../styles/Header.css";
+import Notification from "./Notification";
 
-function Header({ isDarkMode, toggleDarkMode }) {
+function Header() {
+  const isDarkMode = useSelector((state) => state.beatSnapApp.isDarkMode);
+  const dispatch = useDispatch();
+
+  const toggleDarkModeHandler = () => {
+    dispatch(toggleDarkMode());
+    document.body.classList.toggle("dark-mode", !isDarkMode);
+  };
+
   return (
     <div>
       <header
@@ -19,22 +29,18 @@ function Header({ isDarkMode, toggleDarkMode }) {
         </div>
 
         {/* User Controls */}
-        <div className="col-3 p-4 d-flex justify-content-end align-items-center">
+        <div className="col-3 d-flex justify-content-end align-items-center">
           {/* Notification Component */}
-          <Notification isDarkMode={isDarkMode} />
+          <Notification />
 
           {/* Dark Mode Toggle */}
-          <div className="icon-container mx-3" onClick={toggleDarkMode}>
+          <div className="icon-container mx-3" onClick={toggleDarkModeHandler}>
             <Moon size={24} className="header-icon" />
           </div>
 
           {/* User Profile Icon */}
           <div className="icon-container">
-            <img
-              src={user1}
-              alt="User"
-              className="user-avatar"
-            />
+            <img src={user1} alt="User" className="user-avatar" />
           </div>
         </div>
       </header>
