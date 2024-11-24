@@ -126,11 +126,11 @@ export const deletePostMessage = async function(postId) {
 // USER
 //------------------------------------------------------------
 // Sample call -- let r = await getPost('ACC0000002', 'ASC');
-export const getUserGenre = async function(userId, sort) {
+export const getUserGenre = async function(userId) {
 
     try {
         //generate select query
-        let query = 'SELECT * from post where user_id=\'' + userId + "\' ORDER BY created_timestamp " + sort;
+        let query = 'SELECT * from user_music_genre where user_id=\'' + userId + "\'";
         let result = await client.query({
                 rowMode: 'array',
                 text: query
