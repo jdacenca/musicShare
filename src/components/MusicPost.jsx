@@ -5,6 +5,7 @@ import "../styles/MusicPost.css";
 import Comment from "./Comment";
 
 function MusicPost({ post }) {
+
   const isDarkMode = useSelector((state) => state.beatSnapApp.isDarkMode);
 
   const [isLiked, setIsLiked] = useState(false); // Tracks whether the post is liked

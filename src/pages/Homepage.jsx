@@ -6,7 +6,11 @@ import MusicFeed from "../components/MusicFeed";
 import NavBar from "../components/Navbar";
 import SideBar from "../components/SideBar";
 
-import { setCurrentUser, setTrendingMusic } from "../redux/slice";
+import {
+  setCurrentUser,
+  setTrendingMusic,
+  setRecommendations,
+} from "../redux/slice";
 import "../styles/Homepage.css";
 
 const Homepage = () => {
@@ -18,16 +22,22 @@ const Homepage = () => {
   }, [dispatch]);
 
   useEffect(() => {
-    async function fetchTrendingMusic() {
-      //TODO - remove localhost. use same url or actual url from env.
+    async function fetchSpotifyData() {
+      //TODO - remove localhost. 
       await fetch("http://localhost:8777/spotify/connect", {
         method: "POST",
       });
       const response = await fetch("http://localhost:8777/spotify/trending");
       const data = await response.json();
       dispatch(setTrendingMusic(data));
+
+      const recommendations = await fetch(
+        "http://localhost:8777/spotify/recommendations?genre=rock"
+      );
+      const recommendationsData = await recommendations.json();
+      dispatch(setRecommendations(recommendationsData));
     }
-    fetchTrendingMusic();
+    fetchSpotifyData();
   }, [dispatch]);
 
   return (

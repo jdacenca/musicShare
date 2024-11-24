@@ -1,14 +1,17 @@
 import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
-import album2 from "../assets/images/album2.jpg";
 import user1 from "../assets/images/user1.jpg";
 import user2 from "../assets/images/user2.jpg";
 import user3 from "../assets/images/user3.jpg";
+import spotify from "../assets/images/spotify.jpg";
 import "../styles/MusicFeed.css";
 import CreatePostPopup from "./CreatePostPopup";
 import MusicPost from "./MusicPost";
 
 function MusicFeed() {
+  const recommendations = useSelector(
+    (state) => state.beatSnapApp.recommendations
+  );
   const isDarkMode = useSelector((state) => state.beatSnapApp.isDarkMode);
 
   const [posts, setPosts] = useState([]);
@@ -28,7 +31,7 @@ function MusicFeed() {
 
   useEffect(() => {
     // Mock data for posts
-    setPosts([
+    const mockData = [
       {
         id: 1,
         username: "priya_gounalan",
@@ -52,7 +55,8 @@ function MusicFeed() {
         description: "This song hits different!",
         likes: 5,
         comments: [{ username: "user3", text: "Can’t stop listening!" }],
-        musicImage: album2,
+        //musicImage: album2,
+        spotifyUrl: "2Z51EnLF4Nps4LmulSQPnn"
       },
       {
         id: 3,
@@ -68,7 +72,31 @@ function MusicFeed() {
         ],
         spotifyUrl: "3nR9B40hYLKLcR0Eph3Goc", // Spotify track ID for Memories
       },
-    ]);
+    ];
+
+    let posts = [...mockData];
+
+    let len = posts.length;
+    let count = 1;
+    recommendations?.tracks?.slice(0,15).forEach((x) => {
+      posts.push({
+        id: len + count,
+        username: "Spotify",
+        title: x.album?.name,
+        //time: "11h",
+        userImage: spotify,
+        description: "",
+        likes: 0,
+        comments: [
+          { username: "user4", text: "Brings back memories!" },
+          { username: "user5", text: "An all-time favorite!" },
+        ],
+        spotifyUrl: x.album?.id,
+      });
+      count++;
+    });
+
+    setPosts(posts);
   }, []);
 
   return (
@@ -85,7 +113,7 @@ function MusicFeed() {
             className="user-avatar"
           />
           <div>
-            <h4 className="user-name">Kelvin Li</h4>
+            <h4 className="user-name">Username</h4>
             <p className="user-role">Music Buff • Now</p>
           </div>
         </div>

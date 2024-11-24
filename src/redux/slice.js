@@ -3,6 +3,7 @@ import { createSlice } from '@reduxjs/toolkit';
 const initialState = {
   isDarkMode: false,
   trendingMusic: [],
+  recommendations: [],
   authToken: null,
   currentUser: null,
   openPopup: null,
@@ -20,6 +21,9 @@ const appSlice = createSlice({
     },
     setTrendingMusic: (state, action) => {
       state.trendingMusic = action.payload;
+    },
+    setRecommendations: (state, action) => {
+      state.recommendations = action.payload;
     },
     setAuthToken: (state, action) => {
       state.authToken = action.payload;
@@ -42,6 +46,7 @@ const appSlice = createSlice({
 export const {
   toggleDarkMode,
   setTrendingMusic,
+  setRecommendations,
   setAuthToken,
   setCurrentUser,
   setOpenPopup,
