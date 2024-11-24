@@ -3,31 +3,39 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 10px 20px;           /* Added padding for better spacing */
-  background-color: #f9f9f9;    /* Light mode background */
-  color: #000;                  /* Light mode text color */
-  box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
-  border-bottom: 1px solid #ddd; /* Light border for separation */
+  padding: 10px 20px;
+  /* Added padding for better spacing */
+  background-color: #f9f9f9;
+  /* Light mode background */
+  color: #000;
+  /* Light mode text color */
+  box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
+  /* Subtle shadow for depth */
+  border-bottom: 1px solid #ddd;
+  /* Light border for separation */
 }
 
 .header .icon-container {
   display: flex;
   align-items: center;
-  gap: 15px;                   /* Equal spacing between icons */
+  gap: 15px;
+  /* Equal spacing between icons */
   cursor: pointer;
 }
 
 .header .notification-count {
   position: absolute;
-  top: -10px;                 /* Adjust position to align with icons */
-  right: -10px;               
+  top: -10px;
+  /* Adjust position to align with icons */
+  right: -10px;
   background-color: red;
   color: white;
   border-radius: 50%;
   padding: 0.2em 0.5em;
   font-size: 12px;
   font-weight: bold;
-  box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.2); /* Add depth for notification */
+  box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.2);
+  /* Add depth for notification */
 }
 
 /* Header Title or Logo */
@@ -39,19 +47,26 @@
 
 /* Dark Mode Styles */
 .dark-mode {
-  background-color: #181818; /* Dark mode background */
-  color: white;             /* Dark mode text color */
+  background-color: #181818;
+  /* Dark mode background */
+  color: white;
+  /* Dark mode text color */
 }
 
 .dark-mode .header {
-  background-color: #181818; /* Dark header background */
-  box-shadow: none;          /* Remove light shadow in dark mode */
-  border-bottom: 1px solid #444; /* Subtle dark border */
+  background-color: #181818;
+  /* Dark header background */
+  box-shadow: none;
+  /* Remove light shadow in dark mode */
+  border-bottom: 1px solid #444;
+  /* Subtle dark border */
 }
 
 .dark-mode .notification-count {
-  background-color: #ff4d4d; /* Softer red for dark mode */
-  color: black;             /* Text contrast in dark mode */
+  background-color: #ff4d4d;
+  /* Softer red for dark mode */
+  color: black;
+  /* Text contrast in dark mode */
 }
 
 /* Dark Mode Button Style */
@@ -67,18 +82,21 @@
 
 .dark-mode-button:hover {
   background-color: #555;
-  transform: scale(1.05); /* Slight zoom effect on hover */
+  transform: scale(1.05);
+  /* Slight zoom effect on hover */
 }
 
 /* Responsive Adjustments */
 @media (max-width: 768px) {
   .header {
-    flex-direction: column;   /* Stack elements on smaller screens */
+    flex-direction: column;
+    /* Stack elements on smaller screens */
     text-align: center;
   }
 
   .icon-container {
-    margin-top: 10px;         /* Add space below the title/logo */
+    margin-top: 10px;
+    /* Add space below the title/logo */
   }
 }
 
@@ -94,7 +112,8 @@
 }
 
 .light-mode .header-logo {
-  filter: none; /* Keep the original SVG colors */
+  filter: none;
+  /* Keep the original SVG colors */
 }
 
 /* Dark Mode Styles */
@@ -104,7 +123,58 @@
 }
 
 .dark-mode .header-logo {
-  filter: invert(100%) sepia(0%) saturate(0%) hue-rotate(180deg)
-      brightness(200%) contrast(90%);
+  filter: invert(100%) sepia(0%) saturate(0%) hue-rotate(180deg) brightness(200%) contrast(90%);
 }
 
+
+.profile-menu-popup {
+  position: absolute;
+  top: 70px;
+  right: 40px;
+  background: #fff;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  z-index: 10;
+}
+
+.profile-menu-popup ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.profile-menu-popup li {
+  padding: 10px 15px;
+  cursor: pointer;
+  border-bottom: 1px solid #eee;
+}
+
+.profile-menu-popup li:hover {
+  background-color: #f5f5f5;
+}
+
+.profile-menu-popup li:last-child {
+  border-bottom: none;
+}
+
+/* Menu Popup for Dark Mode */
+.dark-mode .profile-menu-popup {
+  background-color: #2e2e2e;
+  /* Dark background for menu */
+  border: 1px solid #444;
+  /* Subtle border */
+  color: #ffffff;
+  /* Light text color */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
+  /* Adjust shadow for dark mode */
+}
+
+.dark-mode .profile-menu-popup li {
+  border-bottom: 1px solid #444;
+}
+
+.dark-mode .profile-menu-popup li:hover {
+  background-color: #444;
+  /* Highlight effect */
+}

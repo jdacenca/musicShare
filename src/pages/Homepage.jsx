@@ -6,7 +6,7 @@ import MusicFeed from "../components/MusicFeed";
 import NavBar from "../components/Navbar";
 import SideBar from "../components/SideBar";
 
-import { setCurrentUser } from "../redux/slice";
+import { setCurrentUser, setTrendingMusic } from "../redux/slice";
 import "../styles/Homepage.css";
 
 const Homepage = () => {
@@ -17,12 +17,23 @@ const Homepage = () => {
     dispatch(setCurrentUser("priya_gounalan")); // TODO use data from auth
   }, [dispatch]);
 
+  useEffect(() => {
+    async function fetchTrendingMusic() {
+      //TODO - remove localhost. use same url or actual url from env.
+      await fetch("http://localhost:8777/spotify/connect", {
+        method: "POST",
+      });
+      const response = await fetch("http://localhost:8777/spotify/trending");
+      const data = await response.json();
+      dispatch(setTrendingMusic(data));
+    }
+    fetchTrendingMusic();
+  }, [dispatch]);
+
   return (
     <div className={`app-container ${isDarkMode ? "dark-mode" : ""}`}>
       <Header />
-
       <div className="row g-0">
-
         {/* NavBar (Left Sidebar) */}
         <div className="d-none d-md-block p-4 pe-0 col-md-2 navbar-container">
           <NavBar />
