@@ -74,7 +74,7 @@ function MusicFeed() {
   return (
     <>
       <div
-        className={`post-creator-container m-4 p-4 pb-0 ${
+        className={`feed-post-creator-container m-4 p-4 pb-0 ${
           isDarkMode ? "dark-mode" : ""
         }`}
       >
@@ -92,14 +92,14 @@ function MusicFeed() {
         <div className="d-flex flex-row align-items-center">
           <div className="w-100 flex-grow-1">
             <textarea
-              className="post-input w-100 "
+              className="feed-post-input w-100 "
               placeholder="What's on your mind today?"
               value={postContent}
               onChange={handleInputChange}
             />
           </div>
           <div
-            className="post-actions ms-auto ps-4 align-self-start"
+            className="feed-post-actions ms-auto ps-4 align-self-start"
             onClick={() => setPopupVisible(true)}
           >
             <button

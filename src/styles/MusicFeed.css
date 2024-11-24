@@ -1,4 +1,4 @@
-.post-creator-container {
+.feed-post-creator-container {
   background-color: #ffffff;
   border: 1px solid #ddd;
   border-radius: 8px;
@@ -7,17 +7,17 @@
   transition: background-color 0.3s ease, color 0.3s ease;
 }
 
-.post-creator-container.dark-mode {
+.feed-post-creator-container.dark-mode {
+  background-color: #181818;
   border-color: #444;
   color: #ffffff;
 }
 
-.post-input {
+.feed-post-input {
   width: 100%;
   height: 60px;
   padding: 10px;
-  border: 0px solid #555;
-  border-radius: 8px;
+  border: 0px;
   font-size: 14px;
   color: #333;
   background-color: transparent;
@@ -26,18 +26,18 @@
   transition: background-color 0.3s ease, color 0.3s ease;
 }
 
-.post-input:focus {
+.feed-post-input:focus {
   outline: none;
   border-color: #007bff;
 }
 
-.post-input.dark-mode {
+.feed-post-input.dark-mode {
   background-color: #444;
   border-color: #555;
   color: #fff;
 }
 
-.post-actions {
+.feed-post-actions {
   display: flex;
   justify-content: flex-end;
 }
