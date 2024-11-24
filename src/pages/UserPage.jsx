@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Header from '../components/Header';
 import defaultUserImage from '../assets/images/defaultuser.png';
-import '../styles/UserPage.css';
+import '../styles/Userpage.css';
 
 const UserPage = () => {
   const navigate = useNavigate();
