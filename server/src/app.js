@@ -6,7 +6,7 @@ import { spotifyGlobalTopHits } from "./utils/spotifyGlobalTopHits.js";
 import { spotifyGenreRecommendation } from "./utils/spotifyGenreRecommendation.js";
 import { youtubeMusic } from "./utils/youTubeSearchMusicCategory.js";
 
-import { databaseConnect, databaseDisconnect, getPost, insertPost, updatePostMessage } from "./utils/databaseHelper.js";
+import { databaseConnect, databaseDisconnect } from "./utils/databaseHelper.js";
 import process from 'node:process';
 import cors from "cors";
 
@@ -29,6 +29,7 @@ app.get("/spotify/trending", spotifyGlobalTopHits);
 app.get("/spotify/recommendations", spotifyGenreRecommendation);
 
 app.get("/youtube/music/search", youtubeMusic);
+
 
 app.listen(port, () => {
   console.log("Server is running on port: " + port);

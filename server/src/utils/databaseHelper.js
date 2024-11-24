@@ -25,7 +25,9 @@ export const databaseDisconnect = async function() {
     console.log("Database disconnected.");
 }
 
-
+//------------------------------------------------------------
+// POST
+//------------------------------------------------------------
 // Sample call -- let r = await getPost('ACC0000002', 'ASC');
 export const getPost = async function(userId, sort) {
 
@@ -82,3 +84,61 @@ export const updatePostMessage = async function(postId, message) {
     } 
 }
 
+// Sample call -- let r = await updatePostLike('PST000003', 123)
+// Returns the number of inserted value to indicate success else, null
+export const updatePostLike = async function(postId, noOfLikes) {
+
+    try {
+        //generate select query
+        let query = util.format('UPDATE post SET no_of_likes=%d, updated_timestamp=NOW() where id=\'%s\'', noOfLikes, postId);
+        console.log(query)
+        let result = await client.query({
+                rowMode: 'array',
+                text: query
+            });
+        return result.rowCount;
+    } catch (err) {
+        console.log("Error in running query: " + err);
+        return null
+    } 
+}
+
+
+// Not yet done
+export const deletePostMessage = async function(postId) {
+
+    try {
+        //generate select query
+        let query = util.format('UPDATE post SET message=\'%s\', updated_timestamp=NOW() where id=\'%s\'', message, postId);
+        console.log(query)
+        let result = await client.query({
+                rowMode: 'array',
+                text: query
+            });
+        return result.rowCount;
+    } catch (err) {
+        console.log("Error in running query: " + err);
+        return null
+    } 
+}
+
+//------------------------------------------------------------
+// USER
+//------------------------------------------------------------
+// Sample call -- let r = await getPost('ACC0000002', 'ASC');
+export const getUserGenre = async function(userId, sort) {
+
+    try {
+        //generate select query
+        let query = 'SELECT * from post where user_id=\'' + userId + "\' ORDER BY created_timestamp " + sort;
+        let result = await client.query({
+                rowMode: 'array',
+                text: query
+            });
+        console.log(result)
+        return result.rows;
+    } catch (err) {
+        console.log("Error in running query: " + err);
+        return null
+    } 
+}
