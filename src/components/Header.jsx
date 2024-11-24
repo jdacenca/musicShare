@@ -2,7 +2,8 @@ import React from "react";
 import { Moon } from "react-feather";
 import { useDispatch, useSelector } from "react-redux";
 import logo from "../assets/images/logo.svg";
-import user1 from "../assets/images/user1.jpg";
+import user1 from "../assets/images/defaultuser.png";
+import { useNavigate } from 'react-router-dom';
 import { toggleDarkMode } from "../redux/slice";
 import "../styles/Header.css";
 import Notification from "./Notification";
@@ -10,6 +11,11 @@ import Notification from "./Notification";
 function Header() {
   const isDarkMode = useSelector((state) => state.beatSnapApp.isDarkMode);
   const dispatch = useDispatch();
+
+  const navigate = useNavigate();
+
+  const profilePic = localStorage.getItem('profilePic') || '/assets/images/defaultuser.jpg';
+
 
   const toggleDarkModeHandler = () => {
     dispatch(toggleDarkMode());
@@ -39,8 +45,8 @@ function Header() {
           </div>
 
           {/* User Profile Icon */}
-          <div className="icon-container">
-            <img src={user1} alt="User" className="user-avatar" />
+          <div className="icon-container" onClick={() => navigate('/userpage')}>
+            <img src={profilePic} alt="User" className="user-avatar" />
           </div>
         </div>
       </header>
