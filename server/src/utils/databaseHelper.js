@@ -33,7 +33,7 @@ export const getPost = async function(userId, sort) {
 
     try {
         //generate select query
-        let query = 'SELECT * from post where user_id=\'' + userId + "\' ORDER BY created_timestamp " + sort;
+        let query = 'SELECT * from post where user_id=\'' + userId + "\' and is_deleted='false' ORDER BY created_timestamp " + sort;
         let result = await client.query({
                 rowMode: 'array',
                 text: query
@@ -109,7 +109,7 @@ export const deletePostMessage = async function(postId) {
 
     try {
         //generate select query
-        let query = util.format('UPDATE post SET message=\'%s\', updated_timestamp=NOW() where id=\'%s\'', message, postId);
+        let query = util.format('UPDATE post SET is_deleted=\'true\'  where id=\'%s\'', postId);
         console.log(query)
         let result = await client.query({
                 rowMode: 'array',

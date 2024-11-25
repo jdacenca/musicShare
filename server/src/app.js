@@ -32,7 +32,6 @@ app.get("/spotify/recommendations", spotifyGenreRecommendation);
 
 app.get("/youtube/music/search", youtubeMusic);
 
-
 app.listen(port, () => {
   console.log("Server is running on port: " + port);
 })
