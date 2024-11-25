@@ -8,6 +8,7 @@ import { youtubeMusic } from "./utils/youTubeSearchMusicCategory.js";
 
 import { databaseConnect, databaseDisconnect } from "./utils/databaseHelper.js";
 import { sendEmail } from "./utils/sendEmail.js";
+import { authRoutes } from "./utils/authRoutes.js";
 
 import process from 'node:process';
 import cors from "cors";
@@ -31,6 +32,8 @@ app.get("/spotify/trending", spotifyGlobalTopHits);
 app.get("/spotify/recommendations", spotifyGenreRecommendation);
 
 app.get("/youtube/music/search", youtubeMusic);
+
+app.use("/auth", authRoutes); // auth routes
 
 app.listen(port, () => {
   console.log("Server is running on port: " + port);
