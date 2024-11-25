@@ -7,6 +7,8 @@ import { spotifyGenreRecommendation } from "./utils/spotifyGenreRecommendation.j
 import { youtubeMusic } from "./utils/youTubeSearchMusicCategory.js";
 
 import { databaseConnect, databaseDisconnect } from "./utils/databaseHelper.js";
+import { sendEmail } from "./utils/sendEmail.js";
+
 import process from 'node:process';
 import cors from "cors";
 
