@@ -1,11 +1,16 @@
-import React, { useState } from "react";
+import {
+  React,
+  useState,
+  useRef,
+  useEffect,
+  useSelector,
+} from "../CommonImports";
 import { Heart, MessageCircle, MoreHorizontal, Share2, X } from "react-feather";
-import { useSelector } from "react-redux";
 import "../styles/MusicPost.css";
 import Comment from "./Comment";
+import PostPopup from "./PostPopup";
 
 function MusicPost({ post }) {
-
   const isDarkMode = useSelector((state) => state.beatSnapApp.isDarkMode);
 
   const [isLiked, setIsLiked] = useState(false); // Tracks whether the post is liked
@@ -16,6 +21,9 @@ function MusicPost({ post }) {
   const [showMenu, setShowMenu] = useState(false); // Tracks whether the menu is visible
 
   const currentUser = useSelector((state) => state.beatSnapApp.currentUser);
+  const popupRef = useRef(null);
+
+  const [isPostPopupVisible, setPostPopupVisible] = useState(false);
 
   const handleLikeToggle = () => {
     setLikes(isLiked ? likes - 1 : likes + 1); // Increment or decrement likes
@@ -37,9 +45,11 @@ function MusicPost({ post }) {
   const toggleMenu = () => setShowMenu(!showMenu); // Toggles the 3-dots menu
 
   const handleAction = (action) => {
+    setShowMenu(false); // Close the menu
     switch (action) {
       case "edit":
-        alert("Edit action triggered");
+        console.log("here ->");
+        setPostPopupVisible(true);
         break;
       case "delete":
         alert("Delete action triggered");
@@ -47,13 +57,25 @@ function MusicPost({ post }) {
       case "account-details":
         alert("Account details action triggered");
         break;
-      case "cancel":
-        setShowMenu(false); // Close the menu
-        break;
       default:
         break;
     }
   };
+
+  // Closes the popup when clicking outside of it
+  const handleClickOutside = (event) => {
+    if (popupRef.current && !popupRef.current.contains(event.target)) {
+      setShowMenu(false);
+    }
+  };
+
+  // Attach and detach the event listener
+  useEffect(() => {
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
 
   return (
     <div
@@ -82,9 +104,9 @@ function MusicPost({ post }) {
             <MoreHorizontal />
           </button>
           {showMenu && (
-            <div className="menu-popup">
+            <div className="menu-popup" ref={popupRef}>
               <ul>
-                {currentUser === post.username && (
+                {currentUser.username === post.username && (
                   <>
                     <li onClick={() => handleAction("edit")}>Edit</li>
                     <li onClick={() => handleAction("delete")}>Delete</li>
@@ -97,6 +119,13 @@ function MusicPost({ post }) {
               </ul>
             </div>
           )}
+          {isPostPopupVisible && (
+            <PostPopup
+              type="UPDATE"
+              onClose={() => setPostPopupVisible(false)}
+              post={post}
+            />
+          )}
           <button className="close-button">
             <X />
           </button>
@@ -108,7 +137,7 @@ function MusicPost({ post }) {
         {post.videoUrl ? (
           <iframe
             width="100%"
-            height="500"
+            height="300"
             src={post.videoUrl}
             title="YouTube video player"
             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"

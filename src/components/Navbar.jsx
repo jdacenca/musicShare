@@ -10,7 +10,7 @@ import {
 } from "react-feather";
 import { useSelector } from "react-redux";
 import "../styles/NavBar.css";
-import CreatePostPopup from "./CreatePostPopup";
+import PostPopup from "./PostPopup";
 import SearchPopup from "./SearchPopup";
 
 const NavBar = () => {
@@ -57,7 +57,7 @@ const NavBar = () => {
         <span className="nav-label">Create</span>
       </div>
       {isPopupVisible && (
-        <CreatePostPopup onClose={() => setPopupVisible(false)} />
+        <PostPopup onClose={() => setPopupVisible(false)} />
       )}
       <div className="nav-item">
         <Clock className="nav-icon" />

@@ -5,7 +5,7 @@ import user2 from "../assets/images/user2.jpg";
 import user3 from "../assets/images/user3.jpg";
 import spotify from "../assets/images/spotify.jpg";
 import "../styles/MusicFeed.css";
-import CreatePostPopup from "./CreatePostPopup";
+import PostPopup from "./PostPopup";
 import MusicPost from "./MusicPost";
 
 function MusicFeed() {
@@ -13,6 +13,7 @@ function MusicFeed() {
     (state) => state.beatSnapApp.recommendations
   );
   const isDarkMode = useSelector((state) => state.beatSnapApp.isDarkMode);
+  const currentUser = useSelector((state) => state.beatSnapApp.currentUser);
 
   const [posts, setPosts] = useState([]);
   const [postContent, setPostContent] = useState("");
@@ -34,7 +35,7 @@ function MusicFeed() {
     const mockData = [
       {
         id: 1,
-        username: "priya_gounalan",
+        username: "pgounalan",
         title: "Musik Freak",
         time: "5h",
         userImage: user1,
@@ -56,7 +57,7 @@ function MusicFeed() {
         likes: 5,
         comments: [{ username: "user3", text: "Can’t stop listening!" }],
         //musicImage: album2,
-        spotifyUrl: "2Z51EnLF4Nps4LmulSQPnn"
+        spotifyUrl: "2Z51EnLF4Nps4LmulSQPnn",
       },
       {
         id: 3,
@@ -78,7 +79,7 @@ function MusicFeed() {
 
     let len = posts.length;
     let count = 1;
-    recommendations?.tracks?.slice(0,15).forEach((x) => {
+    recommendations?.tracks?.slice(0, 5).forEach((x) => {
       posts.push({
         id: len + count,
         username: "Spotify",
@@ -113,14 +114,16 @@ function MusicFeed() {
             className="user-avatar"
           />
           <div>
-            <h4 className="user-name">Username</h4>
-            <p className="user-role">Music Buff • Now</p>
+            <h4 className="user-name">{currentUser?.fullname}</h4>
+            <p className="user-role">{currentUser?.status} • Now</p>
           </div>
         </div>
         <div className="d-flex flex-row align-items-center">
           <div className="w-100 flex-grow-1">
             <textarea
-              className="feed-post-input w-100 "
+              className={`feed-post-input w-100 ${
+                isDarkMode ? "dark-mode" : ""
+              }`}
               placeholder="What's on your mind today?"
               value={postContent}
               onChange={handleInputChange}
@@ -138,7 +141,7 @@ function MusicFeed() {
             </button>
           </div>
           {isPopupVisible && (
-            <CreatePostPopup onClose={() => setPopupVisible(false)} />
+            <PostPopup onClose={() => setPopupVisible(false)} />
           )}
         </div>
       </div>

@@ -1,6 +1,11 @@
-import React, { useState } from "react";
+import {
+  React,
+  useState,
+  useSelector,
+  useRef,
+  useEffect,
+} from "../CommonImports";
 import { Search, X } from "react-feather";
-import { useSelector } from "react-redux";
 import "../styles/SearchPopup.css";
 
 const SearchPopup = ({ isOpen, closePopup }) => {
@@ -17,6 +22,21 @@ const SearchPopup = ({ isOpen, closePopup }) => {
     setSearchQuery(e.target.value);
   };
 
+  const popupRef = useRef(null);
+
+  const handleClickOutside = (event) => {
+    if (popupRef.current && !popupRef.current.contains(event.target)) {
+      closePopup();
+    }
+  };
+
+  useEffect(() => {
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
+
   if (!isOpen) return null; // Don't render if closed
 
   return (
@@ -24,6 +44,7 @@ const SearchPopup = ({ isOpen, closePopup }) => {
       className={`search-popup-container ${
         isDarkMode ? "dark-mode" : "light-mode"
       }`}
+      ref={popupRef}
     >
       <div className="search-popup">
         <div className="search-header">

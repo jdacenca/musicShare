@@ -1,6 +1,5 @@
 import "bootstrap/dist/css/bootstrap.css";
-import React, { useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { React, useEffect, useDispatch, useSelector } from "../CommonImports";
 import Header from "../components/Header";
 import MusicFeed from "../components/MusicFeed";
 import NavBar from "../components/Navbar";
@@ -18,12 +17,19 @@ const Homepage = () => {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    dispatch(setCurrentUser("priya_gounalan")); // TODO use data from auth
+    dispatch(
+      setCurrentUser({
+        username: "pgounalan",
+        interest: ["rock"],
+        fullname: "Priya Gounalan",
+        status: "Musik Freak",
+      })
+    ); // TODO use data from auth
   }, [dispatch]);
 
   useEffect(() => {
     async function fetchSpotifyData() {
-      //TODO - remove localhost. 
+      //TODO - remove localhost.
       await fetch("http://localhost:8777/spotify/connect", {
         method: "POST",
       });
