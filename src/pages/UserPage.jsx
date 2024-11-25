@@ -1,51 +1,32 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import Header from '../components/Header';
 import defaultUserImage from '../assets/images/defaultuser.png';
 import '../styles/Userpage.css';
 
 const UserPage = () => {
   const navigate = useNavigate();
   const [isDarkMode, setIsDarkMode] = useState(false);
-  
-  // State for user data
-  const [username, setUsername] = useState('');
-  const [displayName, setDisplayName] = useState('');
-  const [bio, setBio] = useState('');
-  const [profilePic, setProfilePic] = useState(defaultUserImage);
-  const [followingCount, setFollowingCount] = useState(0);
-  const [followersCount, setFollowersCount] = useState(0);
-  const [isFollowing, setIsFollowing] = useState(false);
 
-  // State for editing
-  const [showEditModal, setShowEditModal] = useState(false);
-  const [editUsername, setEditUsername] = useState('');
-  const [editDisplayName, setEditDisplayName] = useState('');
-  const [editBio, setEditBio] = useState('');
-  const [editProfilePic, setEditProfilePic] = useState('');
-  const [previewProfilePic, setPreviewProfilePic] = useState('');
+  // User details
+  const [username, setUsername] = useState('username');
+  const [displayName, setDisplayName] = useState('User Name');
+  const [bio, setBio] = useState('This is a short bio about the user.');
+  const [profilePic, setProfilePic] = useState(defaultUserImage);
+  const [postCount, setPostCount] = useState(12);
+  const [followersCount, setFollowersCount] = useState(345);
+  const [followingCount, setFollowingCount] = useState(200);
+
+  // Friends and Playlists
+  const [friends, setFriends] = useState(['Friend 1', 'Friend 2', 'Friend 3', 'Friend 4', 'Friend 5']);
+  const [playlists, setPlaylists] = useState(['Playlist 1', 'Playlist 2', 'Playlist 3', 'Playlist 4', 'Playlist 5']);
+
+  // State for toggling drop-downs
+  const [showAllFriends, setShowAllFriends] = useState(false);
+  const [showAllPlaylists, setShowAllPlaylists] = useState(false);
 
   useEffect(() => {
-    // Retrieve dark mode preference
     const darkModePreference = localStorage.getItem('darkMode') === 'true';
     setIsDarkMode(darkModePreference);
-
-    // Retrieve user data from localStorage
-    const storedUsername = localStorage.getItem('username');
-    const storedDisplayName = localStorage.getItem('displayName');
-    const storedBio = localStorage.getItem('bio');
-    const storedProfilePic = localStorage.getItem('profilePic');
-    const storedFollowingCount = localStorage.getItem('followingCount');
-    const storedFollowersCount = localStorage.getItem('followersCount');
-    const storedIsFollowing = localStorage.getItem('isFollowing') === 'true';
-
-    setUsername(storedUsername || 'username');
-    setDisplayName(storedDisplayName || 'User Name');
-    setBio(storedBio || 'This is a short bio about the user.');
-    setProfilePic(storedProfilePic || defaultUserImage);
-    setFollowingCount(parseInt(storedFollowingCount) || 0);
-    setFollowersCount(parseInt(storedFollowersCount) || 0);
-    setIsFollowing(storedIsFollowing);
   }, []);
 
   const toggleDarkMode = () => {
@@ -54,160 +35,72 @@ const UserPage = () => {
     localStorage.setItem('darkMode', newDarkMode.toString());
   };
 
-  const handleEditClick = () => {
-    setEditUsername(username);
-    setEditDisplayName(displayName);
-    setEditBio(bio);
-    setEditProfilePic(profilePic);
-    setPreviewProfilePic(profilePic); // Set initial preview
-    setShowEditModal(true);
-  };
-
-  const handleProfilePicChange = (e) => {
-    const file = e.target.files[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setEditProfilePic(reader.result);
-        setPreviewProfilePic(reader.result);
-      };
-      reader.readAsDataURL(file);
-    }
-  };
-
-  const handleRemoveProfilePic = () => {
-    setPreviewProfilePic(defaultUserImage); 
-    setEditProfilePic(defaultUserImage); 
-    setIsProfilePicRemoved(true);
-  };
-
-  const handleSaveChanges = () => {
-    setUsername(editUsername);
-    setDisplayName(editDisplayName);
-    setBio(editBio);
-    setProfilePic(editProfilePic);
-
-    localStorage.setItem('username', editUsername);
-    localStorage.setItem('displayName', editDisplayName);
-    localStorage.setItem('bio', editBio);
-    localStorage.setItem('profilePic', editProfilePic);
-    setShowEditModal(false);
-  };
-
-  const handleCancelEdit = () => {
-    setShowEditModal(false);
-    // Reset edit states when canceling
-    setEditUsername(username);
-    setEditDisplayName(displayName);
-    setEditBio(bio);
-    setEditProfilePic(profilePic);
-    setPreviewProfilePic(profilePic); 
-  };
-
-  const handleFollowClick = () => {
-    if (isFollowing) {
-      setFollowersCount(followersCount - 1);
-      setFollowingCount(followingCount - 1);
-    } else {
-      setFollowersCount(followersCount + 1);
-      setFollowingCount(followingCount + 1);
-    }
-    setIsFollowing(!isFollowing);
-  };
-
   return (
-    <div className={isDarkMode ? 'dark-mode' : 'light-mode'}>
-      <Header isDarkMode={isDarkMode} toggleDarkMode={toggleDarkMode} />
-      <div className="user-page-container">
-        <div className="left-sidebar">
-          <div className="profile-card">
-            <div className="profile-header">
-              <div className="profile-pic-container">
-                <img src={profilePic} alt="Profile" className="profile-pic" />
+    <div className={isDarkMode ? 'dark-mode user-page' : 'light-mode user-page'}>
+      {/* Left Sidebar */}
+      <div className="sidebar">
+        {/* Section 1: Navigation */}
+        <div className="section-box">
+          <a href="/" className="nav-link">Home</a>
+          <a href="/search" className="nav-link">Search</a>
+          <a href="/create" className="nav-link">Create</a>
+          <a href="/history" className="nav-link">History</a>
+          <a href="/messages" className="nav-link">Messages</a>
+        </div>
+
+        {/* Section 2: Friends */}
+        <div className="section-box">
+          {friends.slice(0, showAllFriends ? friends.length : 3).map((friend, index) => (
+            <p key={index}>{friend}</p>
+          ))}
+          <div className="dropdown" onClick={() => setShowAllFriends(!showAllFriends)}>
+            <span>{showAllFriends ? '^ show less' : 'v show more'}</span>
+          </div>
+        </div>
+
+        {/* Section 3: Playlists */}
+        <div className="section-box">
+          {playlists.slice(0, showAllPlaylists ? playlists.length : 3).map((playlist, index) => (
+            <p key={index}>{playlist}</p>
+          ))}
+          <div className="dropdown" onClick={() => setShowAllPlaylists(!showAllPlaylists)}>
+            <span>{showAllPlaylists ? '^ show less' : 'v show more'}</span>
+          </div>
+        </div>
+      </div>
+
+      {/* Right Content */}
+      <div className="main-content">
+        {/* Profile Section */}
+        <div className="profile-section">
+          <div className="profile-header">
+            <img src={profilePic} alt="Profile" className="profile-pic" />
+            <div className="profile-info">
+              <h2>{displayName}</h2>
+              <p className="username">@{username}</p>
+              <div className="profile-stats">
+                <div>
+                  <strong>{postCount}</strong> Posts
+                </div>
+                <div>
+                  <strong>{followersCount}</strong> Followers
+                </div>
+                <div>
+                  <strong>{followingCount}</strong> Following
+                </div>
               </div>
-              <h2 className="username">{displayName}</h2>
-              <p className="user-handle">@{username}</p>
               <p className="bio">{bio}</p>
+              <button className="edit-profile-btn">Edit Profile</button>
             </div>
-            <div className="stats-container">
-              <div className="stat-item">
-                <span className="stat-number">{followingCount}</span>
-                <span className="stat-label">Following</span>
-              </div>
-              <div className="stat-item">
-                <span className="stat-number">{followersCount}</span>
-                <span className="stat-label">Followers</span>
-              </div>
-            </div>
-            <button className="edit-profile-btn" onClick={handleEditClick}>
-              Edit Profile
-            </button>
-            <button
-              className={`follow-btn ${isFollowing ? 'following' : ''}`}
-              onClick={handleFollowClick}
-            >
-              {isFollowing ? 'Unfollow' : 'Follow'}
-            </button>
-            <button className="logout-btn" onClick={() => navigate('/login')}>
-              Log Out
-            </button>
           </div>
         </div>
-        <div className="posts-section">
-          <h3>My Posts</h3>
-          <div className="posts-grid">
-            <p>No posts yet</p>
-          </div>
+
+        {/* Share Post Section */}
+        <div className="posts-container">
+          <h3>Share Your Post</h3>
+          <p>When you share post, they will appear on your profile.</p>
+          <button className="share-photo-btn">Share Post</button>
         </div>
-        {showEditModal && (
-          <div className="modal-overlay">
-            <div className={`modal-content ${isDarkMode ? 'dark-mode' : ''}`}>
-              <h3>Edit Profile</h3>
-              <div className="edit-form">
-                <div className="form-group">
-                  <label>Profile Picture</label>
-                  <div className="profile-pic-container">
-                    <input type="file" accept="image/*" onChange={handleProfilePicChange} />
-                    <button className="remove-pic-btn" onClick={handleRemoveProfilePic}>
-                      Remove Profile
-                    </button>
-                  </div>
-                </div>
-                <div className="form-group">
-                  <label>Display Name</label>
-                  <input
-                    type="text"
-                    value={editDisplayName}
-                    onChange={(e) => setEditDisplayName(e.target.value)}
-                  />
-                </div>
-                <div className="form-group">
-                  <label>Username</label>
-                  <input
-                    type="text"
-                    value={editUsername}
-                    onChange={(e) => setEditUsername(e.target.value)}
-                  />
-                </div>
-                <div className="form-group">
-                  <label>Bio</label>
-                  <textarea
-                    value={editBio}
-                    onChange={(e) => setEditBio(e.target.value)}
-                  />
-                </div>
-                <div className="button-group">
-                  <button className="cancel-btn" onClick={handleCancelEdit}>
-                    Cancel
-                  </button>
-                  <button className="save-btn" onClick={handleSaveChanges}>
-                    Save Changes
-                  </button>
-                </div>
-              </div>
-            </div>
-          </div>
-        )}
       </div>
     </div>
   );
