@@ -97,9 +97,12 @@ const LoginPage = () => {
             }}
           />
           <div style={{ textAlign: 'right' }}>
-            <a href="#" style={{ fontSize: '12px', color: '#007bff', textDecoration: 'none' }}>
-              Forget Password ?
-            </a>
+            <span
+              onClick={() => navigate('/resetpassword')} // 跳转到 SignUpPage
+              style={{ color: '#007bff', cursor: 'pointer', textDecoration: 'underline' }}
+            >
+              Forget Password?
+            </span>
           </div>
           <button
             type="submit"
