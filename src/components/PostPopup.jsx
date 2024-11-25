@@ -4,6 +4,7 @@ import {
   useRef,
   useEffect,
   useDispatch,
+  apiUrl
 } from "../CommonImports";
 import "../styles/PostPopup.css";
 import { Search } from "react-feather";
@@ -25,12 +26,10 @@ const PostPopup = ({ type = "NEW", onClose, post }) => {
   };
 
   const searchYoutube = async (v) => {
-    //TODO - remove localhost.
     const youtubeSearch = await fetch(
-      "http://localhost:8777/youtube/music/search?q=" + v
+      apiUrl + "/youtube/music/search?q=" + v
     );
     const youtubeSearchData = await youtubeSearch.json();
-    console.log("youtubeSearchData", youtubeSearchData);
     setYoutubeData(youtubeSearchData.items);
   };
 
@@ -58,7 +57,6 @@ const PostPopup = ({ type = "NEW", onClose, post }) => {
 
   const handlePost = () => {
     if (postContent.trim()) {
-      console.log("Post created:", postContent); // Replace with API or post logic
       setPostContent(""); // Clear the input field
     }
   };

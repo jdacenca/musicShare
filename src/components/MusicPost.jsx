@@ -10,7 +10,7 @@ import "../styles/MusicPost.css";
 import Comment from "./Comment";
 import PostPopup from "./PostPopup";
 
-function MusicPost({ post }) {
+function MusicPost({ post, onDelete }) {
   const isDarkMode = useSelector((state) => state.beatSnapApp.isDarkMode);
 
   const [isLiked, setIsLiked] = useState(false); // Tracks whether the post is liked
@@ -48,11 +48,10 @@ function MusicPost({ post }) {
     setShowMenu(false); // Close the menu
     switch (action) {
       case "edit":
-        console.log("here ->");
         setPostPopupVisible(true);
         break;
       case "delete":
-        alert("Delete action triggered");
+        onDelete();
         break;
       case "account-details":
         alert("Account details action triggered");
@@ -126,7 +125,10 @@ function MusicPost({ post }) {
               post={post}
             />
           )}
-          <button className="close-button">
+          <button
+            className="close-button"
+            onClick={() => handleAction("delete")}
+          >
             <X />
           </button>
         </div>

@@ -1,15 +1,11 @@
 import "bootstrap/dist/css/bootstrap.css";
-import { React, useEffect, useDispatch, useSelector } from "../CommonImports";
+import { React, useEffect, useDispatch, useSelector, apiUrl } from "../CommonImports";
 import Header from "../components/Header";
 import MusicFeed from "../components/MusicFeed";
 import NavBar from "../components/Navbar";
 import SideBar from "../components/SideBar";
 
-import {
-  setCurrentUser,
-  setTrendingMusic,
-  setRecommendations,
-} from "../redux/slice";
+import { setCurrentUser, setTrendingMusic } from "../redux/slice";
 import "../styles/Homepage.css";
 
 const Homepage = () => {
@@ -29,25 +25,21 @@ const Homepage = () => {
 
   useEffect(() => {
     async function fetchSpotifyData() {
-      //TODO - remove localhost.
-      await fetch("http://localhost:8777/spotify/connect", {
+      await fetch(apiUrl + "/spotify/connect", {
         method: "POST",
       });
-      const response = await fetch("http://localhost:8777/spotify/trending");
+      const response = await fetch(apiUrl +  "/spotify/trending");
       const data = await response.json();
       dispatch(setTrendingMusic(data));
-
-      const recommendations = await fetch(
-        "http://localhost:8777/spotify/recommendations?genre=rock"
-      );
-      const recommendationsData = await recommendations.json();
-      dispatch(setRecommendations(recommendationsData));
     }
     fetchSpotifyData();
   }, [dispatch]);
 
   return (
-    <div className={`app-container ${isDarkMode ? "dark-mode" : ""}`}>
+    <div
+      id="app-container-id"
+      className={`app-container ${isDarkMode ? "dark-mode" : ""}`}
+    >
       <Header />
       <div className="row g-0">
         {/* NavBar (Left Sidebar) */}
