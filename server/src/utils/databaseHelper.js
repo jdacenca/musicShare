@@ -142,3 +142,35 @@ export const getUserGenre = async function(userId) {
         return null
     } 
 }
+
+export const insertUserGenre = async function(userId, genreId) {
+
+    try {
+        let query = util.format('INSERT INTO user_music_genre (user_id, music_genre_id) VALUES (\'%s\', %d)', userId, genreId);
+        let result = await client.query({
+                rowMode: 'array',
+                text: query
+            });
+        console.log(result)
+        return result.rows;
+    } catch (err) {
+        console.log("Error in running query: " + err);
+        return null
+    } 
+}
+
+export const deleteUserGenre = async function(userId, genreId) {
+
+    try {
+        let query = util.format('DELETE FROM user_music_genre where user_id=\'%s\' and music_genre_id=%d', userId, genreId);
+        let result = await client.query({
+                rowMode: 'array',
+                text: query
+            });
+        console.log(result)
+        return result.rows;
+    } catch (err) {
+        console.log("Error in running query: " + err);
+        return null
+    } 
+}
