@@ -28,10 +28,8 @@ export const databasePoolConnect = async function() {
   .catch((error) => console.error("Error connecting to PostgreSQL:", error));
 }
 
-
-
 // Register Route
-router.post("/register", async (req, res) => {
+app.post("/register", async (req, res) => {
   const { username, password, email, name, date_of_birth } = req.body;
 
   try {
@@ -40,17 +38,14 @@ router.post("/register", async (req, res) => {
       return res.status(400).json({ error: "All fields are required" });
     }
 
-    // Generate a unique ID for the user
-    const generatedId = `ACC${Math.floor(10000000 + Math.random() * 90000000)}`;
-
     // Hash the password
-    const hashedPassword = await bcryptjs.hash(password, 10);
+    const hashedPassword = await bcrypt.hash(password, 10);
 
     // Insert the new user into the database
     const query = `
-      INSERT INTO users (id, username, password, name, date_of_birth, email, created_timestamp) 
-      VALUES ($1, $2, $3, $4, $5, $6, CURRENT_TIMESTAMP) RETURNING id`;
-    const values = [generatedId, username, hashedPassword, name, date_of_birth, email];
+      INSERT INTO users (username, password, name, date_of_birth, email, created_timestamp) 
+      VALUES ($1, $2, $3, $4, $5, CURRENT_TIMESTAMP) RETURNING id`;
+    const values = [username, hashedPassword, name, date_of_birth, email];
     const result = await pool.query(query, values);
 
     res.status(201).json({ message: "User registered successfully", userId: result.rows[0].id });
