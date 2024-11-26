@@ -10,7 +10,7 @@ var transporter = NodeMailer.createTransport({
 
 export const sendEmail = async function(email) {
     var mailOptions = {
-        from: 'suki.kowaineko@gmail.com',
+        from: 'beatsnap.media@gmail.com',
         to: email,
         subject: 'Password Reset',
         text: "Password reset successful!"
