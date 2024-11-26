@@ -14,10 +14,12 @@
     "@netlify/functions": "^2.8.2",
     "@types/express": "^5.0.0",
     "axios": "^1.7.7",
+    "bcryptjs": "^2.4.3",
     "cors": "^2.8.5",
     "crypto": "^1.0.1",
     "dotenv": "^16.4.5",
     "express": "^4.21.1",
+    "jsonwebtoken": "^9.0.2",
     "nodemailer": "^6.9.16",
     "pg": "^8.13.1",
     "serverless-http": "^3.2.0"

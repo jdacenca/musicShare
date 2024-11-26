@@ -1,26 +1,34 @@
-const express = require("express");
-const bcrypt = require("bcryptjs");
-const jwt = require("jsonwebtoken");
-const dotenv = require("dotenv");
-const { Pool } = require("pg");
+'use strict';
 
-dotenv.config();
-const router = express.Router();
+import express from "express";
+import bcryptjs from 'bcryptjs';
+import jwt from "jsonwebtoken";
+import pg from 'pg';
+
+const { Pool } = pg;
+
+export const router = express.Router();
+
+let pool = undefined;
 
 // PostgreSQL database connection
-const pool = new Pool({
-  user: process.env.DB_USER,
-  host: process.env.DB_HOST,
-  database: process.env.DB_NAME,
-  password: process.env.DB_PASSWORD,
-  port: process.env.DB_PORT,
-});
+export const databasePoolConnect = async function() {
+  pool = new Pool({
+    user: process.env.DATABASE_USERNAME,
+    host: process.env.DATABASE_HOST,
+    database: process.env.DATABASE_NAME,
+    password: process.env.DATABASE_PASSWORD,
+    port: process.env.DATABASE_PORT,
+  });
 
-// Test the database connection
-pool
+  // Test the database connection
+  pool
   .connect()
   .then(() => console.log("Connected to PostgreSQL"))
   .catch((error) => console.error("Error connecting to PostgreSQL:", error));
+}
+
+
 
 // Register Route
 router.post("/register", async (req, res) => {
@@ -36,7 +44,7 @@ router.post("/register", async (req, res) => {
     const generatedId = `ACC${Math.floor(10000000 + Math.random() * 90000000)}`;
 
     // Hash the password
-    const hashedPassword = await bcrypt.hash(password, 10);
+    const hashedPassword = await bcryptjs.hash(password, 10);
 
     // Insert the new user into the database
     const query = `
@@ -100,7 +108,7 @@ router.post("/login", async (req, res) => {
 });
 
 // Protected Route Middleware
-function authenticateToken(req, res, next) {
+export const authenticateToken = async function(req, res) {
   const token = req.headers["authorization"];
   if (!token) {
     return res.status(401).json({ error: "Access denied, no token provided" });
@@ -120,5 +128,5 @@ router.get("/api/dashboard", authenticateToken, (req, res) => {
   res.status(200).json({ message: `Welcome ${req.user.username}!` });
 });
 
-module.exports = router;
-module.exports.authenticateToken = authenticateToken;
+//module.exports = router;
+//module.exports.authenticateToken = authenticateToken;
