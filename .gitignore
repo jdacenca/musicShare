@@ -133,3 +133,6 @@ dist
 .DS_Store
 public/.DS_Store
 src/.DS_Store
+
+# Local Netlify folder
+.netlify
