@@ -29,7 +29,7 @@ export const databasePoolConnect = async function() {
 }
 
 // Register Route
-app.post("/register", async (req, res) => {
+router.post("/register", async (req, res) => {
   const { username, password, email, name, date_of_birth } = req.body;
 
   try {
