@@ -29,10 +29,8 @@ jobs:
       - name: Install Dependencies
         working-directory: ./server
         run: npm ci
-      - name: Build project
-        working-directory: ./server
-        run: npm run build
       - name: Deploy to Netlify
+        working-directory: ./server
         id: netlify_deploy
         run: |
           netlify deploy \
