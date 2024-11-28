@@ -32,7 +32,7 @@ function Header() {
         navigate("/");
         break;
       case "settings":
-        alert("Settings action triggered");
+        navigate("/settings");  // 替换 alert
         break;
       default:
         break;
