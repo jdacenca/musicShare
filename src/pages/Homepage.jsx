@@ -1,5 +1,11 @@
 import "bootstrap/dist/css/bootstrap.css";
-import { React, useEffect, useDispatch, useSelector, apiUrl } from "../CommonImports";
+import {
+  React,
+  useEffect,
+  useDispatch,
+  useSelector,
+  apiUrl,
+} from "../CommonImports";
 import Header from "../components/Header";
 import MusicFeed from "../components/MusicFeed";
 import NavBar from "../components/Navbar";
@@ -28,7 +34,7 @@ const Homepage = () => {
       await fetch(apiUrl + "/spotify/connect", {
         method: "POST",
       });
-      const response = await fetch(apiUrl +  "/spotify/trending");
+      const response = await fetch(apiUrl + "/spotify/trending");
       const data = await response.json();
       dispatch(setTrendingMusic(data));
     }
@@ -43,7 +49,7 @@ const Homepage = () => {
       <Header />
       <div className="row g-0">
         {/* NavBar (Left Sidebar) */}
-        <div className="d-none d-md-block p-4 pe-0 col-md-2 navbar-container">
+        <div className="d-none d-md-block p-4 pe-0 col-md-2">
           <NavBar />
         </div>
         {/* Music Feed (Center Content) */}

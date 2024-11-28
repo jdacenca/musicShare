@@ -1,30 +1,3 @@
-.user-page {
-  display: flex;
-  height: 100vh; /* Full viewport height */
-}
-
-.userpage-sidebar {
-  width: 20%;
-  background-color: #ffffff;
-  border-right: 1px solid #ddd;
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  padding: 1rem;
-}
-
-.dark-mode .userpage-sidebar {
-  background-color: #18191a;
-  border-color: #333;
-}
-
-.logo {
-  font-size: 1.8rem;
-  font-weight: bold;
-  margin-bottom: 2rem;
-  cursor: pointer;
-}
-
 .nav-links {
   display: flex;
   flex-direction: column;
@@ -119,57 +92,6 @@
   cursor: pointer;
 }
 
-/* Profile Navigation Bar */
-.profile-navbar {
-  display: flex;
-  justify-content: center;
-  margin-top: 2rem;
-  border-top: 1px solid #ddd;
-  border-bottom: 1px solid #ddd;
-  padding: 1rem 0;
-}
-
-.profile-navbar button {
-  background: none;
-  border: none;
-  font-size: 1.2rem;
-  color: gray;
-  margin: 0 1.5rem;
-  cursor: pointer;
-  padding-bottom: 0.5rem;
-}
-
-.profile-navbar button.active-tab {
-  color: black;
-  border-bottom: 2px solid black;
-}
-
-.profile-navbar button:hover {
-  color: #0095f6;
-}
-
-/* Content Section */
-.content-section {
-  margin-top: 2rem;
-  text-align: center;
-  padding: 2rem;
-  background-color: #f9f9f9;
-  border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-}
-
-.nav-section,
-.friends-section,
-.playlist-section {
-  margin-bottom: 2rem;
-}
-
-.nav-section h3,
-.friends-section h3,
-.playlist-section h3 {
-  margin-bottom: 1rem;
-}
-
 /* This is overriding style in other pages.  
 pls use page specific prefix in class names... like "userpage-button"  */
 .userpage-button {
@@ -183,7 +105,9 @@ pls use page specific prefix in class names... like "userpage-button"  */
 
 .userpage-button:hover {
   background-color: #007acc;
-} */
+}
+
+*/
 
 /* Sidebar Section Boxes */
 .section-box {
@@ -195,7 +119,8 @@ pls use page specific prefix in class names... like "userpage-button"  */
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  height: 400px; /* Equal height for all boxes */
+  height: 400px;
+  /* Equal height for all boxes */
   width: 250px
 }
 
@@ -270,7 +195,7 @@ pls use page specific prefix in class names... like "userpage-button"  */
   cursor: pointer;
 }
 
-.edit-profile-btn{
+.edit-profile-btn {
   width: 170px;
 }
 
@@ -289,8 +214,3 @@ pls use page specific prefix in class names... like "userpage-button"  */
   padding: 5px 10px;
   cursor: pointer;
 }
-
-
-
-
-

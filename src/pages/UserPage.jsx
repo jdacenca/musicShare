@@ -1,21 +1,14 @@
-import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import defaultUserImage from "../assets/images/defaultuser.png";
-import {
-  Clock,
-  Home,
-  MessageCircle,
-  Plus,
-  Search,
-  User,
-  Users,
-} from "react-feather";
+import { React, useSelector, useState } from "../CommonImports";
+import Header from "../components/Header";
+import NavBar from "../components/Navbar";
 
 import "../styles/Userpage.css";
 
 const UserPage = () => {
   const navigate = useNavigate();
-  const [isDarkMode, setIsDarkMode] = useState(false);
+  const isDarkMode = useSelector((state) => state.beatSnapApp.isDarkMode);
 
   // Retrieve user details from localStorage or set default values
   const [username, setUsername] = useState(
@@ -61,17 +54,6 @@ const UserPage = () => {
   const [editBio, setEditBio] = useState(bio);
   const [editProfilePic, setEditProfilePic] = useState(profilePic);
 
-  useEffect(() => {
-    const darkModePreference = localStorage.getItem("darkMode") === "true";
-    setIsDarkMode(darkModePreference);
-  }, []);
-
-  const toggleDarkMode = () => {
-    const newDarkMode = !isDarkMode;
-    setIsDarkMode(newDarkMode);
-    localStorage.setItem("darkMode", newDarkMode.toString());
-  };
-
   // Handle file input for profile picture
   const handleProfilePicChange = (e) => {
     const file = e.target.files[0];
@@ -106,12 +88,21 @@ const UserPage = () => {
 
   return (
     <div
-      className={isDarkMode ? "dark-mode user-page" : "light-mode user-page"}
+      id="app-container-id"
+      className={`app-container ${isDarkMode ? "dark-mode" : ""}`}
     >
-      {/* Left Sidebar */}
-      <div className="userpage-sidebar">
-        {/* Section 1: Navigation */}
-        <div className="section-box">
+      <Header />
+      <div className="row g-0">
+        {/* NavBar (Left Sidebar) */}
+        <div className="d-none d-md-block p-4 pe-0 col-md-2">
+          <NavBar />
+        </div>
+        {/* Music Feed (Center Content) */}
+        <div className="col-12 col-md-10">
+          {/* Left Sidebar */}
+          {/* <div className="userpage-sidebar"> */}
+          {/* Section 1: Navigation */}
+          {/* <div className="section-box">
           <a href="/" className="nav-link">
             <Home className="me-2" /> Home
           </a>
@@ -127,10 +118,10 @@ const UserPage = () => {
           <a href="/messages" className="nav-link">
             <MessageCircle className="me-2" /> Messages
           </a>
-        </div>
+        </div> */}
 
-        {/* Section 2: Friends */}
-        <div className="section-box">
+          {/* Section 2: Friends */}
+          {/* <div className="section-box">
           <h4 className="section-heading">
             <Users className="me-2" /> <strong>Friends</strong>
           </h4>
@@ -145,10 +136,10 @@ const UserPage = () => {
           >
             <span>{showAllFriends ? "^ show less" : "v show more"}</span>
           </div>
-        </div>
+        </div> */}
 
-        {/* Section 3: Playlists */}
-        <div className="section-box">
+          {/* Section 3: Playlists */}
+          {/* <div className="section-box">
           <h4 className="section-heading">
             <User className="me-2" /> <strong>Playlists</strong>
           </h4>
@@ -163,102 +154,104 @@ const UserPage = () => {
           >
             <span>{showAllPlaylists ? "^ show less" : "v show more"}</span>
           </div>
-        </div>
-      </div>
+        </div> */}
+          {/* </div> */}
 
-      {/* Right Content */}
-      <div className="main-content">
-        {/* Profile Section */}
-        <div className="profile-section">
-          <div className="profile-header">
-            <img src={profilePic} alt="Profile" className="profile-pic" />
-            <div className="profile-info">
-              <h2>{displayName}</h2>
-              <p className="username">@{username}</p>
-              <div className="profile-stats">
-                <div>
-                  <strong>{postCount}</strong> Posts
-                </div>
-                <div>
-                  <strong>{followersCount}</strong> Followers
-                </div>
-                <div>
-                  <strong>{followingCount}</strong> Following
+          {/* Right Content */}
+          <div className="main-content">
+            {/* Profile Section */}
+            <div className="profile-section">
+              <div className="profile-header">
+                <img src={profilePic} alt="Profile" className="profile-pic" />
+                <div className="profile-info">
+                  <h2>{displayName}</h2>
+                  <p className="username">@{username}</p>
+                  <div className="profile-stats">
+                    <div>
+                      <strong>{postCount}</strong> Posts
+                    </div>
+                    <div>
+                      <strong>{followersCount}</strong> Followers
+                    </div>
+                    <div>
+                      <strong>{followingCount}</strong> Following
+                    </div>
+                  </div>
+                  <p className="bio">{bio}</p>
+                  <button
+                    className="userpage-button edit-profile-btn"
+                    onClick={handleEditClick}
+                  >
+                    Edit Profile
+                  </button>
                 </div>
               </div>
-              <p className="bio">{bio}</p>
-              <button
-                className="userpage-button edit-profile-btn"
-                onClick={handleEditClick}
-              >
-                Edit Profile
+            </div>
+
+            {/* Share Post Section */}
+            <div className="posts-container">
+              <h3>Share Your Post</h3>
+              <p>When you share post, they will appear on your profile.</p>
+              <button className="userpage-button share-photo-btn">
+                Share Post
               </button>
             </div>
-          </div>
-        </div>
 
-        {/* Share Post Section */}
-        <div className="posts-container">
-          <h3>Share Your Post</h3>
-          <p>When you share post, they will appear on your profile.</p>
-          <button className="userpage-button share-photo-btn">
-            Share Post
-          </button>
-        </div>
+            {/* Edit Profile Modal */}
+            {showEditModal && (
+              <div className="modal-overlay">
+                <div className="modal-content">
+                  <h3>Edit Profile</h3>
+                  <div className="edit-form">
+                    <div className="form-group">
+                      <label>Profile Picture</label>
+                      <input
+                        type="file"
+                        accept="image/*"
+                        onChange={handleProfilePicChange}
+                      />
+                    </div>
+                    <div className="form-group">
+                      <label>Display Name</label>
+                      <input
+                        type="text"
+                        value={editDisplayName}
+                        onChange={(e) => setEditDisplayName(e.target.value)}
+                      />
+                    </div>
 
-        {/* Edit Profile Modal */}
-        {showEditModal && (
-          <div className="modal-overlay">
-            <div className="modal-content">
-              <h3>Edit Profile</h3>
-              <div className="edit-form">
-                <div className="form-group">
-                  <label>Profile Picture</label>
-                  <input
-                    type="file"
-                    accept="image/*"
-                    onChange={handleProfilePicChange}
-                  />
-                </div>
-                <div className="form-group">
-                  <label>Display Name</label>
-                  <input
-                    type="text"
-                    value={editDisplayName}
-                    onChange={(e) => setEditDisplayName(e.target.value)}
-                  />
-                </div>
-
-                <div className="form-group">
-                  <label>Username</label>
-                  <input
-                    type="text"
-                    value={editUsername}
-                    onChange={(e) => setEditUsername(e.target.value)}
-                  />
-                </div>
-                <div className="form-group">
-                  <label>Bio</label>
-                  <textarea
-                    value={editBio}
-                    onChange={(e) => setEditBio(e.target.value)}
-                  />
-                </div>
-                <div className="button-group">
-                  <button
-                    className="cancel-btn"
-                    onClick={() => setShowEditModal(false)}
-                  >
-                    Cancel
-                  </button>
-                  <button className="save-btn" onClick={handleSaveChanges}>
-                    Save Changes
-                  </button>
+                    <div className="form-group">
+                      <label>Username</label>
+                      <input
+                        type="text"
+                        value={editUsername}
+                        onChange={(e) => setEditUsername(e.target.value)}
+                      />
+                    </div>
+                    <div className="form-group">
+                      <label>Bio</label>
+                      <textarea
+                        value={editBio}
+                        onChange={(e) => setEditBio(e.target.value)}
+                      />
+                    </div>
+                    <div className="button-group">
+                      <button
+                        className="cancel-btn"
+                        onClick={() => setShowEditModal(false)}
+                      >
+                        Cancel
+                      </button>
+                      <button className="save-btn" onClick={handleSaveChanges}>
+                        Save Changes
+                      </button>
+                    </div>
+                  </div>
                 </div>
               </div>
-            </div>
+            )}
           </div>
-        )}
+        </div>
       </div>
     </div>
   );

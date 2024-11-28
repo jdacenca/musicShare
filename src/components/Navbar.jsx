@@ -1,4 +1,10 @@
-import React, { useEffect, useState } from "react";
+import {
+  React,
+  useEffect,
+  useState,
+  useSelector,
+  useNavigate,
+} from "../CommonImports";
 import {
   Clock,
   Home,
@@ -8,7 +14,6 @@ import {
   User,
   Users,
 } from "react-feather";
-import { useSelector } from "react-redux";
 import "../styles/NavBar.css";
 import PostPopup from "./PostPopup";
 import SearchPopup from "./SearchPopup";
@@ -19,6 +24,8 @@ const NavBar = () => {
   const [showFriends, setShowFriends] = useState(false);
   const [isPopupVisible, setPopupVisible] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
+
+  const navigate = useNavigate();
 
   const openSearch = () => setIsSearchOpen(true);
   const closeSearch = () => setIsSearchOpen(false);
@@ -42,7 +49,7 @@ const NavBar = () => {
   return (
     <div className={`left-nav-bar ${isDarkMode ? "dark-mode" : ""}`}>
       {/* Navigation Items */}
-      <div className="nav-item">
+      <div className="nav-item" onClick={() => navigate("/home")}>
         <Home className="nav-icon" />
         <span className="nav-label">Home</span>
       </div>
@@ -56,9 +63,7 @@ const NavBar = () => {
         <Plus className="nav-icon" />
         <span className="nav-label">Create</span>
       </div>
-      {isPopupVisible && (
-        <PostPopup onClose={() => setPopupVisible(false)} />
-      )}
+      {isPopupVisible && <PostPopup onClose={() => setPopupVisible(false)} />}
       <div className="nav-item">
         <Clock className="nav-icon" />
         <span className="nav-label">History</span>
