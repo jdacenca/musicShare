@@ -25,6 +25,7 @@ function MusicPost({ post, onDelete }) {
   const popupRef = useRef(null);
 
   const [isPostPopupVisible, setPostPopupVisible] = useState(false);
+  const [isPostDelete, setPostDelete] = useState(false);
 
   const handleLikeToggle = () => {
     setLikes(isLiked ? likes - 1 : likes + 1); // Increment or decrement likes
@@ -49,10 +50,15 @@ function MusicPost({ post, onDelete }) {
     setShowMenu(false); // Close the menu
     switch (action) {
       case "edit":
+        setPostDelete(false);
         setPostPopupVisible(true);
         break;
-      case "delete":
+      case "hide":
         onDelete();
+        break;
+      case "delete":
+        setPostDelete(true);
+        setPostPopupVisible(true);
         break;
       case "account-details":
         alert("Account details action triggered");
@@ -85,7 +91,7 @@ function MusicPost({ post, onDelete }) {
     >
       {/* Post Header */}
       <div className="post-header">
-        <NameCard user={post}/>
+        <NameCard user={post} />
         <p></p>
         <div className="post-header-actions">
           <button className="post-menu-button" onClick={toggleMenu}>
@@ -109,15 +115,16 @@ function MusicPost({ post, onDelete }) {
           )}
           {isPostPopupVisible && (
             <PostPopup
-              type="UPDATE"
+              type={isPostDelete ? "DELETE" : "UPDATE"}
               onClose={() => setPostPopupVisible(false)}
               post={post}
+              onDelete={() => {
+                setPostPopupVisible(false);
+                onDelete();
+              }}
             />
           )}
-          <button
-            className="close-button"
-            onClick={() => handleAction("delete")}
-          >
+          <button className="close-button" onClick={() => handleAction("hide")}>
             <X />
           </button>
         </div>

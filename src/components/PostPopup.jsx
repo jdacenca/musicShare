@@ -8,8 +8,9 @@ import {
 } from "../CommonImports";
 import "../styles/PostPopup.css";
 import { Search, X } from "react-feather";
+import NameCard from "./NameCard";
 
-const PostPopup = ({ type = "NEW", onClose, post }) => {
+const PostPopup = ({ type = "NEW", onClose, post, onDelete }) => {
   const currentUser = useSelector((state) => state.beatSnapApp.currentUser);
   const isDarkMode = useSelector((state) => state.beatSnapApp.isDarkMode);
   const [query, setQuery] = useState("");
@@ -18,6 +19,29 @@ const PostPopup = ({ type = "NEW", onClose, post }) => {
   const popupRef = useRef(null);
   const [postContent, setPostContent] = useState("");
   const dispatch = useDispatch();
+
+  const handleAction = () => {
+    switch (type) {
+      case "NEW":
+        //Validate
+        //Save data - API
+        onClose();
+        break;
+      case "UPDATE":
+        //Validate
+        //Save data - API
+        onClose();
+        break;
+      case "DELETE":
+        //Validate
+        //Save data - API
+        onDelete();
+        break;
+      default:
+        onClose();
+        break;
+    }
+  };
 
   const handleClickOutside = (event) => {
     if (popupRef.current && !popupRef.current.contains(event.target)) {
@@ -61,38 +85,45 @@ const PostPopup = ({ type = "NEW", onClose, post }) => {
 
   return (
     <div className="popup-overlay">
-      <div className="popup-container pt-0" ref={popupRef}>
+      <div className="popup-container" ref={popupRef}>
         <div className="d-flex flex-row align-items-center border-bottom border-secondary mb-4 pt-2 pb-2">
           <div className="mx-auto">
-            <h5>{type === "NEW" ? "Create new post" : "Update post"}</h5>
+            <h5>
+              {type === "NEW"
+                ? "Create new post"
+                : type === "DELETE"
+                ? "Are you sure you want to delete this post?"
+                : "Update post"}
+            </h5>
           </div>
-          <div className="ml-auto">
-            <button className="close-button" onClick={onClose}>
-              <X />
-            </button>
-          </div>
+          {type !== "DELETE" && (
+            <div className="ml-auto">
+              <button className="close-button" onClick={onClose}>
+                <X />
+              </button>
+            </div>
+          )}
         </div>
-
-        <div className="user-info">
-          <img
-            src="https://via.placeholder.com/40"
-            alt="User"
-            className="user-avatar"
-          />
-          <div className="user-details">
-            <p className="user-name">{currentUser?.fullname}</p>
-            <p className="user-status">{currentUser?.status}</p>
+        {type !== "DELETE" && (
+          <div>
+            <NameCard
+              user={{
+                username: currentUser?.fullname,
+                title: currentUser?.status,
+                time: "Now",
+              }}
+            />
           </div>
-        </div>
+        )}
         <div>
           <textarea
+            disabled={type === "DELETE"}
             placeholder="What's on your mind today?"
             className={`post-input w-100 ${isDarkMode ? "dark-mode" : ""}`}
             value={postContent}
             onChange={handleInputChange}
           />
         </div>
-
         {type === "NEW" && (
           <div className="search-section">
             <div className="search-container">
@@ -125,8 +156,7 @@ const PostPopup = ({ type = "NEW", onClose, post }) => {
             )}
           </div>
         )}
-
-        {type === "UPDATE" && (
+        {(type === "UPDATE" || type === "DELETE") && (
           <div>
             {post.videoUrl ? (
               <iframe
@@ -155,12 +185,22 @@ const PostPopup = ({ type = "NEW", onClose, post }) => {
             )}
           </div>
         )}
-
-        <div>
-          <button className="btn btn-primary w-100 text-nowrap">
-            {type === "NEW" ? "Post" : "Update"}
+        <div className="pt-4" onClick={handleAction}>
+          <button
+            className={`btn w-100 text-nowrap ${
+              type === "DELETE" ? "btn-danger" : "btn-primary"
+            }`}
+          >
+            {type === "NEW" ? "Post" : type === "DELETE" ? "Delete" : "Update"}
           </button>
         </div>
+        {type === "DELETE" && (
+          <div onClick={onClose} className="pt-2">
+            <button className="btn w-100 text-nowrap btn-primary">
+              Cancel
+            </button>
+          </div>
+        )}{" "}
       </div>
     </div>
   );
