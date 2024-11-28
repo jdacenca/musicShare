@@ -3,7 +3,7 @@
   height: 100vh; /* Full viewport height */
 }
 
-.sidebar {
+.userpage-sidebar {
   width: 20%;
   background-color: #ffffff;
   border-right: 1px solid #ddd;
@@ -13,7 +13,7 @@
   padding: 1rem;
 }
 
-.dark-mode .sidebar {
+.dark-mode .userpage-sidebar {
   background-color: #18191a;
   border-color: #333;
 }
@@ -170,7 +170,9 @@
   margin-bottom: 1rem;
 }
 
-button {
+/* This is overriding style in other pages.  
+pls use page specific prefix in class names... like "userpage-button"  */
+.userpage-button {
   padding: 0.5rem 1rem;
   background-color: #0095f6;
   color: #fff;
@@ -179,9 +181,9 @@ button {
   cursor: pointer;
 }
 
-button:hover {
+.userpage-button:hover {
   background-color: #007acc;
-}
+} */
 
 /* Sidebar Section Boxes */
 .section-box {

@@ -9,6 +9,7 @@ import { Heart, MessageCircle, MoreHorizontal, Share2, X } from "react-feather";
 import "../styles/MusicPost.css";
 import Comment from "./Comment";
 import PostPopup from "./PostPopup";
+import NameCard from "./NameCard";
 
 function MusicPost({ post, onDelete }) {
   const isDarkMode = useSelector((state) => state.beatSnapApp.isDarkMode);
@@ -84,26 +85,14 @@ function MusicPost({ post, onDelete }) {
     >
       {/* Post Header */}
       <div className="post-header">
-        <div className="user-info">
-          <img
-            src={post.userImage || "default-user.png"}
-            alt="User"
-            className="user-avatar"
-          />
-          <div>
-            <h4 className="user-name">{post.username || "Anonymous"}</h4>
-            <p className="user-role">
-              {post.title} . {post.time}
-            </p>
-          </div>
-        </div>
+        <NameCard user={post}/>
         <p></p>
         <div className="post-header-actions">
-          <button className="menu-button" onClick={toggleMenu}>
+          <button className="post-menu-button" onClick={toggleMenu}>
             <MoreHorizontal />
           </button>
           {showMenu && (
-            <div className="menu-popup" ref={popupRef}>
+            <div className="post-menu-popup" ref={popupRef}>
               <ul>
                 {currentUser.username === post.username && (
                   <>

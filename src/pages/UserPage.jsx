@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
-import defaultUserImage from '../assets/images/defaultuser.png';
+import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import defaultUserImage from "../assets/images/defaultuser.png";
 import {
   Clock,
   Home,
@@ -11,24 +11,44 @@ import {
   Users,
 } from "react-feather";
 
-import '../styles/Userpage.css';
+import "../styles/Userpage.css";
 
 const UserPage = () => {
   const navigate = useNavigate();
   const [isDarkMode, setIsDarkMode] = useState(false);
 
   // Retrieve user details from localStorage or set default values
-  const [username, setUsername] = useState(localStorage.getItem('username') || 'username');
-  const [displayName, setDisplayName] = useState(localStorage.getItem('displayName') || 'User Name');
-  const [bio, setBio] = useState(localStorage.getItem('bio') || 'This is a short bio about the user.');
-  const [profilePic, setProfilePic] = useState(localStorage.getItem('profilePic') || defaultUserImage);
+  const [username, setUsername] = useState(
+    localStorage.getItem("username") || "username"
+  );
+  const [displayName, setDisplayName] = useState(
+    localStorage.getItem("displayName") || "User Name"
+  );
+  const [bio, setBio] = useState(
+    localStorage.getItem("bio") || "This is a short bio about the user."
+  );
+  const [profilePic, setProfilePic] = useState(
+    localStorage.getItem("profilePic") || defaultUserImage
+  );
   const [postCount, setPostCount] = useState(12); // Keep static or store this too if needed
   const [followersCount, setFollowersCount] = useState(345); // Same as above
   const [followingCount, setFollowingCount] = useState(200); // Same as above
 
   // Friends and Playlists
-  const [friends, setFriends] = useState(['Lingyan Cui', 'Jeanne Damasco', 'Haripriya', 'Friend 4', 'Friend 5']);
-  const [playlists, setPlaylists] = useState(['Playlist1', 'Playlist 2', 'Playlist 3', 'Playlist 4', 'Playlist 5']);
+  const [friends, setFriends] = useState([
+    "Lingyan Cui",
+    "Jeanne Damasco",
+    "Haripriya",
+    "Friend 4",
+    "Friend 5",
+  ]);
+  const [playlists, setPlaylists] = useState([
+    "Playlist1",
+    "Playlist 2",
+    "Playlist 3",
+    "Playlist 4",
+    "Playlist 5",
+  ]);
 
   // State for toggling drop-downs
   const [showAllFriends, setShowAllFriends] = useState(false);
@@ -42,14 +62,14 @@ const UserPage = () => {
   const [editProfilePic, setEditProfilePic] = useState(profilePic);
 
   useEffect(() => {
-    const darkModePreference = localStorage.getItem('darkMode') === 'true';
+    const darkModePreference = localStorage.getItem("darkMode") === "true";
     setIsDarkMode(darkModePreference);
   }, []);
 
   const toggleDarkMode = () => {
     const newDarkMode = !isDarkMode;
     setIsDarkMode(newDarkMode);
-    localStorage.setItem('darkMode', newDarkMode.toString());
+    localStorage.setItem("darkMode", newDarkMode.toString());
   };
 
   // Handle file input for profile picture
@@ -75,47 +95,73 @@ const UserPage = () => {
     setProfilePic(editProfilePic);
 
     // Save to localStorage
-    localStorage.setItem('username', editUsername);
-    localStorage.setItem('displayName', editDisplayName);
-    localStorage.setItem('bio', editBio);
-    localStorage.setItem('profilePic', editProfilePic);
+    localStorage.setItem("username", editUsername);
+    localStorage.setItem("displayName", editDisplayName);
+    localStorage.setItem("bio", editBio);
+    localStorage.setItem("profilePic", editProfilePic);
 
     // Optionally save to backend here
     setShowEditModal(false);
   };
 
   return (
-    <div className={isDarkMode ? 'dark-mode user-page' : 'light-mode user-page'}>
+    <div
+      className={isDarkMode ? "dark-mode user-page" : "light-mode user-page"}
+    >
       {/* Left Sidebar */}
-      <div className="sidebar">
+      <div className="userpage-sidebar">
         {/* Section 1: Navigation */}
         <div className="section-box">
-          <a href="/" className="nav-link"><Home className="me-2" /> Home</a>
-          <a href="/search" className="nav-link"><Search className="me-2" /> Search</a>
-          <a href="/create" className="nav-link"><Plus className="me-2" /> Create</a>
-          <a href="/history" className="nav-link"><Clock className="me-2" /> History</a>
-          <a href="/messages" className="nav-link"><MessageCircle className="me-2" /> Messages</a>
+          <a href="/" className="nav-link">
+            <Home className="me-2" /> Home
+          </a>
+          <a href="/search" className="nav-link">
+            <Search className="me-2" /> Search
+          </a>
+          <a href="/create" className="nav-link">
+            <Plus className="me-2" /> Create
+          </a>
+          <a href="/history" className="nav-link">
+            <Clock className="me-2" /> History
+          </a>
+          <a href="/messages" className="nav-link">
+            <MessageCircle className="me-2" /> Messages
+          </a>
         </div>
 
         {/* Section 2: Friends */}
         <div className="section-box">
-          <h4 className="section-heading"><Users className="me-2" /> <strong>Friends</strong></h4>
-          {friends.slice(0, showAllFriends ? friends.length : 3).map((friend, index) => (
-            <p key={index}>{friend}</p>
-          ))}
-          <div className="dropdown" onClick={() => setShowAllFriends(!showAllFriends)}>
-            <span>{showAllFriends ? '^ show less' : 'v show more'}</span>
+          <h4 className="section-heading">
+            <Users className="me-2" /> <strong>Friends</strong>
+          </h4>
+          {friends
+            .slice(0, showAllFriends ? friends.length : 3)
+            .map((friend, index) => (
+              <p key={index}>{friend}</p>
+            ))}
+          <div
+            className="dropdown"
+            onClick={() => setShowAllFriends(!showAllFriends)}
+          >
+            <span>{showAllFriends ? "^ show less" : "v show more"}</span>
           </div>
         </div>
 
         {/* Section 3: Playlists */}
         <div className="section-box">
-          <h4 className="section-heading"><User className="me-2" /> <strong>Playlists</strong></h4>
-          {playlists.slice(0, showAllPlaylists ? playlists.length : 3).map((playlist, index) => (
-            <p key={index}>{playlist}</p>
-          ))}
-          <div className="dropdown" onClick={() => setShowAllPlaylists(!showAllPlaylists)}>
-            <span>{showAllPlaylists ? '^ show less' : 'v show more'}</span>
+          <h4 className="section-heading">
+            <User className="me-2" /> <strong>Playlists</strong>
+          </h4>
+          {playlists
+            .slice(0, showAllPlaylists ? playlists.length : 3)
+            .map((playlist, index) => (
+              <p key={index}>{playlist}</p>
+            ))}
+          <div
+            className="dropdown"
+            onClick={() => setShowAllPlaylists(!showAllPlaylists)}
+          >
+            <span>{showAllPlaylists ? "^ show less" : "v show more"}</span>
           </div>
         </div>
       </div>
@@ -141,7 +187,12 @@ const UserPage = () => {
                 </div>
               </div>
               <p className="bio">{bio}</p>
-              <button className="edit-profile-btn" onClick={handleEditClick}>Edit Profile</button>
+              <button
+                className="userpage-button edit-profile-btn"
+                onClick={handleEditClick}
+              >
+                Edit Profile
+              </button>
             </div>
           </div>
         </div>
@@ -150,7 +201,9 @@ const UserPage = () => {
         <div className="posts-container">
           <h3>Share Your Post</h3>
           <p>When you share post, they will appear on your profile.</p>
-          <button className="share-photo-btn">Share Post</button>
+          <button className="userpage-button share-photo-btn">
+            Share Post
+          </button>
         </div>
 
         {/* Edit Profile Modal */}
@@ -161,7 +214,11 @@ const UserPage = () => {
               <div className="edit-form">
                 <div className="form-group">
                   <label>Profile Picture</label>
-                  <input type="file" accept="image/*" onChange={handleProfilePicChange} />
+                  <input
+                    type="file"
+                    accept="image/*"
+                    onChange={handleProfilePicChange}
+                  />
                 </div>
                 <div className="form-group">
                   <label>Display Name</label>
@@ -171,7 +228,7 @@ const UserPage = () => {
                     onChange={(e) => setEditDisplayName(e.target.value)}
                   />
                 </div>
-                
+
                 <div className="form-group">
                   <label>Username</label>
                   <input
@@ -188,7 +245,10 @@ const UserPage = () => {
                   />
                 </div>
                 <div className="button-group">
-                  <button className="cancel-btn" onClick={() => setShowEditModal(false)}>
+                  <button
+                    className="cancel-btn"
+                    onClick={() => setShowEditModal(false)}
+                  >
                     Cancel
                   </button>
                   <button className="save-btn" onClick={handleSaveChanges}>

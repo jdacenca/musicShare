@@ -23,16 +23,6 @@
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
 }
 
-/* Close Button */
-.close-button {
-    background: none;
-    border: none;
-    font-size: 36px;
-    color: var(--text-color);
-    float: right;
-    cursor: pointer;
-}
-
 /* Post Input */
 .post-input {
     width: 100%;

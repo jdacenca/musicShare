@@ -1,4 +1,4 @@
-import { createSlice } from '@reduxjs/toolkit';
+import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
   isDarkMode: false,
@@ -8,12 +8,12 @@ const initialState = {
   currentUser: null,
   openPopup: null,
   createPostData: {
-    text: ''
+    text: "",
   },
 };
 
 const appSlice = createSlice({
-  name: 'beatSnapApp',
+  name: "beatSnapApp",
   initialState,
   reducers: {
     toggleDarkMode: (state) => {
@@ -38,7 +38,7 @@ const appSlice = createSlice({
       state.createPostData = action.payload;
     },
     clearCreatePostData: (state) => {
-      state.createPostData = { text: '', attachments: [] };
+      state.createPostData = { text: "", attachments: [] };
     },
   },
 });

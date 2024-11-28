@@ -4,10 +4,10 @@ import {
   useRef,
   useEffect,
   useDispatch,
-  apiUrl
+  apiUrl,
 } from "../CommonImports";
 import "../styles/PostPopup.css";
-import { Search } from "react-feather";
+import { Search, X } from "react-feather";
 
 const PostPopup = ({ type = "NEW", onClose, post }) => {
   const currentUser = useSelector((state) => state.beatSnapApp.currentUser);
@@ -26,9 +26,7 @@ const PostPopup = ({ type = "NEW", onClose, post }) => {
   };
 
   const searchYoutube = async (v) => {
-    const youtubeSearch = await fetch(
-      apiUrl + "/youtube/music/search?q=" + v
-    );
+    const youtubeSearch = await fetch(apiUrl + "/youtube/music/search?q=" + v);
     const youtubeSearchData = await youtubeSearch.json();
     setYoutubeData(youtubeSearchData.items);
   };
@@ -64,13 +62,13 @@ const PostPopup = ({ type = "NEW", onClose, post }) => {
   return (
     <div className="popup-overlay">
       <div className="popup-container pt-0" ref={popupRef}>
-        <div className="d-flex flex-row align-items-center border-bottom border-secondary mb-4">
+        <div className="d-flex flex-row align-items-center border-bottom border-secondary mb-4 pt-2 pb-2">
           <div className="mx-auto">
             <h5>{type === "NEW" ? "Create new post" : "Update post"}</h5>
           </div>
           <div className="ml-auto">
-            <button className="close-button pt-0" onClick={onClose}>
-              &times;
+            <button className="close-button" onClick={onClose}>
+              <X />
             </button>
           </div>
         </div>
@@ -110,7 +108,7 @@ const PostPopup = ({ type = "NEW", onClose, post }) => {
             {youtubeData && youtubeData.length > 0 && (
               <div className="search-results">
                 {youtubeData.slice(0, 3).map((item, index) => (
-                  <div className="search-item d-flex flex-column mb-3 ps-4" >
+                  <div className="search-item d-flex flex-column mb-3 ps-4">
                     <span>{item.snippet?.title}</span>
                     <span>
                       <a

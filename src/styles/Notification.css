@@ -1,58 +1,74 @@
 .notification-container {
-    position: relative; /* Ensure relative positioning for dropdown alignment */
-    display: inline-block; /* Keep dropdown aligned with the icon */
-  }
-  
-  .notification-dropdown {
-    position: absolute;
-    top: 40px; /* Adjust to place dropdown below the icon */
-    right: 0;
-    width: 300px;
-    background-color: #fff;
-    border: 1px solid #ddd;
-    border-radius: 8px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-    z-index: 10; /* Ensure it's above other elements */
-    padding: 10px;
-  }
-  
-  .notification-dropdown.dark-mode {
-    background-color: #232627;
-    color: #fff;
-    border-color: #333;
-  }
-  
-  .notification-item {
-    padding: 10px;
-    border-bottom: 1px solid #eee;
-    cursor: pointer;
-  }
-  
-  .notification-item:last-child {
-    border-bottom: none; /* Remove border for last item */
-  }
-  
-  .notification-item:hover {
-    background-color: #f7f7f7;
-  }
-  
-  .notification-empty {
-    text-align: center;
-    padding: 10px;
-    font-size: 14px;
-    color: #888;
-  }
-  
-  .notification-count {
-    position: absolute;
-    background-color: red;
-    color: white;
-    font-size: 12px;
-    font-weight: bold;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    min-width: 20px; /* Ensure circular shape for single-digit counts */
-    height: 20px; /* Keep height uniform */
+  position: relative;
+  /* Ensure relative positioning for dropdown alignment */
+  display: inline-block;
+  /* Keep dropdown aligned with the icon */
+}
+
+.notification-dropdown {
+  position: absolute;
+  top: 40px;
+  /* Adjust to place dropdown below the icon */
+  right: 0;
+  width: 300px;
+  background-color: #fff;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  z-index: 10;
+  /* Ensure it's above other elements */
+  padding: 10px;
+}
+
+.notification-dropdown.dark-mode {
+  background-color: #232627;
+  color: #fff;
+  border-color: #333;
+}
+
+.notification-item {
+  padding: 10px;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.dark-mode .notification-item {
+  background-color: #181818;
+}
+
+.notification-item:last-child {
+  border-bottom: none;
+  /* Remove border for last item */
+}
+
+.notification-item:hover {
+  background-color: #f7f7f7;
+}
+
+.dark-mode .notification-item:hover {
+  background-color: #444;
+  /* Highlight effect */
+}
+
+.notification-empty {
+  text-align: center;
+  padding: 10px;
+  font-size: 14px;
+  color: #888;
+}
+
+.notification-count {
+  position: absolute;
+  background-color: red;
+  color: white;
+  font-size: 12px;
+  font-weight: bold;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 20px;
+  /* Ensure circular shape for single-digit counts */
+  height: 20px;
+  /* Keep height uniform */
 }

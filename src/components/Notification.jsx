@@ -5,12 +5,45 @@ import {
   useRef,
   useEffect,
 } from "../CommonImports";
-import { Bell } from "react-feather"; // Import Bell icon
+import { Bell, X } from "react-feather"; // Import Bell icon
 import "../styles/Notification.css";
+import NameCard from "./NameCard";
+
+export const notifications_mock = [
+  {
+    id: 1,
+    name: "Kelvin Li",
+    message: "Shared a music from walk the moon. Click here to listen.",
+    time: "59 seconds ago",
+    avatar: "https://via.placeholder.com/50", // Replace with avatar URL
+  },
+  {
+    id: 2,
+    name: "Christopher",
+    message: `Commented on your post. "Awesome! Thanks for Sharing!"`,
+    time: "1 hour ago",
+    avatar: "https://via.placeholder.com/50",
+  },
+  {
+    id: 3,
+    name: "Jeanne Damasco",
+    message: "Shared a music from DNCE. Click here to listen.",
+    time: "1 day ago",
+    avatar: "https://via.placeholder.com/50",
+  },
+  {
+    id: 4,
+    name: "Lingyan Cui",
+    message: "Liked your post.",
+    time: "1 week ago",
+    avatar: "https://via.placeholder.com/50",
+  },
+];
 
 function Notification() {
   const isDarkMode = useSelector((state) => state.beatSnapApp.isDarkMode);
   const [showNotifications, setShowNotifications] = useState(false);
+  const [notifications, setNotifications] = useState(notifications_mock);
   const popupRef = useRef(null);
 
   const handleClickOutside = (event) => {
@@ -26,36 +59,14 @@ function Notification() {
     };
   }, []);
 
-  // Mock notification data
-  const notifications = [
-    {
-      id: 1,
-      user: "John Doe",
-      message: "Shared a music from walk the moon. Click here to listen.",
-      time: "59 seconds ago",
-    },
-    {
-      id: 2,
-      user: "Christopher",
-      message: 'Commented on your post: "Awesome! Thanks for sharing!"',
-      time: "1 hour ago",
-    },
-    {
-      id: 3,
-      user: "Jeanne Damasco",
-      message: "Shared a music from DNCE. Click here to listen.",
-      time: "1 day ago",
-    },
-    {
-      id: 4,
-      user: "Lingyan Cui",
-      message: "Liked your post.",
-      time: "1 week ago",
-    },
-  ];
   // Toggle visibility of notifications
   const toggleNotifications = () => {
     setShowNotifications((prevState) => !prevState);
+  };
+
+  const handleRemove = (id) => {
+    const newArray = notifications.filter((item) => item.id !== id);
+    setNotifications(newArray);
   };
 
   return (
@@ -74,9 +85,28 @@ function Notification() {
         >
           {notifications.length > 0 ? (
             notifications.map((notification) => (
-              <div key={notification.id} className="notification-item">
-                <strong>{notification.user}</strong>: {notification.message}{" "}
-                <span className="notification-time">{notification.time}</span>
+              <div key={notification.id} className="notification-item mb-2">
+                <div className="d-flex flex-row">
+                  <NameCard
+                    user={{
+                      userImage: notification?.avatar,
+                      username: notification?.name,
+                      time: notification?.time,
+                    }}
+                  />
+                  <div className="ms-auto">
+                    {" "}
+                    <button
+                      className="close-button"
+                      onClick={() => handleRemove(notification.id)}
+                    >
+                      <X size={16} />
+                    </button>
+                  </div>
+                </div>
+                <div>
+                  <span>{notification.message}</span>
+                </div>
               </div>
             ))
           ) : (
