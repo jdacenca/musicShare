@@ -1,8 +1,20 @@
 import { useNavigate } from "react-router-dom";
-import defaultUserImage from "../assets/images/defaultuser.png";
-import { React, useSelector, useState } from "../CommonImports";
+import defaultuser from "../assets/images/defaultuser.png";
+import { React, useSelector, useState, useEffect } from "../CommonImports";
 import Header from "../components/Header";
 import NavBar from "../components/Navbar";
+import {
+  Home,
+  Search,
+  Plus,
+  Clock,
+  MessageCircle,
+  Music,
+  Users,
+  User,
+  ChevronUp,
+  ChevronDown,
+} from "lucide-react";
 
 import "../styles/Userpage.css";
 
@@ -10,49 +22,38 @@ const UserPage = () => {
   const navigate = useNavigate();
   const isDarkMode = useSelector((state) => state.beatSnapApp.isDarkMode);
 
-  // Retrieve user details from localStorage or set default values
-  const [username, setUsername] = useState(
-    localStorage.getItem("username") || "username"
-  );
-  const [displayName, setDisplayName] = useState(
-    localStorage.getItem("displayName") || "User Name"
-  );
-  const [bio, setBio] = useState(
-    localStorage.getItem("bio") || "This is a short bio about the user."
-  );
-  const [profilePic, setProfilePic] = useState(
-    localStorage.getItem("profilePic") || defaultUserImage
-  );
-  const [postCount, setPostCount] = useState(12); // Keep static or store this too if needed
-  const [followersCount, setFollowersCount] = useState(345); // Same as above
-  const [followingCount, setFollowingCount] = useState(200); // Same as above
+  // User details from localStorage with default values
+  const [username, setUsername] = useState("");
+  const [displayName, setDisplayName] = useState("");
+  const [bio, setBio] = useState("");
+  const [profilePic, setProfilePic] = useState("");
+  const [postCount, setPostCount] = useState(12);
+  const [followersCount, setFollowersCount] = useState(345);
+  const [followingCount, setFollowingCount] = useState(200);
 
   // Friends and Playlists
-  const [friends, setFriends] = useState([
-    "Lingyan Cui",
-    "Jeanne Damasco",
-    "Haripriya",
-    "Friend 4",
-    "Friend 5",
-  ]);
-  const [playlists, setPlaylists] = useState([
-    "Playlist1",
-    "Playlist 2",
-    "Playlist 3",
-    "Playlist 4",
-    "Playlist 5",
-  ]);
+  const [friends, setFriends] = useState([]);
+  const [playlists, setPlaylists] = useState([]);
 
-  // State for toggling drop-downs
-  const [showAllFriends, setShowAllFriends] = useState(false);
+  // Dropdown states
   const [showAllPlaylists, setShowAllPlaylists] = useState(false);
 
-  // State for profile editing modal
+  // Modal state
   const [showEditModal, setShowEditModal] = useState(false);
-  const [editUsername, setEditUsername] = useState(username);
-  const [editDisplayName, setEditDisplayName] = useState(displayName);
-  const [editBio, setEditBio] = useState(bio);
-  const [editProfilePic, setEditProfilePic] = useState(profilePic);
+  const [editUsername, setEditUsername] = useState("");
+  const [editDisplayName, setEditDisplayName] = useState("");
+  const [editBio, setEditBio] = useState("");
+  const [editProfilePic, setEditProfilePic] = useState("");
+
+  useEffect(() => {
+    // Load user details from localStorage on component mount
+    setUsername(localStorage.getItem("username") || "username");
+    setDisplayName(localStorage.getItem("displayName") || "User Name");
+    setBio(localStorage.getItem("bio") || "This is a short bio about the user.");
+    setProfilePic(
+      localStorage.getItem("profilePic") || defaultuser
+    );
+  }, []);
 
   // Handle file input for profile picture
   const handleProfilePicChange = (e) => {
@@ -60,13 +61,24 @@ const UserPage = () => {
     if (file) {
       const reader = new FileReader();
       reader.onloadend = () => {
-        setEditProfilePic(reader.result); // Update editProfilePic state only
+        setEditProfilePic(reader.result);
       };
       reader.readAsDataURL(file);
     }
   };
 
+  // Reset profile picture to default
+  const handleRemoveProfilePic = () => {
+    setEditProfilePic(defaultuser);
+    setProfilePic(defaultuser); 
+  };
+
+  // Modal actions
   const handleEditClick = () => {
+    setEditUsername(username);
+    setEditDisplayName(displayName);
+    setEditBio(bio);
+    setEditProfilePic(profilePic);
     setShowEditModal(true);
   };
 
@@ -74,15 +86,14 @@ const UserPage = () => {
     setUsername(editUsername);
     setDisplayName(editDisplayName);
     setBio(editBio);
-    setProfilePic(editProfilePic);
+    setProfilePic(editProfilePic); // Ensure the profile picture is updated in main content
 
     // Save to localStorage
     localStorage.setItem("username", editUsername);
     localStorage.setItem("displayName", editDisplayName);
     localStorage.setItem("bio", editBio);
-    localStorage.setItem("profilePic", editProfilePic);
+    localStorage.setItem("profilePic", editProfilePic); // Save the updated profile picture
 
-    // Optionally save to backend here
     setShowEditModal(false);
   };
 
@@ -93,76 +104,47 @@ const UserPage = () => {
     >
       <Header />
       <div className="row g-0">
-        {/* NavBar (Left Sidebar) */}
+        {/* Sidebar */}
         <div className="d-none d-md-block p-4 pe-0 col-md-2">
           <NavBar />
-        </div>
-        {/* Music Feed (Center Content) */}
-        <div className="col-12 col-md-10">
-          {/* Left Sidebar */}
-          {/* <div className="userpage-sidebar"> */}
-          {/* Section 1: Navigation */}
-          {/* <div className="section-box">
-          <a href="/" className="nav-link">
-            <Home className="me-2" /> Home
-          </a>
-          <a href="/search" className="nav-link">
-            <Search className="me-2" /> Search
-          </a>
-          <a href="/create" className="nav-link">
-            <Plus className="me-2" /> Create
-          </a>
-          <a href="/history" className="nav-link">
-            <Clock className="me-2" /> History
-          </a>
-          <a href="/messages" className="nav-link">
-            <MessageCircle className="me-2" /> Messages
-          </a>
-        </div> */}
 
-          {/* Section 2: Friends */}
-          {/* <div className="section-box">
-          <h4 className="section-heading">
-            <Users className="me-2" /> <strong>Friends</strong>
-          </h4>
-          {friends
-            .slice(0, showAllFriends ? friends.length : 3)
-            .map((friend, index) => (
-              <p key={index}>{friend}</p>
-            ))}
+          {/* Playlist Dropdown */}
           <div
-            className="dropdown"
-            onClick={() => setShowAllFriends(!showAllFriends)}
-          >
-            <span>{showAllFriends ? "^ show less" : "v show more"}</span>
-          </div>
-        </div> */}
-
-          {/* Section 3: Playlists */}
-          {/* <div className="section-box">
-          <h4 className="section-heading">
-            <User className="me-2" /> <strong>Playlists</strong>
-          </h4>
-          {playlists
-            .slice(0, showAllPlaylists ? playlists.length : 3)
-            .map((playlist, index) => (
-              <p key={index}>{playlist}</p>
-            ))}
-          <div
-            className="dropdown"
+            className="playlist-toggle"
             onClick={() => setShowAllPlaylists(!showAllPlaylists)}
           >
-            <span>{showAllPlaylists ? "^ show less" : "v show more"}</span>
+            <div className="playlist-header">
+              <User className="icon" />
+              <span>Playlists</span>
+            </div>
+            {showAllPlaylists ? (
+              <ChevronUp className="toggle-icon" />
+            ) : (
+              <ChevronDown className="toggle-icon" />
+            )}
           </div>
-        </div> */}
-          {/* </div> */}
+          {showAllPlaylists && (
+            <div className="playlist-list">
+              {playlists.map((playlist, index) => (
+                <div key={index} className="playlist-item">
+                  <span>{playlist}</span>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
 
-          {/* Right Content */}
+        {/* Main Content */}
+        <div className="col-12 col-md-10">
           <div className="main-content">
             {/* Profile Section */}
             <div className="profile-section">
               <div className="profile-header">
-                <img src={profilePic} alt="Profile" className="profile-pic" />
+                <img
+                  src={profilePic}
+                  alt="User Profile"
+                  className="profile-pic"
+                />
                 <div className="profile-info">
                   <h2>{displayName}</h2>
                   <p className="username">@{username}</p>
@@ -191,7 +173,7 @@ const UserPage = () => {
             {/* Share Post Section */}
             <div className="posts-container">
               <h3>Share Your Post</h3>
-              <p>When you share post, they will appear on your profile.</p>
+              <p>When you share posts, they will appear on your profile.</p>
               <button className="userpage-button share-photo-btn">
                 Share Post
               </button>
@@ -208,8 +190,14 @@ const UserPage = () => {
                       <input
                         type="file"
                         accept="image/*"
-                        onChange={handleProfilePicChange}
+                        onChange={handleProfilePicChange} // Update the profile picture from the file input
                       />
+                      <button
+                        className="remove-btn"
+                        onClick={handleRemoveProfilePic} // Reset to default profile picture
+                      >
+                        Remove Profile
+                      </button>
                     </div>
                     <div className="form-group">
                       <label>Display Name</label>
@@ -219,7 +207,6 @@ const UserPage = () => {
                         onChange={(e) => setEditDisplayName(e.target.value)}
                       />
                     </div>
-
                     <div className="form-group">
                       <label>Username</label>
                       <input

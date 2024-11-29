@@ -1,216 +1,304 @@
-.nav-links {
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
-}
+  .nav-links {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
 
-.nav-link {
-  color: #555;
-  text-decoration: none;
-  font-size: 1.2rem;
-}
+  .nav-link {
+    color: #555;
+    text-decoration: none;
+    font-size: 1.2rem;
+  }
 
-.nav-link:hover {
-  text-decoration: underline;
-}
+  .nav-link:hover {
+    text-decoration: underline;
+  }
 
-.main-content {
-  width: 80%;
-  display: flex;
-  flex-direction: column;
-  padding: 2rem;
-  gap: 2rem;
-}
+  .main-content {
+    width: 80%;
+    display: flex;
+    flex-direction: column;
+    padding: 2rem;
+    gap: 2rem;
+  }
 
-/* Profile Section */
-.profile-section {
-  background-color: #f9f9f9;
-  padding: 2rem;
-  border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-}
+  /* Profile Section */
+  .profile-section {
+    background-color: #f9f9f9;
+    padding: 2rem;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    height: 300px;
+    min-height: 300px;
+  }
 
-.profile-header {
-  display: flex;
-  align-items: center;
-}
+  .profile-header {
+    display: flex;
+    align-items: center;
+    position: relative;
+  }
 
-.profile-pic {
-  width: 120px;
-  height: 120px;
-  border-radius: 50%;
-  margin-right: 1.5rem;
-}
+  .profile-pic {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    margin-right: 1.5rem;
+  }
 
-.profile-info {
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-}
+  .profile-info {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    margin-top: 0px;
+  }
 
-.username {
-  color: gray;
-  font-size: 1rem;
-}
+  .username {
+    color: gray;
+    font-size: 1rem;
+  } 
 
-.profile-stats {
-  display: flex;
-  gap: 1.5rem;
-  margin: 0.5rem 0;
-}
+  .profile-stats {
+    display: flex;
+    gap: 1.5rem;
+    margin: 0.5rem 0;
+  }
 
-.profile-stats div {
-  font-size: 1rem;
-  color: #333;
-}
+  .profile-stats div {
+    font-size: 1rem;
+    color: #333;
+  }
 
-.edit-profile-btn {
-  padding: 0.5rem 1rem;
-  background-color: #0095f6;
-  color: white;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-}
+  .edit-profile-btn {
+    padding: 0.5rem 1rem;
+    background-color: #0095f6;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+  }
 
-/* Share Post Section */
-.posts-container {
-  background-color: #f9f9f9;
-  padding: 2rem;
-  border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  text-align: center;
-}
+  /* Share Post Section */
+  .posts-container {
+    background-color: #f9f9f9;
+    padding: 2rem;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    text-align: center;
+  }
 
-.share-photo-btn {
-  margin-top: 1rem;
-  padding: 0.5rem 1rem;
-  background-color: #0095f6;
-  color: #fff;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-}
+  .share-photo-btn {
+    margin-top: 1rem;
+    padding: 0.5rem 1rem;
+    background-color: #0095f6;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+  }
 
-/* This is overriding style in other pages.  
-pls use page specific prefix in class names... like "userpage-button"  */
-.userpage-button {
-  padding: 0.5rem 1rem;
-  background-color: #0095f6;
-  color: #fff;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-}
+  /* This is overriding style in other pages.  
+  pls use page specific prefix in class names... like "userpage-button"  */
+  .userpage-button {
+    padding: 0.5rem 1rem;
+    background-color: #0095f6;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+  }
 
-.userpage-button:hover {
-  background-color: #007acc;
-}
+  .userpage-button:hover {
+    background-color: #007acc;
+  }
 
-*/
+  */
 
-/* Sidebar Section Boxes */
-.section-box {
-  margin-bottom: 1.5rem;
-  padding: 1rem;
-  background-color: #f5f5f5;
-  border: 1px solid #ddd;
-  border-radius: 8px;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  height: 400px;
-  /* Equal height for all boxes */
-  width: 250px
-}
+  /* Sidebar Section Boxes */
+  .section-box {
+    margin-bottom: 1.5rem;
+    padding: 1rem;
+    background-color: #f5f5f5;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: 400px;
+    /* Equal height for all boxes */
+    width: 250px
+  }
 
-.section-box p {
-  margin: 0.5rem 0;
-  font-size: 0.9rem;
-}
+  .section-box p {
+    margin: 0.5rem 0;
+    font-size: 0.9rem;
+  }
 
 
-/* General Modal Styles */
-.modal {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(0, 0, 0, 0.5);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
+  .modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 10; /* Ensures modal stays above other content */
+  }
 
-.modal-content {
-  background: #fff;
-  padding: 2rem;
-  border-radius: 8px;
-  text-align: center;
-}
+  .modal-content {
+    background-color: white;
+    padding: 20px;
+    border-radius: 8px;
+    width: 400px;
+    z-index: 20; /* Makes sure the content is in front */
+  }
 
-.modal-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(0, 0, 0, 0.5);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  z-index: 1000;
-}
+  .modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 5;
+  }
 
-.modal-content {
-  background-color: white;
-  padding: 20px;
-  border-radius: 8px;
-  width: 400px;
-}
+  .modal-content {
+    background-color: white;
+    padding: 20px;
+    border-radius: 8px;
+    width: 400px;
+  }
 
-.edit-form .form-group {
-  margin-bottom: 15px;
-}
 
-.edit-form input,
-.edit-form textarea {
-  width: 100%;
-  padding: 10px;
-  margin-top: 5px;
-  border: 1px solid #ccc;
-  border-radius: 5px;
-}
+  .edit-form .form-group {
+    display: flex;
+    align-items: center; 
+    margin-bottom: 25px;  
+  }
 
-.button-group {
-  display: flex;
-  justify-content: space-between;
-}
+  .edit-form label {
+    width: 150px; 
+    align-items:center;
+  }
 
-.cancel-btn,
-.save-btn {
-  padding: 10px 20px;
-  border: none;
-  cursor: pointer;
-}
+  .edit-form input,
+  .edit-form textarea {
+    width: 100%;  
+    padding: 10px;
+    margin-top: 5px;
+    border: 1px solid #ccc;
+  }
 
-.edit-profile-btn {
-  width: 170px;
-}
 
-.cancel-btn {
-  background-color: #ccc;
-}
+  .button-group {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
 
-.save-btn {
-  background-color: #ccc;
-  color: white;
-}
+  .cancel-btn,
+  .save-btn {
+    padding: 10px 20px;
+    border: none;
+    cursor: pointer;
+  }
 
-.remove-pic-btn {
-  background-color: #f44336;
-  color: white;
-  padding: 5px 10px;
-  cursor: pointer;
-}
+  .remove-btn {
+    position: absolute;
+    margin-left: 97px;
+    margin-bottom: -655px;
+    padding: 11px 5px; 
+    font-size: 15px; 
+    background-color: #ccc;
+    color: #333;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    white-space: nowrap; 
+  }
+
+  .edit-profile-btn {
+    width: 170px;
+  }
+
+  .cancel-btn {
+    background-color: #ccc;
+  }
+
+  .cancel-btn:hover {
+    background-color: darkgray;
+  }
+
+  .save-btn {
+    background-color: #ccc;
+    color: white;
+  }
+
+  .save-btn:hover {
+    background-color: #007acc;
+  }
+
+  .remove-btn:hover {
+    background-color: darkgray;
+  }
+
+  /* Playlist Toggle Container */
+  .playlist-toggle {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px;
+    background-color: var(--secondary-bg-color);
+    border-radius: 8px;
+    cursor: pointer;
+    margin-top: 20px;
+    transition: background-color 0.3s ease;
+  }
+
+  .playlist-toggle:hover {
+    background-color: var(--hover-bg-color);
+  }
+
+  /* Playlist Header */
+  .playlist-header {
+    margin-top: 0px;
+    display: flex;
+    align-items: center;
+  }
+
+  .playlist-header .icon {
+    margin-right: 10px;
+    color: var(--icon-color);
+  }
+
+  /* Chevron Icon for Toggle */
+  .toggle-icon {
+    color: var(--icon-color);
+    transition: transform 0.3s ease;
+  }
+
+  /* Playlist List Container */
+  .playlist-list {
+    padding: 10px;
+    background-color: var(--secondary-bg-color);
+    max-height: 200px;
+    overflow-y: auto;
+    transition: all 0.3s ease;
+  }
+
+  /* Playlist Item */
+  .playlist-item {
+    padding: 10px;
+    font-size: 14px;
+    color: var(--text-color);
+    border-bottom: 1px solid var(--divider-color);
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+
