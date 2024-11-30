@@ -21,6 +21,8 @@ import "../styles/Userpage.css";
 const UserPage = () => {
   const navigate = useNavigate();
   const isDarkMode = useSelector((state) => state.beatSnapApp.isDarkMode);
+  const currentUser = useSelector((state) => state.beatSnapApp.currentUser);
+  console.log(currentUser.username)
 
   // User details from localStorage with default values
   const [username, setUsername] = useState("");
@@ -47,9 +49,9 @@ const UserPage = () => {
 
   useEffect(() => {
     // Load user details from localStorage on component mount
-    setUsername(localStorage.getItem("username") || "username");
-    setDisplayName(localStorage.getItem("displayName") || "User Name");
-    setBio(localStorage.getItem("bio") || "This is a short bio about the user.");
+    setUsername(currentUser.username);
+    setDisplayName(currentUser.fullname);
+    setBio(currentUser.status);
     setProfilePic(
       localStorage.getItem("profilePic") || defaultuser
     );

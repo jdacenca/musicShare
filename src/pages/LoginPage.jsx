@@ -1,11 +1,14 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { apiUrl } from "../CommonImports";
+import { useSelector, useDispatch, apiUrl } from "../CommonImports";
+import { setCurrentUser } from "../redux/slice";
 
 const LoginPage = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const navigate = useNavigate(); // 用于页面跳转
+
+  const dispatch = useDispatch();
 
   const backgroundImage = '/background.png';
   const handleLogin = async (e) => {
@@ -15,7 +18,7 @@ const LoginPage = () => {
       alert('Please enter your username and password.');
       return;
     }
-    
+
     const response = await fetch(apiUrl + "/auth/login", {
       headers: {
         'Content-Type': 'application/json'
@@ -23,9 +26,12 @@ const LoginPage = () => {
       method: "POST",
       body: JSON.stringify({"username": username, "password": password})
     });
+    const data = await response.json();
 
     if (response.status == 200) {
       alert('Login successful! Redirecting to Homepage...');
+      console.log(data)
+      dispatch(setCurrentUser(data.user.username));
       navigate('/home'); // 跳转到 HomePage
     } else {
       alert('Login failed...');
