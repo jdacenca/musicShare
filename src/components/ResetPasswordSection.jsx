@@ -3,17 +3,19 @@ import "../styles/ResetPassword.css";
 
 const ResetPasswordSection = () => {
   return (
+    
     <div className="right-section">
       <h2>Reset Password</h2>
       <p>
-        Trouble with logging in? Enter your email address, or username, and we’ll
+        Trouble with logging in? Enter your email address and we’ll
         send you a link to get back into your account.
       </p>
       <form>
+        
         <div className="input-group">
           <input
             type="text"
-            placeholder="Username"
+            placeholder="enter your email"
             required
           />
         </div>
