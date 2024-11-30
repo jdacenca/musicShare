@@ -15,8 +15,7 @@ const LoginPage = () => {
       alert('Please enter your username and password.');
       return;
     }
-    console.log(username)
-    console.log(password)
+    
     const response = await fetch(apiUrl + "/auth/login", {
       headers: {
         'Content-Type': 'application/json'

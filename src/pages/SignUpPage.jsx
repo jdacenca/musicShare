@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-
+import { apiUrl } from "../CommonImports";
 
 const SignUpPage = () => {
   const [formData, setFormData] = useState({
@@ -22,16 +22,28 @@ const SignUpPage = () => {
     }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     // 这里添加注册逻辑
     if (!formData.username || !formData.password || !formData.email) {
         setError('Please fill out all required fields.');
         return;
     }
-    console.log('Form submitted:', formData);
-    alert('Sign up successful! Redirecting to login page...');
-    navigate('/login');
+
+    const response = await fetch(apiUrl + "/auth/register", {
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      method: "POST",
+      body: JSON.stringify({ "username": formData.username, "password": formData.password, "email": formData.email, "name": formData.fullName, "date_of_birth": formData.dateOfBirth})
+    });
+
+    if (response.status == 201) {
+      alert('Sign up successful! Redirecting to login page...');
+      navigate('/login');
+    } else {
+      alert('Creating new account failed...');
+    }
   };
 
   return (

@@ -31,7 +31,6 @@ export const databasePoolConnect = async function() {
 // Register Route
 router.post("/register", async (req, res) => {
   const { username, password, email, name, date_of_birth } = req.body;
-
   try {
     // Validate required fields
     if (!username || !password || !email || !name || !date_of_birth) {
@@ -59,7 +58,6 @@ router.post("/register", async (req, res) => {
 router.post("/login", async (req, res) => {
   const { username, password } = req.body;
 
-  console.log(req.body)
   try {
     // Validate required fields
     if (!username || !password) {
