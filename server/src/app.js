@@ -1,13 +1,14 @@
 import dotenv from "dotenv";
 import express from "express";
 
-import { spotifyAuth } from "./utils/spotifyAuth.js";
+import { spotifyAuth, spotifyAuthFunc } from "./utils/spotifyAuth.js";
 import { spotifyGlobalTopHits } from "./utils/spotifyGlobalTopHits.js";
 import { spotifyGenreRecommendation } from "./utils/spotifyGenreRecommendation.js";
 import { youtubeMusic } from "./utils/youTubeSearchMusicCategory.js";
 import { databaseConnect, databaseDisconnect } from "./utils/databaseHelper.js";
 import { sendEmail } from "./utils/sendEmail.js";
 import { router, databasePoolConnect, authenticateToken } from "./utils/authRoutes.js";
+import { startSocketIOServer } from './utils/notification.js'
 
 import process from 'node:process';
 import cors from "cors";
@@ -15,6 +16,7 @@ import cors from "cors";
 dotenv.config({ path: "../.env" });
 
 const app = express();
+//startSocketIOServer(app)
 //const router = Router();
 
 if (process.env.ENABLE_CORS === 'true') {

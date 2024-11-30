@@ -39,7 +39,7 @@ router.post("/register", async (req, res) => {
     }
 
     // Hash the password
-    const hashedPassword = await bcrypt.hash(password, 10);
+    const hashedPassword = await bcryptjs.hash(password, 10);
 
     // Insert the new user into the database
     const query = `
@@ -59,6 +59,7 @@ router.post("/register", async (req, res) => {
 router.post("/login", async (req, res) => {
   const { username, password } = req.body;
 
+  console.log(req.body)
   try {
     // Validate required fields
     if (!username || !password) {
@@ -75,7 +76,7 @@ router.post("/login", async (req, res) => {
     }
 
     // Compare the provided password with the hashed password
-    const isPasswordValid = await bcrypt.compare(password, user.password);
+    const isPasswordValid = await bcryptjs.compare(password, user.password);
     if (!isPasswordValid) {
       return res.status(400).json({ error: "Invalid username or password" });
     }

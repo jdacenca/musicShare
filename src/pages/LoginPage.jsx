@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-
+import { apiUrl } from "../CommonImports";
 
 const LoginPage = () => {
   const [username, setUsername] = useState('');
@@ -8,16 +8,30 @@ const LoginPage = () => {
   const navigate = useNavigate(); // 用于页面跳转
 
   const backgroundImage = '/background.png';
-  const handleLogin = (e) => {
+  const handleLogin = async (e) => {
     e.preventDefault();
 
     if (!username || !password) {
       alert('Please enter your username and password.');
       return;
     }
+    console.log(username)
+    console.log(password)
+    const response = await fetch(apiUrl + "/auth/login", {
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      method: "POST",
+      body: JSON.stringify({"username": username, "password": password})
+    });
 
-    alert('Login successful! Redirecting to Homepage...');
-    navigate('/home'); // 跳转到 HomePage
+    if (response.status == 200) {
+      alert('Login successful! Redirecting to Homepage...');
+      navigate('/home'); // 跳转到 HomePage
+    } else {
+      alert('Login failed...');
+    }
+    
   };
 
   return (

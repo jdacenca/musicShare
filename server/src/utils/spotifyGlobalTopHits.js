@@ -8,7 +8,6 @@ export const spotifyGlobalTopHits = async function(req, res) {
     let playlistURL = process.env.SPOTIFY_PLAYLIST_URL;
     let url = playlistURL + globalHitsId;
 
-    console.log(authToken)
     const headers = {
         headers: {
             'Authorization': 'Bearer ' + authToken
@@ -25,7 +24,7 @@ export const spotifyGlobalTopHits = async function(req, res) {
         
     })
     .catch((error) => {
-        console.log("Error getting the authorization token. " +  error);
+        console.log("Error getting the trending hits. " +  error);
         return res.status(500).send("Internal Server Error");
     }) 
     
