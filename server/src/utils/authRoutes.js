@@ -36,6 +36,13 @@ router.post("/register", async (req, res) => {
     if (!username || !password || !email || !name || !date_of_birth) {
       return res.status(400).json({ error: "All fields are required" });
     }
+    // Check if username or email is already registered
+    const checkQuery = `SELECT * FROM users WHERE username = $1 OR email = $2`;
+    const checkResult = await pool.query(checkQuery, [username, email]);
+    
+    if (checkResult.rows.length > 0) {
+      return res.status(400).json({ error: "Username or email is already registered" });
+    }
 
     // Hash the password
     const hashedPassword = await bcryptjs.hash(password, 10);
@@ -100,6 +107,38 @@ router.post("/login", async (req, res) => {
   } catch (error) {
     console.error("Error during login:", error.message);
     res.status(500).json({ error: "Error logging in" });
+  }
+});
+
+// Change Password Route
+router.post("/change-password", async (req, res) => {
+  const { email, newPassword } = req.body;
+
+  try {
+    // Validate required fields
+    if (!email || !newPassword) {
+      return res.status(400).json({ error: "Email and new password are required" });
+    }
+
+    // Find the user by email
+    const checkQuery = `SELECT * FROM users WHERE email = $1`;
+    const checkResult = await pool.query(checkQuery, [email]);
+
+    if (checkResult.rows.length === 0) {
+      return res.status(400).json({ error: "Email not registered" });
+    }
+
+    // Hash the new password
+    const hashedPassword = await bcryptjs.hash(newPassword, 10);
+
+    // Update the user's password in the database
+    const updateQuery = `UPDATE users SET password = $1 WHERE email = $2`;
+    await pool.query(updateQuery, [hashedPassword, email]);
+
+    res.status(200).json({ message: "Password changed successfully" });
+  } catch (error) {
+    console.error("Error during password change:", error.message);
+    res.status(500).json({ error: "Error changing password" });
   }
 });
 
