@@ -50,7 +50,7 @@ const LoginPage = () => {
       {/* 左侧部分 */}
       <div
         style={{
-          flex: 1,
+          flex: 0.6,
           backgroundImage: 'url(/background.png)', // 替换为你的背景图片
           backgroundSize: 'cover',
           backgroundPosition: 'center', 
@@ -70,7 +70,7 @@ const LoginPage = () => {
       {/* 右侧部分 */}
       <div
         style={{
-          flex: 1,
+          flex: 1.4,
           display: 'flex',
           flexDirection: 'column',
           justifyContent: 'center',
