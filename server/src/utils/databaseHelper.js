@@ -38,7 +38,6 @@ export const getPost = async function(userId, sort) {
                 rowMode: 'array',
                 text: query
             });
-        console.log(result)
         return result.rows;
     } catch (err) {
         console.log("Error in running query: " + err);
@@ -57,7 +56,6 @@ export const insertPost = async function(userId, message, musicUrl) {
                 rowMode: 'array',
                 text: query
             });
-        console.log(result)
         return result.rowCount;
     } catch (err) {
         console.log("Error in running query: " + err);
@@ -72,7 +70,6 @@ export const updatePostMessage = async function(postId, message) {
     try {
         //generate select query
         let query = util.format('UPDATE post SET message=\'%s\', updated_timestamp=NOW() where id=\'%s\'', message, postId);
-        console.log(query)
         let result = await client.query({
                 rowMode: 'array',
                 text: query
@@ -91,7 +88,6 @@ export const updatePostLike = async function(postId, noOfLikes) {
     try {
         //generate select query
         let query = util.format('UPDATE post SET no_of_likes=%d, updated_timestamp=NOW() where id=\'%s\'', noOfLikes, postId);
-        console.log(query)
         let result = await client.query({
                 rowMode: 'array',
                 text: query
@@ -110,7 +106,6 @@ export const deletePostMessage = async function(postId) {
     try {
         //generate select query
         let query = util.format('UPDATE post SET is_deleted=\'true\'  where id=\'%s\'', postId);
-        console.log(query)
         let result = await client.query({
                 rowMode: 'array',
                 text: query
