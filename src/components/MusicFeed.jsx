@@ -91,6 +91,10 @@ function MusicFeed() {
       let count = 1;
 
       try {
+        await fetch(apiUrl + "/spotify/connect", {
+          method: "POST",
+        });
+        
         const recommendations = await fetch(
           apiUrl + "/spotify/recommendations?genre=rock"
         );

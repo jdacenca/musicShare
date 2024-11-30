@@ -7,7 +7,6 @@ export const spotifyGenreRecommendation = async function(req, res) {
     let url = process.env.SPOTIFY_RECOMMENDATION_URL;
     const { genre } = req.query;
 
-    console.log(authToken)
     console.log(encodeURIComponent(genre))
     const headers = {
         headers: {
@@ -18,8 +17,10 @@ export const spotifyGenreRecommendation = async function(req, res) {
         } */
     } 
 
-    url = url + "?seed_genres=" + encodeURIComponent(genre);
-    axios.get(url, headers)
+    url = url + "?q=genre:" + encodeURIComponent(genre) + "&type=track";
+
+
+    const r = await axios.get(url, headers)
     .then((response) => {
         if (response.status === 200) {
             return res.status(200).send(response.data);
@@ -29,8 +30,8 @@ export const spotifyGenreRecommendation = async function(req, res) {
         
     })
     .catch((error) => {
-        console.log("Error getting the authorization token. " +  error);
+        console.log("Error getting the tracks with specific genre. " +  error);
         return res.status(500).send("Internal Server Error");
-    }) 
+    })
     
 };
