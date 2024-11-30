@@ -12,8 +12,6 @@ export const youtubeMusic = async function(req, res) {
     }
     url = url + '&part=snippet&type=video&videoCategoryId=10&channelType=any&eventType=none&videoEmbeddable=true&maxResults=10'    
 
-    console.log(url)
-
     axios.get(url)
     .then((response) => {
         if (response.status === 200) {

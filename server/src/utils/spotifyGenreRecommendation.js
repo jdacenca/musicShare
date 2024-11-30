@@ -7,7 +7,6 @@ export const spotifyGenreRecommendation = async function(req, res) {
     let url = process.env.SPOTIFY_RECOMMENDATION_URL;
     const { genre } = req.query;
 
-    console.log(encodeURIComponent(genre))
     const headers = {
         headers: {
             'Authorization': 'Bearer ' + authToken

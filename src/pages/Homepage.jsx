@@ -16,15 +16,17 @@ import "../styles/Homepage.css";
 
 const Homepage = () => {
   const isDarkMode = useSelector((state) => state.beatSnapApp.isDarkMode);
+  const currentUser = useSelector((state) => state.beatSnapApp.currentUser);
+  
   const dispatch = useDispatch();
 
   useEffect(() => {
     dispatch(
       setCurrentUser({
-        username: "pgounalan",
+        username: currentUser.username, //"pgounalan",
         interest: ["rock"],
-        fullname: "Priya Gounalan",
-        status: "Musik Freak",
+        fullname: currentUser.fullname,//"Priya Gounalan",
+        status: currentUser.status//"Musik Freak",
       })
     ); // TODO use data from auth
   }, [dispatch]);

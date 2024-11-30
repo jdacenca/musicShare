@@ -9,8 +9,6 @@ export const spotifyAuth = async function(req, res) {
     let clientSecret = process.env.SPOTIFY_CLIENT_SECRET;
     let url = 'https://accounts.spotify.com/api/token';
 
-    console.log(clientID);
-
     const headers = {
         headers: {
             'Content-Type': 'application/x-www-form-urlencoded',
