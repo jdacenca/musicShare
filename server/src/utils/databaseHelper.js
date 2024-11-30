@@ -35,7 +35,7 @@ export const getPost = async function(userId, sort) {
         //generate select query
         let query = 'SELECT * from post where user_id=\'' + userId + "\' and is_deleted='false' ORDER BY created_timestamp " + sort;
         let result = await client.query({
-                rowMode: 'array',
+                //rowMode: 'array',
                 text: query
             });
         return result.rows;
@@ -53,7 +53,7 @@ export const insertPost = async function(userId, message, musicUrl) {
         //generate select query
         let query = util.format('INSERT INTO post (message, music_url, no_of_likes, user_id) VALUES (\'%s\', \'%s\', %d, \'%s\')', message, musicUrl, 0, userId);
         let result = await client.query({
-                rowMode: 'array',
+                //rowMode: 'array',
                 text: query
             });
         return result.rowCount;
@@ -71,7 +71,7 @@ export const updatePostMessage = async function(postId, message) {
         //generate select query
         let query = util.format('UPDATE post SET message=\'%s\', updated_timestamp=NOW() where id=\'%s\'', message, postId);
         let result = await client.query({
-                rowMode: 'array',
+                //rowMode: 'array',
                 text: query
             });
         return result.rowCount;
@@ -89,7 +89,7 @@ export const updatePostLike = async function(postId, noOfLikes) {
         //generate select query
         let query = util.format('UPDATE post SET no_of_likes=%d, updated_timestamp=NOW() where id=\'%s\'', noOfLikes, postId);
         let result = await client.query({
-                rowMode: 'array',
+                //rowMode: 'array',
                 text: query
             });
         return result.rowCount;
@@ -107,7 +107,7 @@ export const deletePostMessage = async function(postId) {
         //generate select query
         let query = util.format('UPDATE post SET is_deleted=\'true\'  where id=\'%s\'', postId);
         let result = await client.query({
-                rowMode: 'array',
+                //owMode: 'array',
                 text: query
             });
         return result.rowCount;
@@ -127,7 +127,7 @@ export const getUserGenre = async function(userId) {
         //generate select query
         let query = 'SELECT * from user_music_genre where user_id=\'' + userId + "\'";
         let result = await client.query({
-                rowMode: 'array',
+                //rowMode: 'array',
                 text: query
             });
         console.log(result)
@@ -143,7 +143,7 @@ export const insertUserGenre = async function(userId, genreId) {
     try {
         let query = util.format('INSERT INTO user_music_genre (user_id, music_genre_id) VALUES (\'%s\', %d)', userId, genreId);
         let result = await client.query({
-                rowMode: 'array',
+                //rowMode: 'array',
                 text: query
             });
         console.log(result)
@@ -159,7 +159,7 @@ export const deleteUserGenre = async function(userId, genreId) {
     try {
         let query = util.format('DELETE FROM user_music_genre where user_id=\'%s\' and music_genre_id=%d', userId, genreId);
         let result = await client.query({
-                rowMode: 'array',
+                //rowMode: 'array',
                 text: query
             });
         console.log(result)
