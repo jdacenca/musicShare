@@ -46,7 +46,7 @@ function MusicFeed() {
             "Content-Type": "application/json",
           },
           body: JSON.stringify({
-            userId: currentUser.id,
+            userId: currentUser.userId,
             sort: "DESC",
           }),
         });

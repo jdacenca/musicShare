@@ -82,7 +82,7 @@ const PostPopup = ({
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          userId: currentUser.id,
+          userId: currentUser.userId,
           message: postContent,
           musicUrl: musicUrl,
         }),
@@ -100,7 +100,7 @@ const PostPopup = ({
       },
       body: JSON.stringify({
         postId: post.id,
-        userId: currentUser.id,
+        userId: currentUser.userId,
         message: postContent,
         musicUrl: musicUrl,
       }),
