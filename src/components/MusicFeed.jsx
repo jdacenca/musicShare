@@ -63,13 +63,13 @@ function MusicFeed() {
 
         apiPostsData.forEach((x) => {
           let timeAgo = moment(x.created_timestamp).fromNow();
-          timeAgo = timeAgo.replace('in',''); 
+          //timeAgo = timeAgo.replace('in',''); 
           let item = {
             id: x.id,
             userId:  x.user_id ,
             username: currentUser.userId == x.user_id ? currentUser.fullname : x.user_id,
             title: "",
-            time: timeAgo ? timeAgo + ' ago' : timeAgo,
+            time: timeAgo,
             userImage: user1,
             description: x.message,
             likes: x.no_of_likes,
