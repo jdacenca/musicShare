@@ -23,12 +23,7 @@ import cors from "cors";
 dotenv.config({ path: "../.env" });
 
 const app = express();
-//startSocketIOServer(app)
-//const router = Router();
-
-if (process.env.ENABLE_CORS === 'true') {
-  app.use(cors());
-}
+app.use(cors());
 
 app.use(express.json());
 const port = process.env.PORT || 3000;
