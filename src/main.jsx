@@ -1,13 +1,14 @@
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import { Provider } from "react-redux";
+import { PersistGate } from 'redux-persist/integration/react';
 import App from "./App.jsx";
-import beatSnapStore from "./redux/store";
+import { beatSnapStore, persistor } from "./redux/store";
 
 createRoot(document.getElementById("root")).render(
   <Provider store={beatSnapStore}>
-    <StrictMode>
+    <PersistGate loading={null} persistor={persistor}>
       <App />
-    </StrictMode>
+    </PersistGate>
   </Provider>
 );

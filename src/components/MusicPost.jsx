@@ -143,7 +143,7 @@ function MusicPost({ post, onDelete }) {
           ></iframe>
         ) : post.spotifyUrl ? (
           <iframe
-            src={`https://open.spotify.com/embed/album/${post.spotifyUrl}`}
+            src={`${post.spotifyUrl}`}
             width="100%"
             height="360px"
             allow="encrypted-media"

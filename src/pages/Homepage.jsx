@@ -15,7 +15,8 @@ import { setTrendingMusic } from "../redux/slice";
 import "../styles/Homepage.css";
 
 const Homepage = () => {
-  const isDarkMode = useSelector((state) => state.beatSnapApp.isDarkMode);
+  const beatSnapApp = useSelector((state) => state.beatSnapApp.isDarkMode);
+  const isDarkMode = beatSnapApp.isDarkMode;
   
   const dispatch = useDispatch();
 
