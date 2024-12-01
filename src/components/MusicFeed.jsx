@@ -66,14 +66,14 @@ function MusicFeed() {
           timeAgo = timeAgo.replace('in',''); 
           let item = {
             id: x.id,
-            username: currentUser.id == x.user_id ? currentUser.fullname : x.user_id,
+            username: currentUser.userId == x.user_id ? currentUser.fullname : x.user_id,
             title: "",
             time: timeAgo,
             userImage: user1,
             description: x.message,
             likes: x.no_of_likes,
             comments: [],
-            canApiDelete: currentUser.id == x.user_id ? true : false,
+            canApiDelete: currentUser.userId == x.user_id ? true : false,
           };
 
           if (x.music_url && x.music_url.indexOf("spotify") !== -1) {
