@@ -9,8 +9,17 @@ import {
 import "../styles/PostPopup.css";
 import { Search, X } from "react-feather";
 import NameCard from "./NameCard";
+import user1 from "../assets/images/user1.jpg";
+import { setPosts } from "../redux/slice";
 
-const PostPopup = ({ type = "NEW", onClose, post, onDelete }) => {
+const PostPopup = ({
+  type = "NEW",
+  onClose,
+  post,
+  onDelete,
+  postInitContent = "",
+}) => {
+  const posts = useSelector((state) => state.beatSnapApp.posts);
   const currentUser = useSelector((state) => state.beatSnapApp.currentUser);
   const isDarkMode = useSelector((state) => state.beatSnapApp.isDarkMode);
   const [query, setQuery] = useState("");
@@ -18,29 +27,99 @@ const PostPopup = ({ type = "NEW", onClose, post, onDelete }) => {
 
   const popupRef = useRef(null);
   const [postContent, setPostContent] = useState("");
+  const [musicUrl, setMusicUrl] = useState("");
   const dispatch = useDispatch();
 
   const handleAction = () => {
     switch (type) {
       case "NEW":
-        //Validate
-        //Save data - API
+        if (postContent) {
+          createPost();
+        }
         onClose();
         break;
       case "UPDATE":
-        //Validate
-        //Save data - API
+        if (postContent) {
+          updatePost();
+        }
         onClose();
         break;
       case "DELETE":
-        //Validate
-        //Save data - API
+        if (post.canApiDelete) {
+          deletePost();
+        }
         onDelete();
         break;
       default:
         onClose();
         break;
     }
+  };
+
+  const createPost = async () => {
+    // dummy insert in ui
+    let post = {
+      id: crypto.randomUUID,
+      username: currentUser.fullname,
+      title: "",
+      time: "Now",
+      userImage: user1,
+      description: postContent,
+      likes: 0,
+      comments: [],
+      videoUrl: musicUrl,
+    };
+
+    const newArray = [post].concat(posts);
+    dispatch(setPosts(newArray));
+
+    //api
+    try {
+      const resp = await fetch(apiUrl + "/post/create", {
+        method: "POST",
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          userId: currentUser.id,
+          message: postContent,
+          musicUrl: musicUrl,
+        }),
+      });
+      const data = await resp.json();
+    } catch {}
+  };
+
+  const updatePost = async () => {
+    const resp = await fetch(apiUrl + "/post/update", {
+      method: "POST",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        postId: post.id,
+        userId: currentUser.id,
+        message: postContent,
+        musicUrl: musicUrl,
+      }),
+    });
+    const data = await resp.json();
+  };
+
+  const deletePost = async () => {
+    const resp = await fetch(apiUrl + "/post", {
+      method: "DELETE",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        postId: post.id,
+      }),
+    });
+    const data = await resp.json();
   };
 
   const handleClickOutside = (event) => {
@@ -56,8 +135,8 @@ const PostPopup = ({ type = "NEW", onClose, post, onDelete }) => {
   };
 
   useEffect(() => {
-    let postInitContent = type === "NEW" ? "" : post.description;
-    setPostContent(postInitContent);
+    let initContent = type === "NEW" ? postInitContent : post.description;
+    setPostContent(initContent);
 
     document.addEventListener("mousedown", handleClickOutside);
     return () => {
@@ -77,9 +156,10 @@ const PostPopup = ({ type = "NEW", onClose, post, onDelete }) => {
     }
   };
 
-  const handlePost = () => {
-    if (postContent.trim()) {
-      setPostContent(""); // Clear the input field
+  const handleMusicUrlInputChange = (e) => {
+    let v = e.target.value;
+    if (v) {
+      setMusicUrl(v);
     }
   };
 
@@ -123,37 +203,65 @@ const PostPopup = ({ type = "NEW", onClose, post, onDelete }) => {
             value={postContent}
             onChange={handleInputChange}
           />
+          {musicUrl && (
+            <iframe
+              width="100%"
+              height="200"
+              src={musicUrl}
+              title="YouTube video player"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+              allowFullScreen
+            ></iframe>
+          )}
         </div>
         {type === "NEW" && (
-          <div className="search-section">
-            <div className="search-container">
-              <input
-                type="text"
-                placeholder="Search for music..."
-                className="search-input"
-                value={query}
-                onChange={(e) => handleSearchInputChange(e)}
-              />
-              <Search className="search-icon" />
-            </div>
-            {youtubeData && youtubeData.length > 0 && (
-              <div className="search-results">
-                {youtubeData.slice(0, 3).map((item, index) => (
-                  <div className="search-item d-flex flex-column mb-3 ps-4">
-                    <span>{item.snippet?.title}</span>
-                    <span>
-                      <a
-                        href={
-                          "https://www.youtube.com/watch?v=" + item.id?.videoId
-                        }
-                      >
-                        {"https://www.youtube.com/watch?v=" + item.id?.videoId}
-                      </a>
-                    </span>
-                  </div>
-                ))}
+          <div>
+            <div className="search-section">
+              <div className="search-container">
+                <input
+                  type="text"
+                  placeholder="Search for music..."
+                  className="search-input"
+                  value={query}
+                  onChange={(e) => handleSearchInputChange(e)}
+                />
+                <Search className="search-icon" />
               </div>
-            )}
+              {youtubeData && youtubeData.length > 0 && (
+                <div className="search-results">
+                  {youtubeData.slice(0, 3).map((item, index) => (
+                    <div
+                      key={item.id + index}
+                      className="search-item d-flex flex-column mb-3 ps-4"
+                      onClick={() =>
+                        setMusicUrl(
+                          "https://www.youtube.com/embed/" + item.id?.videoId
+                        )
+                      }
+                    >
+                      <span>{item.snippet?.title}</span>
+                      <span>
+                        <a
+                          href={
+                            "https://www.youtube.com/watch?v=" +
+                            item.id?.videoId
+                          }
+                        >
+                          {"https://www.youtube.com/watch?v=" +
+                            item.id?.videoId}
+                        </a>
+                      </span>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+            <textarea
+              placeholder="Paste music url here"
+              className={`post-input w-100 ${isDarkMode ? "dark-mode" : ""}`}
+              value={musicUrl}
+              onChange={handleMusicUrlInputChange}
+            />
           </div>
         )}
         {(type === "UPDATE" || type === "DELETE") && (
@@ -177,11 +285,7 @@ const PostPopup = ({ type = "NEW", onClose, post, onDelete }) => {
                 title="Spotify player"
               ></iframe>
             ) : (
-              <img
-                src={post.musicImage}
-                alt="Music Cover"
-                className="music-cover"
-              />
+              <></>
             )}
           </div>
         )}

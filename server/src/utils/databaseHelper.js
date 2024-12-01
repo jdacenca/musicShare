@@ -29,43 +29,57 @@ export const databaseDisconnect = async function() {
 // POST
 //------------------------------------------------------------
 // Sample call -- let r = await getPost('ACC0000002', 'ASC');
-export const getPost = async function(userId, sort) {
-
-    try {
-        //generate select query
-        let query = 'SELECT * from post where user_id=\'' + userId + "\' and is_deleted='false' ORDER BY created_timestamp " + sort;
-        let result = await client.query({
-                //rowMode: 'array',
-                text: query
-            });
-        return result.rows;
-    } catch (err) {
-        console.log("Error in running query: " + err);
-        return null
-    } 
+export const getPost = async function(req, res) {
+    const userId = req.body.userId;
+    const sort = req.body.sort;
+    if(userId){
+        try {
+            //generate select query
+            let query = 'SELECT * from post where user_id=\'' + userId + "\' and is_deleted='false' ORDER BY created_timestamp " + sort;
+            let result = await client.query({
+                    //rowMode: 'array',
+                    text: query
+                });
+            return res.status(200).send(result.rows);
+        } catch (err) {
+            console.log("Error in running query: " + err);
+            return res.status(500).send("Error in running query");
+        } 
+    } {
+        return res.status(400).send("Invalid request");
+    }
 }
 
 // Sample call -- let r = await insertPost('ACC0000002', 'Look at this song! <3', 'https://open.spotify.com/track/3yfqSUWxFvZELEM4PmlwIR')
 // Returns the number of inserted value to indicate success else, null
-export const insertPost = async function(userId, message, musicUrl) {
+export const insertPost = async function(req, res) {
+    const userId = req.body.userId;
+    const message = req.body.message;
+    const musicUrl = req.body.musicUrl;
 
-    try {
-        //generate select query
-        let query = util.format('INSERT INTO post (message, music_url, no_of_likes, user_id) VALUES (\'%s\', \'%s\', %d, \'%s\')', message, musicUrl, 0, userId);
-        let result = await client.query({
-                //rowMode: 'array',
-                text: query
-            });
-        return result.rowCount;
-    } catch (err) {
-        console.log("Error in running query: " + err);
+    if(userId && message) {
+        try {
+            //generate select query
+            let query = util.format('INSERT INTO post (message, music_url, no_of_likes, user_id) VALUES (\'%s\', \'%s\', %d, \'%s\')', message, musicUrl, 0, userId);
+            let result = await client.query({
+                    //rowMode: 'array',
+                    text: query
+                });
+            return result.rowCount;
+        } catch (err) {
+            console.log("Error in running query: " + err);
+            return null
+        } 
+    } else {
         return null
-    } 
+    }
 }
 
 // Sample call -- let r = await updatePostMessage('PST000003', 'Soooooooooo addicted to this song!')
 // Returns the number of inserted value to indicate success else, null
-export const updatePostMessage = async function(postId, message) {
+export const updatePostMessage = async function(req, res) {
+    const postId = req.body.postId;
+    const message = req.body.message;
 
     try {
         //generate select query
@@ -83,8 +97,9 @@ export const updatePostMessage = async function(postId, message) {
 
 // Sample call -- let r = await updatePostLike('PST000003', 123)
 // Returns the number of inserted value to indicate success else, null
-export const updatePostLike = async function(postId, noOfLikes) {
-
+export const updatePostLike = async function(req, res) {
+    const postId = req.body.postId;
+    const noOfLikes = req.body.noOfLikes;
     try {
         //generate select query
         let query = util.format('UPDATE post SET no_of_likes=%d, updated_timestamp=NOW() where id=\'%s\'', noOfLikes, postId);
@@ -101,20 +116,26 @@ export const updatePostLike = async function(postId, noOfLikes) {
 
 
 // Not yet done
-export const deletePostMessage = async function(postId) {
+export const deletePostMessage = async function(req, res) {
+    const postId = req.body.postId;
 
-    try {
-        //generate select query
-        let query = util.format('UPDATE post SET is_deleted=\'true\'  where id=\'%s\'', postId);
-        let result = await client.query({
-                //owMode: 'array',
-                text: query
-            });
-        return result.rowCount;
-    } catch (err) {
-        console.log("Error in running query: " + err);
-        return null
-    } 
+    if(postId) {
+        try {
+            //generate select query
+            let query = util.format('UPDATE post SET is_deleted=\'true\'  where id=\'%s\'', postId);
+            let result = await client.query({
+                    //owMode: 'array',
+                    text: query
+                });
+            return res.status(200).send(result.rowCount);
+        } catch (err) {
+            console.log("Error in running query: " + err);
+            return res.status(500).send("Error in running query");
+        } 
+    } else {
+        return res.status(400).send("Invalid request");
+    }
+
 }
 
 //------------------------------------------------------------

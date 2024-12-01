@@ -40,16 +40,16 @@ app.post("/post/update", updatePostMessage); // {postId:'PST000003', message:'So
 app.post("/post/like/update", updatePostLike); // {postId:'PST000003', noOfLikes:123}
 app.delete("/post", deletePostMessage); // {postId:'ACC0000002'}
 
-let r1 = await getPost('ACC0000002', 'ASC');
-let r2 = await insertPost('ACC0000002', 'Look at this song! <3', 'https://open.spotify.com/track/3yfqSUWxFvZELEM4PmlwIR')// returns the number of affected rows 
-let r3 = await updatePostMessage('PST000003', 'Soooooooooo addicted to this song!') // returns the number of affected rows 
-let r4 = await updatePostLike('PST000003', 123) // returns the number of affected rows
-let r5 = await deletePostMessage('PST000003'); // returns the number of affected rows
-console.log(r1)
-console.log(r2)
-console.log(r3)
-console.log(r4)
-console.log(r5)
+// let r1 = await getPost('ACC0000002', 'ASC');
+// let r2 = await insertPost('ACC0000002', 'Look at this song! <3', 'https://open.spotify.com/track/3yfqSUWxFvZELEM4PmlwIR')// returns the number of affected rows 
+// let r3 = await updatePostMessage('PST000003', 'Soooooooooo addicted to this song!') // returns the number of affected rows 
+// let r4 = await updatePostLike('PST000003', 123) // returns the number of affected rows
+// let r5 = await deletePostMessage('PST000003'); // returns the number of affected rows
+// console.log(r1)
+// console.log(r2)
+// console.log(r3)
+// console.log(r4)
+// console.log(r5)
 
 //app.use("/api/", router)
 app.use("/auth", router); // auth routes

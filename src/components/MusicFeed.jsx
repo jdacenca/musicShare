@@ -14,57 +14,15 @@ import "../styles/MusicFeed.css";
 import PostPopup from "./PostPopup";
 import MusicPost from "./MusicPost";
 import NameCard from "./NameCard";
-import { setRecommendations } from "../redux/slice";
-
-export const mockData = [
-  {
-    id: 1,
-    username: "pgounalan",
-    title: "Musik Freak",
-    time: "5h",
-    userImage: user1,
-    description: "Check out this awesome track!",
-    likes: 10,
-    comments: [
-      { username: "user1", text: "Love this!" },
-      { username: "user2", text: "Amazing track!" },
-    ],
-    videoUrl: "https://www.youtube.com/embed/CevxZvSJLk8", // Video link
-  },
-  {
-    id: 2,
-    username: "melody_lovz",
-    title: "Lil A-Z",
-    time: "10h",
-    userImage: user2,
-    description: "This song hits different!",
-    likes: 5,
-    comments: [{ username: "user3", text: "Can’t stop listening!" }],
-    //musicImage: album2,
-    spotifyUrl: "2Z51EnLF4Nps4LmulSQPnn",
-  },
-  {
-    id: 3,
-    username: "vinyl_vibes_15",
-    title: "Weekdaz",
-    time: "11h",
-    userImage: user3,
-    description: "Throwback vibes with memories!",
-    likes: 15,
-    comments: [
-      { username: "user4", text: "Brings back memories!" },
-      { username: "user5", text: "An all-time favorite!" },
-    ],
-    spotifyUrl: "3nR9B40hYLKLcR0Eph3Goc", // Spotify track ID for Memories
-  },
-];
+import { setRecommendations, setPosts } from "../redux/slice";
+import moment from "moment";
 
 function MusicFeed() {
   const isDarkMode = useSelector((state) => state.beatSnapApp.isDarkMode);
   const currentUser = useSelector((state) => state.beatSnapApp.currentUser);
+  const posts = useSelector((state) => state.beatSnapApp.posts);
   const dispatch = useDispatch();
 
-  const [posts, setPosts] = useState(mockData);
   const [postContent, setPostContent] = useState("");
   const [isPopupVisible, setPopupVisible] = useState(false);
 
@@ -74,18 +32,60 @@ function MusicFeed() {
 
   const onPostDelete = (id) => {
     const newArray = posts.filter((item) => item.id !== id);
-    setPosts(newArray);
-  };
-
-  const handlePost = () => {
-    if (postContent.trim()) {
-      setPostContent(""); // Clear the input field
-    }
+    dispatch(setPosts(newArray));
   };
 
   useEffect(() => {
     async function fetchTimelineData() {
-      let postsArray = [...posts];
+      let postsArray = [];
+      try {
+        const apiPosts = await fetch(apiUrl + "/posts", {
+          method: "POST",
+          headers: {
+            Accept: "application/json",
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            userId: currentUser.id,
+            sort: "DESC",
+          }),
+        });
+        const apiPostsData = await apiPosts.json();
+
+        // "id": "PST000043",
+        // "message": "test",
+        // "music_url": "",
+        // "created_timestamp": "2024-12-01T06:33:39.331Z",
+        // "updated_timestamp": null,
+        // "no_of_likes": 0,
+        // "user_id": "ACC0000014",
+        // "is_deleted": false
+
+        apiPostsData.forEach((x) => {
+          let timeAgo = moment(x.created_timestamp).fromNow();
+          timeAgo = timeAgo.replace('in',''); 
+          let item = {
+            id: x.id,
+            username: currentUser.id == x.user_id ? currentUser.fullname : x.user_id,
+            title: "",
+            time: timeAgo,
+            userImage: user1,
+            description: x.message,
+            likes: x.no_of_likes,
+            comments: [],
+            canApiDelete: currentUser.id == x.user_id ? true : false,
+          };
+
+          if (x.music_url && x.music_url.indexOf("spotify") !== -1) {
+            item.spotifyUrl = x.music_url;
+          } else {
+            item.videoUrl = x.music_url;
+          }
+          postsArray.push(item);
+        });
+
+        dispatch(setPosts(postsArray));
+      } catch {}
 
       let len = postsArray.length;
       let count = 1;
@@ -94,7 +94,7 @@ function MusicFeed() {
         await fetch(apiUrl + "/spotify/connect", {
           method: "POST",
         });
-        
+
         const recommendations = await fetch(
           apiUrl + "/spotify/recommendations?genre=rock"
         );
@@ -106,7 +106,7 @@ function MusicFeed() {
             id: len + count,
             username: "Spotify",
             title: x.album?.name,
-            //time: "11h",
+            time: "Now",
             userImage: spotify,
             description: "",
             likes: 0,
@@ -115,12 +115,13 @@ function MusicFeed() {
               { username: "user5", text: "An all-time favorite!" },
             ],
             spotifyUrl: x.album?.id,
+            canApiDelete: false
           });
           count++;
         });
       } catch {}
 
-      setPosts(postsArray);
+      dispatch(setPosts(postsArray));
     }
     fetchTimelineData();
   }, [dispatch]);
@@ -154,15 +155,15 @@ function MusicFeed() {
             className="feed-post-actions ms-auto ps-4 align-self-start"
             onClick={() => setPopupVisible(true)}
           >
-            <button
-              className="btn btn-primary w-100 text-nowrap"
-              onClick={handlePost}
-            >
+            <button className="btn btn-primary w-100 text-nowrap">
               + Create a Post
             </button>
           </div>
           {isPopupVisible && (
-            <PostPopup onClose={() => setPopupVisible(false)} />
+            <PostPopup
+              onClose={() => setPopupVisible(false)}
+              postInitContent={postContent}
+            />
           )}
         </div>
       </div>

@@ -155,7 +155,11 @@ body.dark-mode {
 }
 
 .search-item:hover {
-    background-color: #444444;
+    background-color: #d7d6d6;
     border-radius: 8px;
     cursor: pointer;
+}
+
+.dark-mode .search-item:hover {
+    background-color: #444444;
 }

@@ -11,25 +11,13 @@ import MusicFeed from "../components/MusicFeed";
 import NavBar from "../components/Navbar";
 import SideBar from "../components/SideBar";
 
-import { setCurrentUser, setTrendingMusic } from "../redux/slice";
+import { setTrendingMusic } from "../redux/slice";
 import "../styles/Homepage.css";
 
 const Homepage = () => {
   const isDarkMode = useSelector((state) => state.beatSnapApp.isDarkMode);
-  const currentUser = useSelector((state) => state.beatSnapApp.currentUser);
   
   const dispatch = useDispatch();
-
-  useEffect(() => {
-    dispatch(
-      setCurrentUser({
-        username: currentUser.username, //"pgounalan",
-        interest: ["rock"],
-        fullname: currentUser.fullname,//"Priya Gounalan",
-        status: currentUser.status//"Musik Freak",
-      })
-    ); // TODO use data from auth
-  }, [dispatch]);
 
   useEffect(() => {
     async function fetchSpotifyData() {

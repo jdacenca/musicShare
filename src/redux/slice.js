@@ -2,6 +2,7 @@ import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
   isDarkMode: false,
+  posts: [],
   trendingMusic: [],
   recommendations: [],
   authToken: null,
@@ -18,6 +19,9 @@ const appSlice = createSlice({
   reducers: {
     toggleDarkMode: (state) => {
       state.isDarkMode = !state.isDarkMode;
+    },
+    setPosts: (state, action) => {
+      state.posts = action.payload;
     },
     setTrendingMusic: (state, action) => {
       state.trendingMusic = action.payload;
@@ -45,6 +49,7 @@ const appSlice = createSlice({
 
 export const {
   toggleDarkMode,
+  setPosts,
   setTrendingMusic,
   setRecommendations,
   setAuthToken,

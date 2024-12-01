@@ -150,13 +150,7 @@ function MusicPost({ post, onDelete }) {
             allowFullScreen
             title="Spotify player"
           ></iframe>
-        ) : (
-          <img
-            src={post.musicImage}
-            alt="Music Cover"
-            className="music-cover"
-          />
-        )}
+        ) : <></>}
         <p>{post.description}</p>
       </div>
 
