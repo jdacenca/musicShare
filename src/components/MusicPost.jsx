@@ -100,7 +100,7 @@ function MusicPost({ post, onDelete }) {
           {showMenu && (
             <div className="post-menu-popup" ref={popupRef}>
               <ul>
-                {currentUser.username === post.username && (
+                {currentUser.userId === post.userId && (
                   <>
                     <li onClick={() => handleAction("edit")}>Edit</li>
                     <li onClick={() => handleAction("delete")}>Delete</li>
