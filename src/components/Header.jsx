@@ -7,6 +7,7 @@ import logo from "../assets/images/logo.svg";
 import { toggleDarkMode } from "../redux/slice";
 import "../styles/Header.css";
 import Notification from "./Notification";
+import { persistor } from "../redux/store";
 
 function Header() {
   const isDarkMode = useSelector((state) => state.beatSnapApp.isDarkMode);
@@ -29,6 +30,7 @@ function Header() {
         navigate("/userpage");
         break;
       case "logout":
+        persistor.purge();
         navigate("/");
         break;
       case "settings":

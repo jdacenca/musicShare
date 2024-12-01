@@ -1,4 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
+import { PURGE } from "redux-persist";
 
 const initialState = {
   isDarkMode: false,
@@ -45,6 +46,11 @@ const appSlice = createSlice({
       state.createPostData = { text: "", attachments: [] };
     },
   },
+  extraReducers: (builder) => {
+    builder.addCase(PURGE, (state) => {
+        return initialState;
+    });
+}
 });
 
 export const {
