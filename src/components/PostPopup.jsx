@@ -24,6 +24,7 @@ const PostPopup = ({
   const isDarkMode = useSelector((state) => state.beatSnapApp.isDarkMode);
   const [query, setQuery] = useState("");
   const [youtubeData, setYoutubeData] = useState([]);
+  const [showSearch, setShowSearch] = useState(false);
 
   const popupRef = useRef(null);
   const [postContent, setPostContent] = useState("");
@@ -85,9 +86,9 @@ const PostPopup = ({
         likes: 0,
         comments: [],
         videoUrl: musicUrl,
-        canApiDelete: true
+        canApiDelete: true,
       };
-  
+
       const newArray = [post].concat(posts);
       dispatch(setPosts(newArray));
     } catch {}
@@ -132,6 +133,7 @@ const PostPopup = ({
     const youtubeSearch = await fetch(apiUrl + "/youtube/music/search?q=" + v);
     const youtubeSearchData = await youtubeSearch.json();
     setYoutubeData(youtubeSearchData.items);
+    setShowSearch(true);
   };
 
   useEffect(() => {
@@ -160,6 +162,7 @@ const PostPopup = ({
     let v = e.target.value;
     if (v) {
       setMusicUrl(v);
+      setShowSearch(false);
     }
   };
 
@@ -227,17 +230,18 @@ const PostPopup = ({
                 />
                 <Search className="search-icon" />
               </div>
-              {youtubeData && youtubeData.length > 0 && (
+              {showSearch && youtubeData && youtubeData.length > 0 && (
                 <div className="search-results">
                   {youtubeData.slice(0, 3).map((item, index) => (
                     <div
                       key={item.id + index}
                       className="search-item d-flex flex-column mb-3 ps-4"
-                      onClick={() =>
+                      onClick={() => {
+                        setShowSearch(false);
                         setMusicUrl(
                           "https://www.youtube.com/embed/" + item.id?.videoId
-                        )
-                      }
+                        );
+                      }}
                     >
                       <span>{item.snippet?.title}</span>
                       <span>
