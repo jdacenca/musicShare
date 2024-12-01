@@ -36,6 +36,13 @@ router.post("/register", async (req, res) => {
     if (!username || !password || !email || !name || !date_of_birth) {
       return res.status(400).json({ error: "All fields are required" });
     }
+    // Check if username or email is already registered
+    const checkQuery = `SELECT * FROM users WHERE username = $1 OR email = $2`;
+    const checkResult = await pool.query(checkQuery, [username, email]);
+    
+    if (checkResult.rows.length > 0) {
+      return res.status(400).json({ error: "Username or email is already registered" });
+    }
 
     // Hash the password
     const hashedPassword = await bcryptjs.hash(password, 10);
@@ -100,6 +107,74 @@ router.post("/login", async (req, res) => {
   } catch (error) {
     console.error("Error during login:", error.message);
     res.status(500).json({ error: "Error logging in" });
+  }
+});
+
+export const generateResetToken = async function(email) {
+  try {
+      // Find the user in the database
+      const query = `SELECT * FROM users WHERE email = $1`;
+      const result = await pool.query(query, [email]);
+      const user = result.rows[0];
+
+    // Generate a JWT
+    const token = jwt.sign(
+      { id: user.id, username: user.username },
+      process.env.JWT_SECRET,
+      { expiresIn: "1h" }
+    );
+
+    return token;
+  } catch (err) {
+      console.log("Error in running query: " + err);
+      return null;
+  } 
+}
+
+
+router.get("/resetpassword/:token", async (req, res) => {
+    
+    try {
+      const { token } = req.params;
+      const verified = jwt.verify(token, process.env.JWT_SECRET);
+      req.user = verified; // Attach the decoded token to the request
+      return res.status(200).send(verified);
+    
+    } catch (err) {
+      console.log(err)
+      res.status(403).json({ error: "Invalid email link" });
+    }
+});
+
+// Change Password Route
+router.post("/change-password", async (req, res) => {
+  const { id, newPassword } = req.body;
+
+  try {
+    // Validate required fields
+    if (!id || !newPassword) {
+      return res.status(400).json({ error: "Id and new password are required" });
+    }
+
+    // Find the user by email
+    const checkQuery = `SELECT * FROM users WHERE id = $1`;
+    const checkResult = await pool.query(checkQuery, [id]);
+
+    if (checkResult.rows.length === 0) {
+      return res.status(400).json({ error: "Id not registered" });
+    }
+
+    // Hash the new password
+    const hashedPassword = await bcryptjs.hash(newPassword, 10);
+
+    // Update the user's password in the database
+    const updateQuery = `UPDATE users SET password = $1 WHERE id = $2`;
+    await pool.query(updateQuery, [hashedPassword, id]);
+
+    res.status(200).json({ message: "Password changed successfully" });
+  } catch (error) {
+    console.error("Error during password change:", error.message);
+    res.status(500).json({ error: "Error changing password" });
   }
 });
 

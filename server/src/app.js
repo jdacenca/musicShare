@@ -5,7 +5,14 @@ import { spotifyAuth, spotifyAuthFunc } from "./utils/spotifyAuth.js";
 import { spotifyGlobalTopHits } from "./utils/spotifyGlobalTopHits.js";
 import { spotifyGenreRecommendation } from "./utils/spotifyGenreRecommendation.js";
 import { youtubeMusic } from "./utils/youTubeSearchMusicCategory.js";
-import { databaseConnect, databaseDisconnect, getPost, insertPost, updatePostMessage, updatePostLike, deletePostMessage } from "./utils/databaseHelper.js";
+import { databaseConnect,
+  databaseDisconnect,
+  getPost,
+  insertPost,
+  updatePostMessage,
+  updatePostLike,
+  deletePostMessage,
+  updateUser } from "./utils/databaseHelper.js";
 import { sendEmail } from "./utils/sendEmail.js";
 import { router, databasePoolConnect, authenticateToken } from "./utils/authRoutes.js";
 import { startSocketIOServer } from './utils/notification.js'
@@ -16,12 +23,7 @@ import cors from "cors";
 dotenv.config({ path: "../.env" });
 
 const app = express();
-//startSocketIOServer(app)
-//const router = Router();
-
-if (process.env.ENABLE_CORS === 'true') {
-  app.use(cors());
-}
+app.use(cors());
 
 app.use(express.json());
 const port = process.env.PORT || 3000;
@@ -39,19 +41,9 @@ app.post("/posts", getPost); // {userId:'ACC0000002', sort:'ASC'}
 app.post("/post/update", updatePostMessage); // {postId:'PST000003', message:'Soooooooooo addicted to this song!'}
 app.post("/post/like/update", updatePostLike); // {postId:'PST000003', noOfLikes:123}
 app.delete("/post", deletePostMessage); // {postId:'ACC0000002'}
+app.post("/user/resetpassword", sendEmail);
+app.post("/user/update", updateUser);
 
-// let r1 = await getPost('ACC0000002', 'ASC');
-// let r2 = await insertPost('ACC0000002', 'Look at this song! <3', 'https://open.spotify.com/track/3yfqSUWxFvZELEM4PmlwIR')// returns the number of affected rows 
-// let r3 = await updatePostMessage('PST000003', 'Soooooooooo addicted to this song!') // returns the number of affected rows 
-// let r4 = await updatePostLike('PST000003', 123) // returns the number of affected rows
-// let r5 = await deletePostMessage('PST000003'); // returns the number of affected rows
-// console.log(r1)
-// console.log(r2)
-// console.log(r3)
-// console.log(r4)
-// console.log(r5)
-
-//app.use("/api/", router)
 app.use("/auth", router); // auth routes
 
 app.listen(port, () => {

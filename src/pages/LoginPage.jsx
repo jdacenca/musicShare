@@ -29,7 +29,9 @@ const LoginPage = () => {
     const data = await response.json();
 
     if (response.status == 200) {
-      dispatch(setCurrentUser({id: data.user.id, "username": data.user.username, "interest": "rock", "fullname": data.user.fullname, "status": data.user.status}));
+      alert('Login successful! Redirecting to Homepage...');
+      console.log(data.user.id)
+      dispatch(setCurrentUser({"userId": data.user.id,"username": data.user.username, "interest": "rock", "fullname": data.user.fullname, "status": data.user.status}));
       navigate('/home'); // 跳转到 HomePage
     } else {
       alert('Login failed...');

@@ -1,3 +1,6 @@
+import {
+  apiUrl,
+} from "../CommonImports";
 import { useNavigate } from "react-router-dom";
 import defaultuser from "../assets/images/defaultuser.png";
 import { React, useSelector, useState, useEffect } from "../CommonImports";
@@ -22,9 +25,10 @@ const UserPage = () => {
   const navigate = useNavigate();
   const isDarkMode = useSelector((state) => state.beatSnapApp.isDarkMode);
   const currentUser = useSelector((state) => state.beatSnapApp.currentUser);
-  console.log(currentUser.username)
+  console.log(currentUser.userId)
 
   // User details from localStorage with default values
+  const [userId, setUserId] = useState("");
   const [username, setUsername] = useState("");
   const [displayName, setDisplayName] = useState("");
   const [bio, setBio] = useState("");
@@ -49,6 +53,7 @@ const UserPage = () => {
 
   useEffect(() => {
     // Load user details from localStorage on component mount
+    setUserId(currentUser.userId);
     setUsername(currentUser.username);
     setDisplayName(currentUser.fullname);
     setBio(currentUser.status);
@@ -77,26 +82,50 @@ const UserPage = () => {
 
   // Modal actions
   const handleEditClick = () => {
-    setEditUsername(username);
-    setEditDisplayName(displayName);
-    setEditBio(bio);
-    setEditProfilePic(profilePic);
-    setShowEditModal(true);
+      setEditUsername(username);
+      setEditDisplayName(displayName);
+      setEditBio(bio);
+      setEditProfilePic(profilePic);
+      setShowEditModal(true);    
   };
 
-  const handleSaveChanges = () => {
-    setUsername(editUsername);
-    setDisplayName(editDisplayName);
-    setBio(editBio);
-    setProfilePic(editProfilePic); // Ensure the profile picture is updated in main content
+  const handleSaveChanges = async () => {
 
-    // Save to localStorage
-    localStorage.setItem("username", editUsername);
-    localStorage.setItem("displayName", editDisplayName);
-    localStorage.setItem("bio", editBio);
-    localStorage.setItem("profilePic", editProfilePic); // Save the updated profile picture
+    console.log(userId)
+    const response = await fetch(apiUrl + "/user/update", {
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      method: "POST",
+      body: JSON.stringify(
+        {
+          "userId": userId,
+          "name": editDisplayName, 
+          "username": editUsername, 
+          "status": editBio, 
+        }
+      )
+    });
+    //const data = await response.json();
 
-    setShowEditModal(false);
+    if (response.status == 200) {
+      alert('User Updated');
+      setUsername(editUsername);
+      setDisplayName(editDisplayName);
+      setBio(editBio);
+      setProfilePic(editProfilePic); // Ensure the profile picture is updated in main content
+
+      setUsername(editUsername);
+      setDisplayName(editDisplayName);
+      setBio(editBio);
+
+      setShowEditModal(false);
+    } else {
+      alert('User update failed!...');
+      console.log("Failed to Update")
+    }
+
+    
   };
 
   return (

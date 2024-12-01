@@ -1,8 +1,16 @@
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import {
+  React,
+  useState,
+  useEffect,
+  apiUrl,
+} from "../CommonImports";
+import { useNavigate, useParams } from 'react-router-dom';
 import '../styles/ChangePassword.css';
 
 const ChangePassword = () => {
+// check the token first
+  const {token} = useParams();
+  const [id, setId] = useState('');
   const [currentPassword, setCurrentPassword] = useState('');
   const [newPassword, setNewPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
@@ -11,20 +19,59 @@ const ChangePassword = () => {
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const navigate = useNavigate(); // For navigation
 
+  //Call back end to check if the Url is Valid
+  useEffect(() => {
+    const checkTokenValidation = async () => {
+      const response = await fetch(apiUrl + "/auth/resetpassword/" + token, {
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        method: "GET",
+      });
+      const data = await response.json();
+      console.log(data)
+      setId(data.id);
+
+      if (response.status == 200) {
+        alert('Token validated!');
+      } else {
+        alert('Token is expired!...');
+      }
+    };
+
+    checkTokenValidation();
+  }, []);
+
+  
+
   const togglePasswordVisibility = (type) => {
     if (type === 'current') setShowCurrentPassword(!showCurrentPassword);
     if (type === 'new') setShowNewPassword(!showNewPassword);
     if (type === 'confirm') setShowConfirmPassword(!showConfirmPassword);
   };
 
-  const handleSaveChanges = (e) => {
+  const handleSaveChanges = async (e) => {
     e.preventDefault();
     if (newPassword !== confirmPassword) {
       alert('Passwords do not match');
       return;
     }
-    alert('Password changed successfully');
-    navigate('/home'); // Redirect to home or another page after password change
+    const response = await fetch(apiUrl + "/auth/change-password", {
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      method: "POST",
+      body: JSON.stringify({"id": id, "newPassword": newPassword})
+    });
+    const data = await response.json();
+
+    if (response.status == 200) {
+      alert('Password changed successfully');
+      navigate('/login'); // Redirect to login or another page after password change
+    } else {
+      alert('Failed to change password!...');
+    }
+    
   };
 
   return (

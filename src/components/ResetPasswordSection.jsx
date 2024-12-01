@@ -1,7 +1,37 @@
-import React from "react";
+import {
+  React,
+  useState,
+  apiUrl,
+} from "../CommonImports";
 import "../styles/ResetPassword.css";
 
 const ResetPasswordSection = () => {
+  const [email, setEmail] = useState('');
+
+  const handleResetPassword = async (e) => {
+    e.preventDefault();
+
+    if (!email) {
+      alert('Please enter your email.');
+      return;
+    }
+
+    const response = await fetch(apiUrl + "/user/resetpassword", {
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      method: "POST",
+      body: JSON.stringify({"email": email})
+    });
+    const data = await response.json();
+
+    if (response.status == 200) {
+      alert('Email Sent!');
+    } else {
+      alert('Email failed!...');
+    }
+    
+  };
   return (
     
     <div className="right-section">
@@ -10,12 +40,16 @@ const ResetPasswordSection = () => {
         Trouble with logging in? Enter your email address and we’ll
         send you a link to get back into your account.
       </p>
-      <form>
+      <form
+        onSubmit={handleResetPassword}
+      >
         
         <div className="input-group">
           <input
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
             type="text"
-            placeholder="enter your email"
+            placeholder="Enter your email"
             required
           />
         </div>
