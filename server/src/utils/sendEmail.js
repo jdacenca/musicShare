@@ -18,8 +18,8 @@ export const sendEmail = async function(req, res) {
         from: 'beatsnap.media@gmail.com',
         to: email,
         subject: 'Password Reset',
-        text: `Please use the following link to reset your password: ${process.env.UI_URL}/changepassword/${token}`,
-        html: `<p>Please use the following link to reset your password:</p> <p>${process.env.UI_URL}/changepassword/${token}</p>`
+        text: `Please use the following link to reset your password: ${process.env.UI_URL}/changepassword?token=${token}`,
+        html: `<p>Please use the following link to reset your password:</p> <p>${process.env.UI_URL}/changepassword?token=${token}</p>`
     }
 
     transporter.sendMail(mailOptions, function(error, info){
@@ -28,7 +28,7 @@ export const sendEmail = async function(req, res) {
             return res.status(500).send("Internal Server Error");
         } else {
             console.log('Email sent: ' + info.response);
-            return res.status(200);
+            return res.status(200).send("Success");;
         }
     });
 }

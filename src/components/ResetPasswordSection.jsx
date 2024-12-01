@@ -1,12 +1,14 @@
 import {
   React,
   useState,
+  useNavigate,
   apiUrl,
 } from "../CommonImports";
 import "../styles/ResetPassword.css";
 
 const ResetPasswordSection = () => {
   const [email, setEmail] = useState('');
+  const navigate = useNavigate();
 
   const handleResetPassword = async (e) => {
     e.preventDefault();
@@ -25,6 +27,7 @@ const ResetPasswordSection = () => {
     });
     //const data = await response.json();
 
+    console.log(response.status)
     if (response.status == 200) {
       alert('Email Sent!');
     } else {
@@ -59,7 +62,10 @@ const ResetPasswordSection = () => {
       </form>
       <div className="additional-options">
         <p>
-          Already have an account? <a href="#">Login to your account</a>
+        Already have an account?
+        <span onClick={() => navigate('/login')} >
+          <a href="#">Login to your account</a>
+        </span> 
         </p>
         <p>or</p>
         <div className="social-login">

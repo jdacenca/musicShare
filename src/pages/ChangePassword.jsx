@@ -4,12 +4,11 @@ import {
   useEffect,
   apiUrl,
 } from "../CommonImports";
-import { useNavigate, useParams } from 'react-router-dom';
+import { useNavigate, useParams, useLocation } from 'react-router-dom';
 import '../styles/ChangePassword.css';
 
 const ChangePassword = () => {
-// check the token first
-  const {token} = useParams();
+
   const [id, setId] = useState('');
   const [currentPassword, setCurrentPassword] = useState('');
   const [newPassword, setNewPassword] = useState('');
@@ -18,6 +17,11 @@ const ChangePassword = () => {
   const [showNewPassword, setShowNewPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const navigate = useNavigate(); // For navigation
+  const location = useLocation();
+
+  // check the token first
+  let queryParams = new URLSearchParams(location.search);
+  let token = queryParams.get('token');
 
   //Call back end to check if the Url is Valid
   useEffect(() => {
