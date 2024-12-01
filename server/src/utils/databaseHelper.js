@@ -173,3 +173,32 @@ export const deleteUserGenre = async function(req, res) {
         return res.status(500).send("Internal Server Error");
     } 
 }
+
+export const updateUser = async function(req, res) {
+
+    const { name, username, status, userId } = req.body;
+    try {
+        // Check first if the username is already taken
+        //generate select query
+        let checkUsernameQuery = 'SELECT * from users where username=\'' + username + "\'";
+        let isFound = await client.query({
+                //rowMode: 'array',
+                text: checkUsernameQuery
+            });
+
+        if (isFound.rowCount == 0 && (isFound.rows[0].id === userId )) {
+            let query = util.format('UPDATE users SET name=\'%s\', username=\'%s\', status=\'%s\'  where id=\'%s\'', name, username, status, userId);
+            let result = await client.query({
+                    //rowMode: 'array',
+                    text: query
+                });
+            return res.status(200).send({"affectedRows": result.rowCount}); 
+        } else {
+            return res.status(400).send("Username already taken!"); 
+        }
+        
+    } catch (err) {
+        console.log("Error in running query: " + err);
+        return res.status(500).send("Internal Server Error");
+    } 
+}

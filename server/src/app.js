@@ -5,7 +5,14 @@ import { spotifyAuth, spotifyAuthFunc } from "./utils/spotifyAuth.js";
 import { spotifyGlobalTopHits } from "./utils/spotifyGlobalTopHits.js";
 import { spotifyGenreRecommendation } from "./utils/spotifyGenreRecommendation.js";
 import { youtubeMusic } from "./utils/youTubeSearchMusicCategory.js";
-import { databaseConnect, databaseDisconnect, getPost, insertPost, updatePostMessage, updatePostLike, deletePostMessage } from "./utils/databaseHelper.js";
+import { databaseConnect, 
+  databaseDisconnect, 
+  getPost, 
+  insertPost, 
+  updatePostMessage, 
+  updatePostLike, 
+  deletePostMessage,
+  updateUser } from "./utils/databaseHelper.js";
 import { sendEmail } from "./utils/sendEmail.js";
 import { router, databasePoolConnect, authenticateToken } from "./utils/authRoutes.js";
 import { startSocketIOServer } from './utils/notification.js'
@@ -40,6 +47,7 @@ app.post("/post/update", updatePostMessage); // {postId:'PST000003', message:'So
 app.post("/post/like/update", updatePostLike); // {postId:'PST000003', noOfLikes:123}
 app.delete("/post", deletePostMessage); // {postId:'ACC0000002'}
 app.post("/user/resetpassword", sendEmail);
+app.post("/user/update", updateUser);
 
 app.use("/auth", router); // auth routes
 

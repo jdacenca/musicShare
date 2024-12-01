@@ -23,6 +23,7 @@ const Homepage = () => {
   useEffect(() => {
     dispatch(
       setCurrentUser({
+        userId: currentUser.userId,
         username: currentUser.username, //"pgounalan",
         interest: ["rock"],
         fullname: currentUser.fullname,//"Priya Gounalan",

@@ -30,7 +30,8 @@ const LoginPage = () => {
 
     if (response.status == 200) {
       alert('Login successful! Redirecting to Homepage...');
-      dispatch(setCurrentUser({"username": data.user.username, "interest": "rock", "fullname": data.user.fullname, "status": data.user.status}));
+      console.log(data.user.id)
+      dispatch(setCurrentUser({"userId": data.user.id,"username": data.user.username, "interest": "rock", "fullname": data.user.fullname, "status": data.user.status}));
       navigate('/home'); // 跳转到 HomePage
     } else {
       alert('Login failed...');

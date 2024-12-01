@@ -3,7 +3,6 @@
 import express from "express";
 import bcryptjs from 'bcryptjs';
 import jwt from "jsonwebtoken";
-import axios from 'axios';
 import pg from 'pg';
 
 const { Pool } = pg;
