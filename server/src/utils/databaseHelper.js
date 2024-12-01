@@ -52,11 +52,9 @@ export const insertPost = async function(req, res) {
     const { userId, message, musicUrl } = req.body;
     try {
         //generate select query
-        let query = util.format('INSERT INTO post (message, music_url, no_of_likes, user_id) VALUES (\'%s\', \'%s\', %d, \'%s\')', message, musicUrl, 0, userId);
-        let result = await client.query({
-                //rowMode: 'array',
-                text: query
-            });
+        let query = `INSERT INTO post (message, music_url, no_of_likes, user_id) VALUES ($1, $2, $3, $4)`;
+        let result = await client.query(query, [message, musicUrl, 0, userId]);
+
         return res.status(201).send({"affectedRows": result.rowCount});   
     } catch (err) {
         console.log("Error in running query: " + err);
@@ -71,11 +69,8 @@ export const updatePostMessage = async function(req, res) {
     
     try {
         //generate select query
-        let query = util.format('UPDATE post SET message=\'%s\', updated_timestamp=NOW() where id=\'%s\'', message, postId);
-        let result = await client.query({
-                //rowMode: 'array',
-                text: query
-            });
+        let query = `UPDATE post SET message=$1, updated_timestamp=NOW() where id=$2`;
+        let result = await client.query(query, [message, postId]);
         return res.status(200).send({"affectedRows": result.rowCount}); 
     } catch (err) {
         console.log("Error in running query: " + err);
@@ -185,13 +180,12 @@ export const updateUser = async function(req, res) {
                 //rowMode: 'array',
                 text: checkUsernameQuery
             });
+        
+        console.log(isFound.rows[0].id)
+        if (isFound.rowCount == 0 || (isFound.rows[0].id === userId )) {
+            let query = `UPDATE users SET name=$1, username=$2, status=$3  where id=$4`;
+            let result = await client.query(query, [name, username, status, userId]);
 
-        if (isFound.rowCount == 0 && (isFound.rows[0].id === userId )) {
-            let query = util.format('UPDATE users SET name=\'%s\', username=\'%s\', status=\'%s\'  where id=\'%s\'', name, username, status, userId);
-            let result = await client.query({
-                    //rowMode: 'array',
-                    text: query
-                });
             return res.status(200).send({"affectedRows": result.rowCount}); 
         } else {
             return res.status(400).send("Username already taken!"); 
