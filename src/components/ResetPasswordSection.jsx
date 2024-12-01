@@ -23,7 +23,7 @@ const ResetPasswordSection = () => {
       method: "POST",
       body: JSON.stringify({"email": email})
     });
-    const data = await response.json();
+    //const data = await response.json();
 
     if (response.status == 200) {
       alert('Email Sent!');
