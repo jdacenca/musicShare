@@ -3,6 +3,7 @@
 import express from "express";
 import bcryptjs from 'bcryptjs';
 import jwt from "jsonwebtoken";
+import axios from 'axios';
 import pg from 'pg';
 
 const { Pool } = pg;
@@ -110,30 +111,66 @@ router.post("/login", async (req, res) => {
   }
 });
 
+export const generateResetToken = async function(email) {
+  try {
+      // Find the user in the database
+      const query = `SELECT * FROM users WHERE email = $1`;
+      const result = await pool.query(query, [email]);
+      const user = result.rows[0];
+
+    // Generate a JWT
+    const token = jwt.sign(
+      { id: user.id, username: user.username },
+      process.env.JWT_SECRET,
+      { expiresIn: "1h" }
+    );
+
+    return token;
+  } catch (err) {
+      console.log("Error in running query: " + err);
+      return null;
+  } 
+}
+
+
+router.get("/resetpassword/:token", async (req, res) => {
+    
+    try {
+      const { token } = req.params;
+      const verified = jwt.verify(token, process.env.JWT_SECRET);
+      req.user = verified; // Attach the decoded token to the request
+      return res.status(200).send(verified);
+    
+    } catch (err) {
+      console.log(err)
+      res.status(403).json({ error: "Invalid email link" });
+    }
+});
+
 // Change Password Route
 router.post("/change-password", async (req, res) => {
-  const { email, newPassword } = req.body;
+  const { id, newPassword } = req.body;
 
   try {
     // Validate required fields
-    if (!email || !newPassword) {
-      return res.status(400).json({ error: "Email and new password are required" });
+    if (!id || !newPassword) {
+      return res.status(400).json({ error: "Id and new password are required" });
     }
 
     // Find the user by email
-    const checkQuery = `SELECT * FROM users WHERE email = $1`;
-    const checkResult = await pool.query(checkQuery, [email]);
+    const checkQuery = `SELECT * FROM users WHERE id = $1`;
+    const checkResult = await pool.query(checkQuery, [id]);
 
     if (checkResult.rows.length === 0) {
-      return res.status(400).json({ error: "Email not registered" });
+      return res.status(400).json({ error: "Id not registered" });
     }
 
     // Hash the new password
     const hashedPassword = await bcryptjs.hash(newPassword, 10);
 
     // Update the user's password in the database
-    const updateQuery = `UPDATE users SET password = $1 WHERE email = $2`;
-    await pool.query(updateQuery, [hashedPassword, email]);
+    const updateQuery = `UPDATE users SET password = $1 WHERE id = $2`;
+    await pool.query(updateQuery, [hashedPassword, id]);
 
     res.status(200).json({ message: "Password changed successfully" });
   } catch (error) {

@@ -23,7 +23,7 @@ const App = () => {
         <Route path="/settings" element={<Settings />} />
         <Route path="/search" element={<SearchPopup />} />
         <Route path="/create" element={<PostPopup />} />
-        <Route path="/changepassword" element={<ChangePassword />} />
+        <Route path="/changepassword/:token" element={<ChangePassword />} />
 
       </Routes>
     </Router>

@@ -39,6 +39,7 @@ app.post("/posts", getPost); // {userId:'ACC0000002', sort:'ASC'}
 app.post("/post/update", updatePostMessage); // {postId:'PST000003', message:'Soooooooooo addicted to this song!'}
 app.post("/post/like/update", updatePostLike); // {postId:'PST000003', noOfLikes:123}
 app.delete("/post", deletePostMessage); // {postId:'ACC0000002'}
+app.post("/user/resetpassword", sendEmail);
 
 app.use("/auth", router); // auth routes
 
