@@ -57,22 +57,6 @@ const PostPopup = ({
   };
 
   const createPost = async () => {
-    // dummy insert in ui
-    let post = {
-      id: crypto.randomUUID,
-      username: currentUser.fullname,
-      title: "",
-      time: "Now",
-      userImage: user1,
-      description: postContent,
-      likes: 0,
-      comments: [],
-      videoUrl: musicUrl,
-    };
-
-    const newArray = [post].concat(posts);
-    dispatch(setPosts(newArray));
-
     //api
     try {
       const resp = await fetch(apiUrl + "/post/create", {
@@ -87,7 +71,25 @@ const PostPopup = ({
           musicUrl: musicUrl,
         }),
       });
+
       const data = await resp.json();
+
+      let post = {
+        id: data.id,
+        username: currentUser.fullname,
+        userId: currentUser.userId,
+        title: "",
+        time: "Now",
+        userImage: user1,
+        description: postContent,
+        likes: 0,
+        comments: [],
+        videoUrl: musicUrl,
+        canApiDelete: true
+      };
+  
+      const newArray = [post].concat(posts);
+      dispatch(setPosts(newArray));
     } catch {}
   };
 
@@ -105,7 +107,6 @@ const PostPopup = ({
         musicUrl: musicUrl,
       }),
     });
-    const data = await resp.json();
   };
 
   const deletePost = async () => {
@@ -119,7 +120,6 @@ const PostPopup = ({
         postId: post.id,
       }),
     });
-    const data = await resp.json();
   };
 
   const handleClickOutside = (event) => {

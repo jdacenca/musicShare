@@ -52,10 +52,9 @@ export const insertPost = async function(req, res) {
     const { userId, message, musicUrl } = req.body;
     try {
         //generate select query
-        let query = `INSERT INTO post (message, music_url, no_of_likes, user_id) VALUES ($1, $2, $3, $4)`;
+        let query = `INSERT INTO post (message, music_url, no_of_likes, user_id) VALUES ($1, $2, $3, $4) RETURNING id`;
         let result = await client.query(query, [message, musicUrl, 0, userId]);
-
-        return res.status(201).send({"affectedRows": result.rowCount});   
+        return res.status(200).send(result.rows[0]);   
     } catch (err) {
         console.log("Error in running query: " + err);
         return res.status(500).send("Internal Server Error");
