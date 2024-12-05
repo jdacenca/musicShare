@@ -45,14 +45,6 @@
   margin: 0;
 }
 
-/* Dark Mode Styles */
-.dark-mode {
-  background-color: #181818;
-  /* Dark mode background */
-  color: white;
-  /* Dark mode text color */
-}
-
 .dark-mode .header {
   background-color: #181818;
   /* Dark header background */

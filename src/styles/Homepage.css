@@ -54,13 +54,6 @@ body {
   /* Default text color */
 }
 
-body.dark-mode {
-  background-color: #181818;
-  /* Dark background for body */
-  color: white;
-  /* Light text color */
-}
-
 /* Transition effect for smooth mode switch */
 body,
 .music-post {

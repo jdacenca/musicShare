@@ -172,11 +172,11 @@ function MusicPost({ post, onDelete }) {
 
       {/* Comments Section */}
       {showComments && (
-        <div className="comments-section">
+        <div className="post-comments-section">
           {comments.map((comment, index) => (
             <Comment key={index} comment={comment} />
           ))}
-          <form onSubmit={handleCommentSubmit}>
+          <form className="post-form-section" onSubmit={handleCommentSubmit}>
             <div className="w-100 d-flex flex-row align-items-center mt-4">
               {/* Input Field: Takes full width */}
               <div className="flex-grow-1">

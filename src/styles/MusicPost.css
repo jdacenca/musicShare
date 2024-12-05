@@ -49,23 +49,29 @@
   color: inherit;
 }
 
-.comments-section {
-  padding: 10px;
+.post-form-section {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  gap: 15px;
+}
+
+.post-comments-section {
   border-top: 1px solid #ccc;
 }
 
-.comment {
+.post-comment {
   margin: 5px 0;
 }
 
 /* Dark mode styles for the comments section */
-.comments-section.dark-mode {
+.post-comments-section.dark-mode {
   background-color: #232627;
   border-top: 1px solid #555;
   color: #ddd;
 }
 
-.comment.dark-mode {
+.post-comment.dark-mode {
   background-color: #232627;
   color: #fff;
 }

@@ -88,9 +88,7 @@ const PostPopup = ({
         videoUrl: musicUrl,
         canApiDelete: true,
       };
-
-      const newArray = [post].concat(posts);
-      dispatch(setPosts(newArray));
+      dispatch(setPosts([post, ...posts]));
     } catch {}
   };
 
@@ -108,6 +106,18 @@ const PostPopup = ({
         musicUrl: musicUrl,
       }),
     });
+
+    dispatch(
+      setPosts(
+        posts.map((item) => {
+          if (item.id === post.id) {
+            return { ...item, description: postContent };
+          } else {
+            return item;
+          }
+        })
+      )
+    );
   };
 
   const deletePost = async () => {
