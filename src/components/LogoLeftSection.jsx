@@ -6,7 +6,6 @@ const LogoLeftSection = () => {
     <div className="left-section">
       <div class="svg"></div>
       <div className="logo">
-        <h1 className="brand-logo">BEATSNAP</h1>
       </div>
     </div>
   );

@@ -1,0 +1,127 @@
+.genre-container {
+    display: flex;
+    height: 100vh;
+    background-image: url('/background.jpg');
+    background-size: cover;
+    background-position: center;
+    color: white;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+}
+
+.genre-logo {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.genre-content {
+    flex: 2;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 0 50px;
+}
+
+.genre-options {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    margin-bottom: 30px;
+}
+
+.genre-list {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    margin-right: 30px;
+}
+
+.genre-list h2 {
+    margin-bottom: 10px;
+}
+
+.genre-grid {
+    flex: 2;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    grid-gap: 20px;
+}
+
+.genre-card {
+    background-color: rgba(255, 255, 255, 0.2);
+    border-radius: 8px;
+    text-align: center;
+    padding: 20px;
+    position: relative;
+    cursor: pointer;
+    transition: transform 0.3s ease;
+}
+
+.genre-card:hover {
+    transform: scale(1.05);
+}
+
+
+.genre-card img {
+    width: 100px;
+    height: 100px;
+    object-fit: cover;
+    border-radius: 50%;
+    margin-bottom: 10px;
+    transition: opacity 0.3s ease;
+}
+
+
+
+.genre-card .tick-mark {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background-color: #00ff00;
+    color: white;
+    width: 20px;
+    height: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.genre-actions {
+    display: flex;
+    align-items: center;
+}
+
+.genre-button {
+    background-color: rgba(255, 255, 255, 0.3);
+    color: white;
+    border: none;
+    border-radius: 4px;
+    padding: 10px 20px;
+    margin-right: 10px;
+    cursor: pointer;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+}
+
+.genre-skip {
+    color: white;
+    text-decoration: none;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+}
+
+.description {
+    text-align: center; 
+    margin-top: -220px;
+}
+.description h2 {
+    color: white;
+    font-size: 2em; 
+    margin-bottom: 20px; 
+}
+.description h3 {
+    color: white;
+    font-size: 1.2em;
+    font-weight: normal;
+}

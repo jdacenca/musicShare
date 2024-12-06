@@ -9,6 +9,7 @@ import Settings from './pages/Settings';  // 添加这行
 import SearchPopup from './components/SearchPopup'; 
 import PostPopup from './components/PostPopup';
 import ChangePassword from './pages/ChangePassword';
+import Genre from './components/Genre';
 
 const App = () => {
   return (
@@ -24,6 +25,7 @@ const App = () => {
         <Route path="/search" element={<SearchPopup />} />
         <Route path="/create" element={<PostPopup />} />
         <Route path="/changepassword" element={<ChangePassword />} />
+        <Route path="/genre" element={<Genre/>} />
 
       </Routes>
     </Router>
@@ -31,3 +33,4 @@ const App = () => {
 };
 
 export default App;
+
