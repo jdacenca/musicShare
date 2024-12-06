@@ -47,11 +47,12 @@ router.post("/register", async (req, res) => {
     // Hash the password
     const hashedPassword = await bcryptjs.hash(password, 10);
 
+    const defaultPP = 'https://wpuszkmujlxtpxdugyof.supabase.co/storage/v1/object/public/beatSnapPhotos/DEFAULT.png'
     // Insert the new user into the database
     const query = `
-      INSERT INTO users (username, password, name, date_of_birth, email, created_timestamp) 
-      VALUES ($1, $2, $3, $4, $5, CURRENT_TIMESTAMP) RETURNING id`;
-    const values = [username, hashedPassword, name, date_of_birth, email];
+      INSERT INTO users (username, password, name, date_of_birth, email, profile_pic_url, created_timestamp) 
+      VALUES ($1, $2, $3, $4, $5, $6, CURRENT_TIMESTAMP) RETURNING id`;
+    const values = [username, hashedPassword, name, date_of_birth, email, defaultPP] ;
     const result = await pool.query(query, values);
 
     res.status(201).json({ message: "User registered successfully", userId: result.rows[0].id });

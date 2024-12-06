@@ -32,8 +32,23 @@ export const databaseDisconnect = async function() {
 export const getPost = async function(req, res) {
     const { userId, sort } = req.body;
     try {
+
+        // Get all connections
         //generate select query
-        let query = 'SELECT * from post where user_id=\'' + userId + "\' and is_deleted='false' ORDER BY created_timestamp " + sort;
+        let queryUserConnections = 'SELECT following_id from user_connection ucon inner join users uacc on ucon.following_id = uacc.id where ucon.user_id=\'' + userId + "\'";
+        let resultConnections = await client.query({
+                //rowMode: 'array',
+                text: queryUserConnections
+            });
+
+        console.log(resultConnections.rows)
+        
+        let users = []
+        users.push('\'' + userId + '\'')
+        await resultConnections.rows.forEach((user) => users.push('\'' + user.following_id + '\''));
+        //generate select query
+        let query = 'SELECT * from post p inner join users u on p.user_id=u.id where p.user_id in (' + users.join(',') + ") and p.is_deleted='false' ORDER BY u.created_timestamp " + sort;
+        console.log(query)
         let result = await client.query({
                 //rowMode: 'array',
                 text: query
