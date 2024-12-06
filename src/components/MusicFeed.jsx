@@ -1,21 +1,19 @@
+import moment from "moment";
 import {
-  React,
-  useEffect,
-  useState,
-  useSelector,
-  useDispatch,
   apiUrl,
+  React,
+  useDispatch,
+  useEffect,
+  useSelector,
+  useState,
 } from "../CommonImports";
-import user1 from "../assets/images/user1.jpg";
-import user2 from "../assets/images/user2.jpg";
-import user3 from "../assets/images/user3.jpg";
 import spotify from "../assets/images/spotify.jpg";
+import user1 from "../assets/images/user1.jpg";
+import { setPosts, setRecommendations } from "../redux/slice";
 import "../styles/MusicFeed.css";
-import PostPopup from "./PostPopup";
 import MusicPost from "./MusicPost";
 import NameCard from "./NameCard";
-import { setRecommendations, setPosts } from "../redux/slice";
-import moment from "moment";
+import PostPopup from "./PostPopup";
 
 function MusicFeed() {
   const isDarkMode = useSelector((state) => state.beatSnapApp.isDarkMode);
