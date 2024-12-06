@@ -7,17 +7,11 @@ import { React, useSelector, useState, useEffect } from "../CommonImports";
 import Header from "../components/Header";
 import NavBar from "../components/Navbar";
 import {
-  Home,
-  Search,
-  Plus,
-  Clock,
-  MessageCircle,
-  Music,
-  Users,
   User,
   ChevronUp,
   ChevronDown,
 } from "lucide-react";
+import LiveCard from "../components/LiveCard";
 
 import "../styles/Userpage.css";
 
@@ -200,6 +194,8 @@ const UserPage = () => {
                 </div>
               </div>
             </div>
+
+            <LiveCard/>
 
             {/* Share Post Section */}
             <div className="posts-container">
