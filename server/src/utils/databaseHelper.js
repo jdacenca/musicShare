@@ -201,11 +201,13 @@ export const getUserConnections = async function(req, res) {
     const { userId } = req.body;
     try {
         //generate select query
-        let query = 'SELECT * from user_connection where user_id=\'' + userId + "\'";
+        let query = 'SELECT following_id, name from user_connection ucon inner join users uacc on ucon.following_id = uacc.id where ucon.user_id=\'' + userId + "\'";
         let result = await client.query({
                 //rowMode: 'array',
                 text: query
             });
+
+        
         return res.status(200).send(result.rows);
     } catch (err) {
         console.log("Error in running query: " + err);

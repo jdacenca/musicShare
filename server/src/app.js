@@ -12,7 +12,8 @@ import { databaseConnect,
   updatePostMessage,
   updatePostLike,
   deletePostMessage,
-  updateUser } from "./utils/databaseHelper.js";
+  updateUser,
+  getUserConnections } from "./utils/databaseHelper.js";
 import { sendEmail } from "./utils/sendEmail.js";
 import { router, databasePoolConnect, authenticateToken } from "./utils/authRoutes.js";
 import { startSocketIOServer } from './utils/notification.js'
@@ -43,6 +44,7 @@ app.post("/post/like/update", updatePostLike); // {postId:'PST000003', noOfLikes
 app.delete("/post", deletePostMessage); // {postId:'ACC0000002'}
 app.post("/user/resetpassword", sendEmail);
 app.post("/user/update", updateUser);
+app.post("/user/following", getUserConnections);
 
 app.use("/auth", router); // auth routes
 

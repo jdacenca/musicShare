@@ -39,6 +39,9 @@ const appSlice = createSlice({
     setOpenPopup: (state, action) => {
       state.openPopup = action.payload;
     },
+    setFollowing: (state, action) => {
+      state.following = action.payload;
+    },
     setCreatePostData: (state, action) => {
       state.createPostData = action.payload;
     },
@@ -62,6 +65,7 @@ export const {
   setCurrentUser,
   setOpenPopup,
   setCreatePostData,
+  setFollowing,
   clearCreatePostData,
 } = appSlice.actions;
 

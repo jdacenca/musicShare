@@ -1,8 +1,10 @@
 import {
+  apiUrl,
   React,
   useEffect,
   useState,
   useSelector,
+  useDispatch,
   useNavigate,
 } from "../CommonImports";
 import {
@@ -17,9 +19,13 @@ import {
 import "../styles/NavBar.css";
 import PostPopup from "./PostPopup";
 import SearchPopup from "./SearchPopup";
+import { setFollowing } from "../redux/slice";
 
 const NavBar = () => {
   const isDarkMode = useSelector((state) => state.beatSnapApp.isDarkMode);
+  const following = useSelector((state) => state.beatSnapApp.following);
+  const currentUser = useSelector((state) => state.beatSnapApp.currentUser);
+  const dispatch = useDispatch();
 
   const [showFriends, setShowFriends] = useState(false);
   const [isPopupVisible, setPopupVisible] = useState(false);
@@ -31,6 +37,34 @@ const NavBar = () => {
   const closeSearch = () => setIsSearchOpen(false);
 
   useEffect(() => {
+    async function fetchFollowing() {
+      let followingList = [];
+      try {
+        const apiFollowing = await fetch(apiUrl + "/user/following", {
+          method: "POST",
+          headers: {
+            Accept: "application/json",
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            userId: currentUser.userId,
+            sort: "DESC",
+          }),
+        });
+        const apiFollowingData = await apiFollowing.json();
+
+        console.log(apiFollowingData)
+        apiFollowingData.forEach((x) => {
+          followingList.push(x);
+        });
+
+        dispatch(setFollowing(followingList));
+      }
+      catch (err) {
+        console.log("Error:");
+        console.log(err);
+      }
+    }
     const handleShortcut = (e) => {
       if (e.ctrlKey && e.key === "k") {
         e.preventDefault();
@@ -38,6 +72,7 @@ const NavBar = () => {
       }
     };
 
+    fetchFollowing()
     document.addEventListener("keydown", handleShortcut);
     return () => document.removeEventListener("keydown", handleShortcut);
   }, []);
@@ -82,18 +117,12 @@ const NavBar = () => {
 
       {showFriends && (
         <div className="sub-menu">
-          <div className="sub-item">
+          {following.slice(0, 15).map((following, index) => (
+            <div className="sub-item" key={index}>
             <User className="sub-icon" />
-            <span>Lingyan Cui</span>
+            <span>{following.name}</span>
           </div>
-          <div className="sub-item">
-            <User className="sub-icon" />
-            <span>Kayal Jenifer Christopher</span>
-          </div>
-          <div className="sub-item">
-            <User className="sub-icon" />
-            <span>Jeanne Damasco</span>
-          </div>
+          ))}
         </div>
       )}
 
