@@ -97,7 +97,7 @@ export const updatePostLike = async function(req, res) {
 }
 
 
-// Not yet done
+// Does a soft delete on the post, and returns the number of affected rows.
 export const deletePostMessage = async function(req, res) {
 
     const { postId } = req.body;
@@ -190,6 +190,23 @@ export const updateUser = async function(req, res) {
             return res.status(400).send("Username already taken!"); 
         }
         
+    } catch (err) {
+        console.log("Error in running query: " + err);
+        return res.status(500).send("Internal Server Error");
+    } 
+}
+
+export const getUserConnections = async function(req, res) {
+
+    const { userId } = req.body;
+    try {
+        //generate select query
+        let query = 'SELECT * from user_connection where user_id=\'' + userId + "\'";
+        let result = await client.query({
+                //rowMode: 'array',
+                text: query
+            });
+        return res.status(200).send(result.rows);
     } catch (err) {
         console.log("Error in running query: " + err);
         return res.status(500).send("Internal Server Error");
