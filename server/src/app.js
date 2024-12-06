@@ -17,19 +17,35 @@ import { databaseConnect,
 import { uploadPhoto } from "./utils/storePhotos.js";
 import { sendEmail } from "./utils/sendEmail.js";
 import { router, databasePoolConnect, authenticateToken } from "./utils/authRoutes.js";
-import { startSocketIOServer } from './utils/notification.js'
+import { startSocketIOServer } from './utils/notification.js';  
+import http from 'http';
+
 
 import process from 'node:process';
 import cors from "cors";
-import multer from 'multer';
+import multer from "multer";
 
 dotenv.config({ path: "../.env" });
 
 const app = express();
+const server = http.createServer(app);
+
+/*app.use((req, res, next) => {
+  if (req.path.startsWith("/socket.io")) {
+    return next(); // Skip middleware for WebSocket connections
+  }
+  // Other middleware can be added here
+  next();
+});
+*/
+
+startSocketIOServer(server);
+
 app.use(cors());
 
 app.use(express.json());
-const port = process.env.PORT || 3000;
+
+const port = process.env.PORT || 8777;
 
 // connect to database
 let client = databaseConnect();
@@ -56,9 +72,14 @@ app.post("/user/following", getUserConnections);
 app.post("/user/uploadpic", upload.single('image'), uploadPhoto);
 
 app.use("/auth", router); // auth routes
+app.use("/notification", (req, res, next) => {
+  // Example for notification-specific routes if needed
+  res.send("Notifications API placeholder");
+});
 
 app.listen(port, () => {
   console.log("Server is running on port: " + port);
+  console.log("Socket.IO is running on port:" + port);
 })
 
 // Doing cleanup upon code exit

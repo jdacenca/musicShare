@@ -8,8 +8,9 @@ import {
 import { Bell, X } from "react-feather"; // Import Bell icon
 import "../styles/Notification.css";
 import NameCard from "./NameCard";
+import {io} from "socket.io-client"
 
-export const notifications_mock = [
+/*export const notifications_mock = [
   {
     id: 1,
     name: "Kelvin Li",
@@ -39,12 +40,49 @@ export const notifications_mock = [
     avatar: "https://via.placeholder.com/50",
   },
 ];
+*/
 
 function Notification() {
   const isDarkMode = useSelector((state) => state.beatSnapApp.isDarkMode);
   const [showNotifications, setShowNotifications] = useState(false);
-  const [notifications, setNotifications] = useState(notifications_mock);
+  const [notifications, setNotifications] = useState([]);
   const popupRef = useRef(null);
+  const socketRef = useRef(null); 
+  
+  useEffect(() => {
+    // Establish a Socket.IO connection
+    socketRef.current = io("testing"); // Replace with your backend URL
+
+    // Handle connection
+    socketRef.current.on("connect", () => {
+      console.log("Connected to Socket.IO server:", socketRef.current.id);
+
+      // Fetch initial notifications
+      socketRef.current.emit("fetch_notifications", "current-user-id"); // Replace with actual user ID
+    });
+
+    // Listen for notifications from the server
+    socketRef.current.on("notifications", (data) => {
+      console.log("Received notifications:", data);
+      setNotifications(data); // Update the notifications state
+    });
+
+    // Listen for new post notifications
+    socketRef.current.on("new_post_notification", (notification) => {
+      console.log("New post notification received:", notification);
+      setNotifications((prev) => [notification, ...prev]); // Add to existing notifications
+    });
+
+    // Handle disconnection
+    socketRef.current.on("disconnect", (reason) => {
+      console.log("Disconnected from server. Reason:", reason);
+    });
+
+    // Cleanup on component unmount
+    return () => {
+      socketRef.current.disconnect();
+    };
+  }, []);
 
   const handleClickOutside = (event) => {
     if (popupRef.current && !popupRef.current.contains(event.target)) {

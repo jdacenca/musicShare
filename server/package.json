@@ -26,7 +26,8 @@
     "nodemailer": "^6.9.16",
     "pg": "^8.13.1",
     "serverless-http": "^3.2.0",
-    "socket.io": "^4.8.1"
+    "socket.io": "^4.8.1",
+    "socket.io-client": "^4.8.1"
   },
   "devDependencies": {
     "base64-arraybuffer": "^1.0.2"

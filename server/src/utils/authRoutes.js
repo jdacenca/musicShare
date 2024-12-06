@@ -9,7 +9,7 @@ const { Pool } = pg;
 
 export const router = express.Router();
 
-let pool = undefined;
+export let pool = undefined;
 
 // PostgreSQL database connection
 export const databasePoolConnect = async function() {
@@ -181,8 +181,17 @@ router.post("/change-password", async (req, res) => {
   }
 });
 
+
 // Protected Route Middleware
-export const authenticateToken = async function(req, res) {
+export const authenticateToken = async function (req, res, next) {
+  console.log("Middleware executed"); // Add this log
+
+  if (process.env.SKIP_AUTH === "true") {
+    console.log("Skipping authentication middleware for testing.");
+    req.user = { id: "test-user-id", username: "testUser" }; // Mock user data
+    return next();
+  }
+
   const token = req.headers["authorization"];
   if (!token) {
     return res.status(401).json({ error: "Access denied, no token provided" });
@@ -195,7 +204,8 @@ export const authenticateToken = async function(req, res) {
   } catch (err) {
     res.status(403).json({ error: "Invalid token" });
   }
-}
+};
+
 
 // Protected Route Example
 router.get("/api/dashboard", authenticateToken, (req, res) => {
