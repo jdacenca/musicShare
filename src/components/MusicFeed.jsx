@@ -85,7 +85,7 @@ function MusicFeed() {
           postsArray.push(item);
         });
 
-        dispatch(setPosts(postsArray));
+        //dispatch(setPosts(postsArray)); 
       } catch {}
 
       let len = postsArray.length;
@@ -102,28 +102,33 @@ function MusicFeed() {
         const recommendationsData = await recommendations.json();
         dispatch(setRecommendations(recommendationsData));
 
-        recommendationsData?.tracks?.forEach((x) => {
-          postsArray.push({
-            id: len + count,
-            username: "Spotify",
-            title: x.album?.name,
-            time: "Now",
-            userImage: spotify,
-            description: "",
-            likes: 0,
-            comments: [
-              { username: "user4", text: "Brings back memories!" },
-              { username: "user5", text: "An all-time favorite!" },
-            ],
-            spotifyUrl: x.album?.id,
-            canApiDelete: false
-          });
+        // Only load 3 recommendations
+        recommendationsData?.tracks.items.forEach((x) => {
+          if (count < 4) {
+            postsArray.push({
+              id: len + count,
+              username: "Spotify",
+              title: x.name,
+              time: "Now",
+              userImage: spotify,
+              description: "Recommendation",
+              likes: 0,
+              comments: [],
+              spotifyUrl: "https://open.spotify.com/embed/track/" + x.id,
+              canApiDelete: false
+            });
+          }
+
           count++;
         });
-      } catch {}
+      } catch (err) {
+        console.log("Error:")
+        console.log(err);
+      }
 
       dispatch(setPosts(postsArray));
     }
+
     fetchTimelineData();
   }, [dispatch]);
 
