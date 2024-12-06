@@ -101,7 +101,9 @@ router.post("/login", async (req, res) => {
         username: user.username,
         email: user.email,
         fullname: user.name,
-        status: user.status
+        status: user.status,
+        birthday: user.date_of_birth,
+        profilePic: user.profile_pic_url
       },
     });
   } catch (error) {

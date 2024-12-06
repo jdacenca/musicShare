@@ -170,7 +170,7 @@ export const deleteUserGenre = async function(req, res) {
 
 export const updateUser = async function(req, res) {
 
-    const { name, username, status, userId } = req.body;
+    const { name, username, status, userId, profilePicURL } = req.body;
     try {
         // Check first if the username is already taken
         //generate select query
@@ -182,8 +182,8 @@ export const updateUser = async function(req, res) {
         
         console.log(isFound.rows[0].id)
         if (isFound.rowCount == 0 || (isFound.rows[0].id === userId )) {
-            let query = `UPDATE users SET name=$1, username=$2, status=$3  where id=$4`;
-            let result = await client.query(query, [name, username, status, userId]);
+            let query = `UPDATE users SET name=$1, username=$2, status=$3, profile_pic_url=$4  where id=$5`;
+            let result = await client.query(query, [name, username, status, profilePicURL, userId]);
 
             return res.status(200).send({"affectedRows": result.rowCount}); 
         } else {

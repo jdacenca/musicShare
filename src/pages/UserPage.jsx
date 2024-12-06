@@ -19,8 +19,7 @@ const UserPage = () => {
   const navigate = useNavigate();
   const isDarkMode = useSelector((state) => state.beatSnapApp.isDarkMode);
   const currentUser = useSelector((state) => state.beatSnapApp.currentUser);
-  console.log(currentUser.userId)
-
+  console.log(currentUser.profilePic)
   // User details from localStorage with default values
   const [userId, setUserId] = useState("");
   const [username, setUsername] = useState("");
@@ -51,20 +50,42 @@ const UserPage = () => {
     setUsername(currentUser.username);
     setDisplayName(currentUser.fullname);
     setBio(currentUser.status);
-    setProfilePic(
-      localStorage.getItem("profilePic") || defaultuser
-    );
+    setProfilePic(currentUser.profilePic);
   }, []);
 
   // Handle file input for profile picture
-  const handleProfilePicChange = (e) => {
+  const handleProfilePicChange = async (e) => {
     const file = e.target.files[0];
+    
+    console.log(file)
     if (file) {
       const reader = new FileReader();
       reader.onloadend = () => {
         setEditProfilePic(reader.result);
       };
       reader.readAsDataURL(file);
+
+      const formData = new FormData();
+      formData.append('image', e.target.files[0]);
+      formData.append('userId', currentUser.userId);
+
+      try {
+        const response = await fetch(apiUrl + "/user/uploadpic", {
+          headers: {
+            //'Content-Type': 'multipart/form-data',
+            'Access-Control-Allow-Origin': '*'
+          },
+          method: "POST",
+          body: formData
+        });
+
+        const data = await response.json();
+        setProfilePic(data.image);
+      }
+      catch (err) {
+        console.log("Error:");
+        console.log(err);
+      }
     }
   };
 
@@ -97,6 +118,7 @@ const UserPage = () => {
           "name": editDisplayName, 
           "username": editUsername, 
           "status": editBio, 
+          "profilePicURL": profilePic
         }
       )
     });
@@ -217,6 +239,7 @@ const UserPage = () => {
                       <input
                         type="file"
                         accept="image/*"
+                        name='image'
                         onChange={handleProfilePicChange} // Update the profile picture from the file input
                       />
                       <button

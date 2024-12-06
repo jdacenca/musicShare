@@ -68,7 +68,7 @@ function MusicFeed() {
             username: currentUser.userId == x.user_id ? currentUser.fullname : x.user_id,
             title: "",
             time: timeAgo,
-            userImage: user1,
+            userImage: currentUser.profilePic,
             description: x.message,
             likes: x.no_of_likes,
             comments: [],

@@ -14,12 +14,14 @@ import { databaseConnect,
   deletePostMessage,
   updateUser,
   getUserConnections } from "./utils/databaseHelper.js";
+import { uploadPhoto } from "./utils/storePhotos.js";
 import { sendEmail } from "./utils/sendEmail.js";
 import { router, databasePoolConnect, authenticateToken } from "./utils/authRoutes.js";
 import { startSocketIOServer } from './utils/notification.js'
 
 import process from 'node:process';
 import cors from "cors";
+import multer from 'multer';
 
 dotenv.config({ path: "../.env" });
 
@@ -33,6 +35,12 @@ const port = process.env.PORT || 3000;
 let client = databaseConnect();
 let clientPool = databasePoolConnect();
 
+// Store uploaded files in memory
+const storage = multer.memoryStorage();
+
+// Initialize multer with the storage configuration
+const upload = multer({ storage: storage });
+
 app.post("/spotify/connect", spotifyAuth);
 app.get("/spotify/trending", spotifyGlobalTopHits);
 app.get("/spotify/recommendations", spotifyGenreRecommendation);
@@ -45,6 +53,7 @@ app.delete("/post", deletePostMessage); // {postId:'ACC0000002'}
 app.post("/user/resetpassword", sendEmail);
 app.post("/user/update", updateUser);
 app.post("/user/following", getUserConnections);
+app.post("/user/uploadpic", upload.single('image'), uploadPhoto);
 
 app.use("/auth", router); // auth routes
 
