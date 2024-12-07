@@ -9,7 +9,23 @@ import { Bell, X } from "react-feather"; // Import Bell icon
 import "../styles/Notification.css";
 import NameCard from "./NameCard";
 
+const sanitizeYouTubeLink = (url) => {
+  try {
+    const urlObj = new URL(url);
 
+    // Check if it's a YouTube embed link
+    if (urlObj.hostname === "www.youtube.com" && urlObj.pathname.includes("/embed/")) {
+      const videoId = urlObj.pathname.split("/embed/")[1];
+      return `https://www.youtube.com/watch?v=${videoId}`;
+    }
+
+    // If not an embed link, return the original URL
+    return url;
+  } catch (error) {
+    console.error("Invalid URL:", url);
+    return url; // Return original URL if parsing fails
+  }
+};
 
 function Notification() {
   const isDarkMode = useSelector((state) => state.beatSnapApp.isDarkMode);
@@ -121,7 +137,7 @@ function Notification() {
                     </p>
                     {notification.music_url && (
                       <a
-                        href={notification.music_url}
+                        href={sanitizeYouTubeLink(notification.music_url)}
                         target="_blank"
                         rel="noopener noreferrer"
                         className="notification-link"
