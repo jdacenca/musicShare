@@ -20,9 +20,14 @@ function MusicPost({ post, onDelete }) {
   const [commentText, setCommentText] = useState("");
   const [showComments, setShowComments] = useState(false);
   const [showMenu, setShowMenu] = useState(false); // Tracks whether the menu is visible
+  const [showShareMenu, setShowShareMenu] = useState(false); // Tracks whether the menu is visible
+  const [snackbarVisible, setSnackbarVisible] = useState(false);
+
+  let link = post.videoUrl ? post.videoUrl : post.spotifyUrl;
 
   const currentUser = useSelector((state) => state.beatSnapApp.currentUser);
   const popupRef = useRef(null);
+  const sharePopupRef = useRef(null);
 
   const [isPostPopupVisible, setPostPopupVisible] = useState(false);
   const [isPostDelete, setPostDelete] = useState(false);
@@ -44,7 +49,6 @@ function MusicPost({ post, onDelete }) {
   };
 
   const toggleComments = () => setShowComments(!showComments);
-  const toggleMenu = () => setShowMenu(!showMenu); // Toggles the 3-dots menu
 
   const handleAction = (action) => {
     setShowMenu(false); // Close the menu
@@ -68,10 +72,42 @@ function MusicPost({ post, onDelete }) {
     }
   };
 
+  const handleShareAction = (action) => {
+    setShowShareMenu(false); // Close the menu
+    switch (action) {
+      case "whatsapp":
+        const shareText = `Check this out: ${link}`;
+        const whatsappUrl = `https://api.whatsapp.com/send?text=${encodeURIComponent(
+          shareText
+        )}`;
+        window.open(whatsappUrl);
+        break;
+      case "copylink":
+        navigator.clipboard
+          .writeText(link)
+          .then(() => {
+            setSnackbarVisible(true);
+            setTimeout(() => {
+              setSnackbarVisible(false);
+            }, 3000);
+          })
+          .catch((err) => {});
+      default:
+        break;
+    }
+  };
+
   // Closes the popup when clicking outside of it
   const handleClickOutside = (event) => {
     if (popupRef.current && !popupRef.current.contains(event.target)) {
       setShowMenu(false);
+    }
+
+    if (
+      sharePopupRef.current &&
+      !sharePopupRef.current.contains(event.target)
+    ) {
+      setShowShareMenu(false);
     }
   };
 
@@ -94,7 +130,10 @@ function MusicPost({ post, onDelete }) {
         <NameCard user={post} />
         <p></p>
         <div className="post-header-actions">
-          <button className="post-menu-button" onClick={toggleMenu}>
+          <button
+            className="post-menu-button"
+            onClick={() => setShowMenu(!showMenu)}
+          >
             <MoreHorizontal />
           </button>
           {showMenu && (
@@ -150,7 +189,9 @@ function MusicPost({ post, onDelete }) {
             allowFullScreen
             title="Spotify player"
           ></iframe>
-        ) : <></>}
+        ) : (
+          <></>
+        )}
         <p>{post.description}</p>
       </div>
 
@@ -165,9 +206,21 @@ function MusicPost({ post, onDelete }) {
         <button onClick={toggleComments} className="comment-button">
           <MessageCircle /> Comments
         </button>
-        <button className="share-button">
+        <button
+          className="share-button"
+          onClick={() => setShowShareMenu(!showShareMenu)}
+        >
           <Share2 /> Share
         </button>
+        {showShareMenu && (
+          <div className="post-share-menu" ref={sharePopupRef}>
+            <ul>
+              <li onClick={() => handleShareAction("whatsapp")}>WhatsApp</li>
+              <li onClick={() => handleShareAction("copylink")}>Copy Link</li>
+              <li onClick={() => handleShareAction("cancel")}>Cancel</li>
+            </ul>
+          </div>
+        )}
       </div>
 
       {/* Comments Section */}
@@ -197,6 +250,10 @@ function MusicPost({ post, onDelete }) {
             </div>
           </form>
         </div>
+      )}
+
+      {snackbarVisible && (
+        <div className="post-snackbar">Link copied to clipboard!</div>
       )}
     </div>
   );

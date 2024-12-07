@@ -159,3 +159,85 @@
   /* Light icons in dark mode */
   border: none;
 }
+
+.post-share-menu {
+  position: absolute;
+  bottom: 10px;
+  right: 10px;
+  background: #fff;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  z-index: 10;
+  height: auto;  
+  overflow-y: auto;
+}
+
+.post-share-menu ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.post-share-menu li {
+  padding: 10px 15px;
+  cursor: pointer;
+  border-bottom: 1px solid #eee;
+}
+
+.post-share-menu li:hover {
+  background-color: #f5f5f5;
+}
+
+.post-share-menu li:last-child {
+  border-bottom: none;
+}
+
+.dark-mode .post-share-menu {
+  background-color: #2e2e2e;
+  border: 1px solid #444;
+  color: #ffffff;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
+}
+
+.dark-mode .post-share-menu li {
+  border-bottom: 1px solid #444;
+}
+
+.dark-mode .post-share-menu li:hover {
+  background-color: #444;
+}
+
+.post-snackbar {
+  position: fixed;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: #333;
+  color: white;
+  padding: 10px 20px;
+  border-radius: 5px;
+  font-size: 14px;
+  z-index: 1000;
+  opacity: 0;
+  animation: fadeInOut 3s forwards;
+}
+
+@keyframes fadeInOut {
+  0% {
+    opacity: 0;
+    bottom: 0;
+  }
+  10% {
+    opacity: 1;
+    bottom: 20px;
+  }
+  90% {
+    opacity: 1;
+    bottom: 20px;
+  }
+  100% {
+    opacity: 0;
+    bottom: 0;
+  }
+}

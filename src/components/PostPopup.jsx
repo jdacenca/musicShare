@@ -201,10 +201,9 @@ const PostPopup = ({
           <div>
             <NameCard
               user={{
-                username: currentUser?.fullname,
-                title: currentUser?.status,
-                time: "Now",
-              }}
+                time: "Now"
+              }} 
+              isCurrentUser="true"
             />
           </div>
         )}

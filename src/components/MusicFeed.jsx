@@ -61,11 +61,18 @@ function MusicFeed() {
 
         apiPostsData.forEach((x) => {
           let timeAgo = moment(x.created_timestamp).fromNow();
-          //timeAgo = timeAgo.replace('in',''); 
+          //timeAgo = timeAgo.replace('in','');
           let item = {
             id: x.id,
-            userId:  x.user_id ,
-            username: currentUser.userId == x.user_id ? currentUser.fullname : x.user_id,
+            userId: x.user_id,
+            username:
+              currentUser.userId == x.user_id
+                ? currentUser.fullname
+                : x.user_id,
+            profilePic:
+              currentUser.userId == x.user_id
+                ? currentUser?.profilePic
+                : x.profilePic,
             title: "",
             time: timeAgo,
             userImage: currentUser.profilePic,
@@ -113,14 +120,14 @@ function MusicFeed() {
               likes: 0,
               comments: [],
               spotifyUrl: "https://open.spotify.com/embed/track/" + x.id,
-              canApiDelete: false
+              canApiDelete: false,
             });
           }
 
           count++;
         });
       } catch (err) {
-        console.log("Error:")
+        console.log("Error:");
         console.log(err);
       }
 
@@ -139,10 +146,9 @@ function MusicFeed() {
       >
         <NameCard
           user={{
-            username: currentUser?.fullname,
-            title: currentUser?.status,
             time: "Now",
           }}
+          isCurrentUser="true"
         />
         <div className="d-flex flex-row align-items-center">
           <div className="w-100 flex-grow-1">

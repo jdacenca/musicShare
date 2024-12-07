@@ -11,9 +11,9 @@ import { persistor } from "../redux/store";
 
 function Header() {
   const isDarkMode = useSelector((state) => state.beatSnapApp.isDarkMode);
+  const currentUser = useSelector((state) => state.beatSnapApp.currentUser);
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const profilePic = localStorage.getItem("profilePic") || user1;
   const [showMenu, setShowMenu] = useState(false);
   const toggleMenu = () => setShowMenu(!showMenu);
   const popupRef = useRef(null);
@@ -34,7 +34,7 @@ function Header() {
         navigate("/");
         break;
       case "settings":
-        navigate("/settings");  // 替换 alert
+        navigate("/settings"); // 替换 alert
         break;
       default:
         break;
@@ -80,7 +80,11 @@ function Header() {
 
           {/* User Profile Icon */}
           <div className="icon-container" onClick={toggleMenu}>
-            <img src={profilePic} alt="User" className="user-avatar" />
+            <img
+              src={currentUser?.profilePic}
+              alt="User"
+              className="user-avatar"
+            />
           </div>
           {showMenu && (
             <div ref={popupRef} className="profile-menu-popup">

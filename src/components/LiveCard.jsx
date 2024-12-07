@@ -18,10 +18,9 @@ const LiveCard = () => {
           <div className="user-info flex-grow-1">
             <NameCard
               user={{
-                username: currentUser?.fullname,
-                title: currentUser?.status,
                 time: "Now",
               }}
+              isCurrentUser="true"
             />
           </div>
           <div className="ms-auto ps-4 align-self-start"></div>

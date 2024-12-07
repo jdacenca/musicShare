@@ -3,7 +3,7 @@ import {
 } from "../CommonImports";
 import { useNavigate } from "react-router-dom";
 import defaultuser from "../assets/images/defaultuser.png";
-import { React, useSelector, useState, useEffect } from "../CommonImports";
+import { React, useSelector, useState, useEffect, useDispatch } from "../CommonImports";
 import Header from "../components/Header";
 import NavBar from "../components/Navbar";
 import {
@@ -14,12 +14,14 @@ import {
 import LiveCard from "../components/LiveCard";
 
 import "../styles/Userpage.css";
+import { setCurrentUser } from "../redux/slice";
 
 const UserPage = () => {
   const navigate = useNavigate();
   const isDarkMode = useSelector((state) => state.beatSnapApp.isDarkMode);
   const currentUser = useSelector((state) => state.beatSnapApp.currentUser);
-  console.log(currentUser.profilePic)
+  const dispatch = useDispatch();
+
   // User details from localStorage with default values
   const [userId, setUserId] = useState("");
   const [username, setUsername] = useState("");
@@ -80,6 +82,7 @@ const UserPage = () => {
         });
 
         const data = await response.json();
+        dispatch(setCurrentUser({...currentUser, profilePic : data.image + '?t=' + Date.now()}))
         setProfilePic(data.image);
       }
       catch (err) {

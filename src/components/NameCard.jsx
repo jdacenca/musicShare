@@ -1,20 +1,25 @@
 import React from "react";
 import "../styles/NameCard.css";
+import { useSelector } from "../CommonImports";
 
-const NameCard = ({ user }) => {
+const NameCard = ({ user, isCurrentUser = false, showName = true }) => {
+  const currentUser = useSelector((state) => state.beatSnapApp.currentUser);
+
+  let title = isCurrentUser ? currentUser.status : user?.title;
+  let profilePic = isCurrentUser ? currentUser.profilePic : user?.profilePic;
   return (
     <div className="user-info">
-      <img
-        src={user.userImage || "https://via.placeholder.com/50"}
-        alt="User"
-        className="user-avatar"
-      />
-      <div>
-        <h4 className="user-name">{user.username || "Anonymous"}</h4>
-        <p className="user-role">
-          {user.title ? user.title + ". " + user.time : user.time}
-        </p>
-      </div>
+      <img src={profilePic} alt="User" className="user-avatar" />
+      {showName && (
+        <div>
+          <h4 className="user-name">
+            {isCurrentUser ? currentUser.username : user?.username}
+          </h4>
+          <p className="user-role">
+            {title ? title + ". " + user?.time : user?.time}
+          </p>
+        </div>
+      )}
     </div>
   );
 };

@@ -37,7 +37,7 @@ const LoginPage = () => {
         "fullname": data.user.fullname, 
         "status": data.user.status,
         "birthday": data.user.birthday,
-        "profilePic": data.user.profilePic
+        "profilePic": data.user.profilePic + '?t=' + Date.now()  // to reload image
       }));
       navigate('/home'); // 跳转到 HomePage
     } else {

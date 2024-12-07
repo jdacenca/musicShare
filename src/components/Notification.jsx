@@ -130,6 +130,7 @@ function Notification() {
                       userImage: notification?.avatar,
                       username: notification?.name,
                       time: notification?.time,
+                      profilePic: notification?.profilePic
                     }}
                   />
                   <div className="ms-auto">
