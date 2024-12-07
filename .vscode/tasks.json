@@ -6,7 +6,7 @@
 			"script": "dev",
 			"problemMatcher": [],
 			"label": "dev",
-			"detail": "vite"
+			"detail": "ui script"
 		},
 		{
 			"type": "npm",
@@ -14,7 +14,7 @@
 			"path" : "server",
 			"problemMatcher": [],
 			"label": "app",
-			"detail": "app script"
+			"detail": "server script"
 		},
 		{
 			"label": "Run all",
@@ -23,7 +23,7 @@
 				"isDefault": true
 			},
 			"dependsOn" : [
-				"server",
+				"dev",
 				"app"
 			]
 		}

@@ -1,10 +1,27 @@
 /* General Styles */
-.left-nav-bar {
+/* .left-nav-bar {
+    position: fixed;
+    top: 110px; 
     padding: 10px;
     font-family: Arial, sans-serif;
     display: flex;
     flex-direction: column;
     gap: 10px;
+    z-index: 999; 
+  } */
+  .left-nav-bar {
+    position: fixed;
+    top: 110px; 
+    left: 15px;
+    padding: 10px;
+    font-family: Arial, sans-serif;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    z-index: 999; 
+    width: 200px; /* Adjust width as needed */
+    height: calc(100vh - 110px); /* Full height minus header height */
+    box-sizing: border-box;
 }
 
 .nav-item {
