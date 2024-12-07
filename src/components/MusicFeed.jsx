@@ -93,8 +93,9 @@ function MusicFeed() {
           method: "POST",
         });
 
+        console.log((currentUser.interest).join(','))
         const recommendations = await fetch(
-          apiUrl + "/spotify/recommendations?genre=rock"
+          apiUrl + "/spotify/recommendations?genre=" + (currentUser.interest).join(',')
         );
         const recommendationsData = await recommendations.json();
         dispatch(setRecommendations(recommendationsData));

@@ -318,10 +318,10 @@ export const deletePostMessage = async function(req, res) {
 // Sample call -- let r = await getPost('ACC0000002', 'ASC');
 export const getUserGenre = async function(req, res) {
 
-    const { userId } = req.body;
+    const { userId } = req.query;
     try {
         //generate select query
-        let query = 'SELECT * from user_music_genre where user_id=\'' + userId + "\'";
+        let query = 'SELECT music_genre from user_music_genre where user_id=\'' + userId + "\'";
         let result = await client.query({
                 //rowMode: 'array',
                 text: query

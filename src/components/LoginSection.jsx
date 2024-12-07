@@ -26,11 +26,27 @@ const LoginSection = () => {
     });
     const data = await response.json();
 
+    const responseGenre = await fetch(apiUrl + "/user/genre?" + new URLSearchParams({
+        userId: data.user.id
+      }), 
+      {
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        method: "GET",
+      });
+    const genre = await responseGenre.json();
+    
+    const interests = [];
+    genre.forEach((g) => {
+      interests.push(g.music_genre)
+    });
+
     if (response.status == 200) {
       dispatch(setCurrentUser({
         "userId": data.user.id,
         "username": data.user.username, 
-        "interest": "rock", 
+        "interest": interests, 
         "fullname": data.user.fullname, 
         "status": data.user.status,
         "birthday": data.user.birthday,
