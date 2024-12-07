@@ -40,15 +40,13 @@ export const getPost = async function(req, res) {
                 //rowMode: 'array',
                 text: queryUserConnections
             });
-
-        console.log(resultConnections.rows)
         
         let users = []
         users.push('\'' + userId + '\'')
         await resultConnections.rows.forEach((user) => users.push('\'' + user.following_id + '\''));
         //generate select query
         let query = 'SELECT p.*, u.name, u.username, u.status, u.profile_pic_url from post p inner join users u on p.user_id=u.id where p.user_id in (' + users.join(',') + ") and p.is_deleted='false' ORDER BY p.created_timestamp " + sort;
-        console.log(query)
+
         let result = await client.query({
                 //rowMode: 'array',
                 text: query
@@ -313,13 +311,13 @@ export const getUserConnections = async function(req, res) {
     const { userId } = req.body;
     try {
         //generate select query
-        let query = 'SELECT following_id, name from user_connection ucon inner join users uacc on ucon.following_id = uacc.id where ucon.user_id=\'' + userId + "\'";
+        let query = 'SELECT ucon.following_id, uacc.name, uacc.profile_pic_url from user_connection ucon inner join users uacc on ucon.following_id = uacc.id where ucon.user_id=\'' + userId + "\'";
         let result = await client.query({
                 //rowMode: 'array',
                 text: query
             });
 
-        
+        console.log(result.rows)
         return res.status(200).send(result.rows);
     } catch (err) {
         console.log("Error in running query: " + err);
