@@ -24,7 +24,7 @@ const Genre = () => {
 
   const genres = [
     { name: 'Pop', image: pop },
-    { name: 'Hip Hop', image: hiphop },
+    { name: 'Hip-Hop', image: hiphop },
     { name: 'Instrumental', image: instrumental },
     { name: 'Jazz', image: jazz },
     { name: 'Country', image: country},
@@ -34,7 +34,7 @@ const Genre = () => {
     { name: 'Alternative', image: alternative },
     { name: 'Blues', image: blues },
     { name: 'Rock', image: rock },
-    { name: 'World Music', image: worldmusic  }
+    { name: 'World-Music', image: worldmusic  }
   ];
 
   const toggleGenreSelection = (genreName) => {
