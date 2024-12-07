@@ -11,7 +11,7 @@ import Comment from "./Comment";
 import PostPopup from "./PostPopup";
 import NameCard from "./NameCard";
 
-function MusicPost({ post, onDelete }) {
+function MusicPost({ post, onDelete, cardType = "large" }) {
   const isDarkMode = useSelector((state) => state.beatSnapApp.isDarkMode);
 
   const [isLiked, setIsLiked] = useState(false); // Tracks whether the post is liked
@@ -121,60 +121,65 @@ function MusicPost({ post, onDelete }) {
 
   return (
     <div
-      className={`music-post card shadow-xss rounded-xxl border-0 p-4 m-4 ${
+      className={`music-post card shadow-xss rounded-xxl border-0 p-4 ${
         isDarkMode ? "dark-mode" : ""
       }`}
     >
       {/* Post Header */}
-      <div className="post-header">
-        <NameCard user={post} />
-        <p></p>
-        <div className="post-header-actions">
-          <button
-            className="post-menu-button"
-            onClick={() => setShowMenu(!showMenu)}
-          >
-            <MoreHorizontal />
-          </button>
-          {showMenu && (
-            <div className="post-menu-popup" ref={popupRef}>
-              <ul>
-                {currentUser.userId === post.userId && (
-                  <>
-                    <li onClick={() => handleAction("edit")}>Edit</li>
-                    <li onClick={() => handleAction("delete")}>Delete</li>
-                  </>
-                )}
-                <li onClick={() => handleAction("account-details")}>
-                  Account Details
-                </li>
-                <li onClick={() => handleAction("cancel")}>Cancel</li>
-              </ul>
-            </div>
-          )}
-          {isPostPopupVisible && (
-            <PostPopup
-              type={isPostDelete ? "DELETE" : "UPDATE"}
-              onClose={() => setPostPopupVisible(false)}
-              post={post}
-              onDelete={() => {
-                setPostPopupVisible(false);
-                onDelete();
-              }}
-            />
-          )}
-          <button className="close-button" onClick={() => handleAction("hide")}>
-            <X />
-          </button>
+      {cardType === "large" && (
+        <div className="post-header">
+          <NameCard user={post} />
+          <p></p>
+          <div className="post-header-actions">
+            <button
+              className="post-menu-button"
+              onClick={() => setShowMenu(!showMenu)}
+            >
+              <MoreHorizontal />
+            </button>
+            {showMenu && (
+              <div className="post-menu-popup" ref={popupRef}>
+                <ul>
+                  {currentUser.userId === post.userId && (
+                    <>
+                      <li onClick={() => handleAction("edit")}>Edit</li>
+                      <li onClick={() => handleAction("delete")}>Delete</li>
+                    </>
+                  )}
+                  <li onClick={() => handleAction("account-details")}>
+                    Account Details
+                  </li>
+                  <li onClick={() => handleAction("cancel")}>Cancel</li>
+                </ul>
+              </div>
+            )}
+            {isPostPopupVisible && (
+              <PostPopup
+                type={isPostDelete ? "DELETE" : "UPDATE"}
+                onClose={() => setPostPopupVisible(false)}
+                post={post}
+                onDelete={() => {
+                  setPostPopupVisible(false);
+                  onDelete();
+                }}
+              />
+            )}
+            <button
+              className="close-button"
+              onClick={() => handleAction("hide")}
+            >
+              <X />
+            </button>
+          </div>
         </div>
-      </div>
+      )}
 
       {/* Post Body */}
       <div className="post-body">
         {post.videoUrl ? (
           <iframe
-            width="100%"
-            height="300"
+            width={cardType === "large" ? "100%" : ""}
+            height={cardType === "large" ? "300px" : "200px"} 
             src={post.videoUrl}
             title="YouTube video player"
             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
@@ -183,8 +188,8 @@ function MusicPost({ post, onDelete }) {
         ) : post.spotifyUrl ? (
           <iframe
             src={`${post.spotifyUrl}`}
-            width="100%"
-            height="360px"
+            width={cardType === "large" ? "100%" : ""}
+            height={cardType === "large" ? "360px" : "200px"} 
             allow="encrypted-media"
             allowFullScreen
             title="Spotify player"
@@ -192,36 +197,38 @@ function MusicPost({ post, onDelete }) {
         ) : (
           <></>
         )}
-        <p>{post.description}</p>
+        {cardType === "large" && <p>{post.description}</p>}
       </div>
 
       {/* Post Footer */}
-      <div className="post-footer">
-        <button
-          onClick={handleLikeToggle}
-          className={`like-button ${isLiked ? "liked" : ""}`}
-        >
-          <Heart /> Like ({likes})
-        </button>
-        <button onClick={toggleComments} className="comment-button">
-          <MessageCircle /> Comments
-        </button>
-        <button
-          className="share-button"
-          onClick={() => setShowShareMenu(!showShareMenu)}
-        >
-          <Share2 /> Share
-        </button>
-        {showShareMenu && (
-          <div className="post-share-menu" ref={sharePopupRef}>
-            <ul>
-              <li onClick={() => handleShareAction("whatsapp")}>WhatsApp</li>
-              <li onClick={() => handleShareAction("copylink")}>Copy Link</li>
-              <li onClick={() => handleShareAction("cancel")}>Cancel</li>
-            </ul>
-          </div>
-        )}
-      </div>
+      {cardType === "large" && (
+        <div className="post-footer">
+          <button
+            onClick={handleLikeToggle}
+            className={`like-button ${isLiked ? "liked" : ""}`}
+          >
+            <Heart /> Like ({likes})
+          </button>
+          <button onClick={toggleComments} className="comment-button">
+            <MessageCircle /> Comments
+          </button>
+          <button
+            className="share-button"
+            onClick={() => setShowShareMenu(!showShareMenu)}
+          >
+            <Share2 /> Share
+          </button>
+          {showShareMenu && (
+            <div className="post-share-menu" ref={sharePopupRef}>
+              <ul>
+                <li onClick={() => handleShareAction("whatsapp")}>WhatsApp</li>
+                <li onClick={() => handleShareAction("copylink")}>Copy Link</li>
+                <li onClick={() => handleShareAction("cancel")}>Cancel</li>
+              </ul>
+            </div>
+          )}
+        </div>
+      )}
 
       {/* Comments Section */}
       {showComments && (

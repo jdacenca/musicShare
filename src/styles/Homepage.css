@@ -83,6 +83,7 @@ body,
   /* Default text color */
   overflow: hidden;
   /* Prevents accidental scrolling */
+  padding-bottom: 200px;
 }
 
 /* Dark mode styling for app-container */
