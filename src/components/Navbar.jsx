@@ -48,7 +48,6 @@ const NavBar = () => {
           },
           body: JSON.stringify({
             userId: currentUser.userId,
-            sort: "DESC",
           }),
         });
         const apiFollowingData = await apiFollowing.json();
@@ -119,7 +118,7 @@ const NavBar = () => {
         <div className="sub-menu">
           {following.slice(0, 15).map((following, index) => (
             <div className="sub-item" key={index}>
-            <User className="sub-icon" />
+            <img src={following.profile_pic_url} alt="User" className="user-avatar" />
             <span>{following.name}</span>
           </div>
           ))}
