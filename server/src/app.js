@@ -1,5 +1,6 @@
 import dotenv from "dotenv";
 import express from "express";
+import http from "http";
 
 import { spotifyAuth, spotifyAuthFunc } from "./utils/spotifyAuth.js";
 import { spotifyGlobalTopHits } from "./utils/spotifyGlobalTopHits.js";
@@ -17,8 +18,8 @@ import { databaseConnect,
 import { uploadPhoto } from "./utils/storePhotos.js";
 import { sendEmail } from "./utils/sendEmail.js";
 import { router, databasePoolConnect, authenticateToken } from "./utils/authRoutes.js";
-import { startSocketIOServer } from './utils/notification.js';  
-import http from 'http';
+import  notificationsRoutes  from './utils/notification.js';  
+
 
 
 import process from 'node:process';
@@ -39,7 +40,6 @@ const server = http.createServer(app);
 });
 */
 
-startSocketIOServer(server);
 
 app.use(cors());
 
@@ -72,14 +72,10 @@ app.post("/user/following", getUserConnections);
 app.post("/user/uploadpic", upload.single('image'), uploadPhoto);
 
 app.use("/auth", router); // auth routes
-app.use("/notification", (req, res, next) => {
-  // Example for notification-specific routes if needed
-  res.send("Notifications API placeholder");
-});
+app.use("/api/notifications", notificationsRoutes);
 
 app.listen(port, () => {
   console.log("Server is running on port: " + port);
-  console.log("Socket.IO is running on port:" + port);
 })
 
 // Doing cleanup upon code exit
