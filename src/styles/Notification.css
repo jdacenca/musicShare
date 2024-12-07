@@ -72,3 +72,24 @@
   height: 20px;
   /* Keep height uniform */
 }
+
+.notification-user-time {
+  display: flex;
+  flex-direction: column; /* Arrange child elements vertically */
+  margin-top: 5px; /* Add spacing between blocks */
+}
+
+.notification-posted-by {
+  margin-bottom: 2px; /* Space below "Posted by:" */
+  font-weight: bold; /* Keep "Posted by:" bold */
+}
+
+.highlight-username {
+  font-weight: bold; /* Highlight the username */
+  color: #000; /* Optional: Adjust color for emphasis */
+}
+
+.notification-time {
+  margin-top: 2px; /* Space above the timestamp */
+  color: #000000; /* Optional: Adjust color to make it lighter */
+}
