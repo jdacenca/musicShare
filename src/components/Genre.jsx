@@ -1,10 +1,22 @@
 import React, { useState } from 'react';
 import '../styles/Genre.css';
 import pop from '../assets/images/pop.png';
-import classical from '../assets/images/classical.png';
 import hiphop from '../assets/images/hiphop.png';
-import jazz from '../assets/images/jazz.png';
 import instrumental from '../assets/images/instrumental.png';
+import jazz from '../assets/images/jazz.png';
+
+import country from '../assets/images/country.png';
+import funk from '../assets/images/funk.png';
+import indie from '../assets/images/indie.png'
+import classical from '../assets/images/classical.png';
+
+import alternative from '../assets/images/alternative.png';
+import blues from '../assets/images/blues.png';
+import rock from '../assets/images/rock.png';
+import worldmusic from '../assets/images/worldmusic.png';
+
+
+
 
 const Genre = () => {
   const [selectedGenres, setSelectedGenres] = useState([]);
@@ -14,14 +26,14 @@ const Genre = () => {
     { name: 'HIP POP', image: hiphop },
     { name: 'INSTRUMENTAL', image: instrumental },
     { name: 'JAZZ', image: jazz },
-    { name: 'COUNTRY', image: 'country.png' },
-    { name: 'FUNK', image: 'funk.png' },
-    { name: 'INDIE', image: 'indie.png' },
+    { name: 'COUNTRY', image: country},
+    { name: 'FUNK', image: funk },
+    { name: 'INDIE', image: indie},
     { name: 'CLASSICAL', image: classical },
-    { name: 'ALTERNATIVE', image: 'alternative.png' },
-    { name: 'BLUES', image: 'blues.png' },
-    { name: 'ROCK', image: 'rock.png' },
-    { name: 'WORLD MUSIC', image: 'world-music.png' }
+    { name: 'ALTERNATIVE', image: alternative },
+    { name: 'BLUES', image: blues },
+    { name: 'ROCK', image: rock },
+    { name: 'WORLD MUSIC', image: worldmusic  }
   ];
 
   const toggleGenreSelection = (genreName) => {

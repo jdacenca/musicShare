@@ -1,86 +1,111 @@
-import { Server } from "socket.io";
+import express from "express";
 import { pool } from "./authRoutes.js";
 
-// Initialize the Express app and Socket.IO server
-export const startSocketIOServer = (server) => {
-  const io = new Server(server, {
-    cors: {
-      origin: "*",
-      methods: ["GET", "POST"],
-    },
-  });
+const router = express.Router();
 
-  // Socket.IO logic
-  io.on("connection", (socket) => {
-    console.log(`User connected: ${socket.id}`);
+// Fetch unseen notifications for a specific user
+router.get("/", async (req, res) => {
+  const { userId, viewed } = req.query;
 
-    // Fetch unseen notifications for a specific user
-    socket.on("fetch_notifications", async (userId) => {
-      try {
-        const result = await pool.query(
-          `SELECT n.*, p.message, p.music_url
-           FROM notifications n
-           JOIN post p ON n.post_id = p.id
-           WHERE n.user_id = $1 AND n.viewed = FALSE
-           ORDER BY n.created_at DESC`,
-          [userId]
-        );
-        socket.emit("notifications", result.rows);
-      } catch (error) {
-        console.error("Error fetching notifications:", error);
-      }
+  try {
+    const query = `
+    SELECT n.*, p.message, p.music_url
+    FROM notifications n
+    JOIN post p ON n.post_id = p.id
+    WHERE n.user_id = $1 AND n.viewed = $2
+    ORDER BY n.created_at DESC
+  `;
+    const values = viewed !== undefined ? [userId, viewed] : [userId];
+    const result = await pool.query(query, values);
+
+    res.status(200).json(result.rows);
+  } catch (error) {
+    console.error("Error fetching notifications:", error);
+    res.status(500).json({ error: "Failed to fetch notifications" });
+  }
+});
+
+// Mark notifications as viewed
+router.put("/view", async (req, res) => {
+  const { notificationIds } = req.body;
+
+    // Input validation
+    if (!notificationIds || !Array.isArray(notificationIds) || notificationIds.length === 0) {
+      return res.status(400).json({
+        success: false,
+        error: "Invalid input: 'notificationIds' must be a non-empty array.",
+      });
+    }
+
+  try {
+    // Validate if the notifications exist
+    const result = await pool.query(
+      `SELECT id FROM notifications WHERE id = ANY($1)`,
+      [notificationIds]
+    );
+
+    const existingIds = result.rows.map((row) => row.id);
+
+    // Find invalid IDs (those not present in the database)
+    const invalidIds = notificationIds.filter((id) => !existingIds.includes(id));
+
+    if (invalidIds.length > 0) {
+      return res.status(404).json({
+        success: false,
+        message: "Some notifications were not found.",
+        invalidIds,
+      });
+    }
+
+    // Update only existing IDs
+    await pool.query(
+      `UPDATE notifications SET viewed = TRUE WHERE id = ANY($1)`,
+      [existingIds]
+    );
+
+    res.status(200).json({
+      success: true,
+      updatedIds: existingIds,
     });
+  } catch (error) {
+    console.error("Error marking notifications as viewed:", error);
+    res.status(500).json({ success: false, error: "Failed to update notifications." });
+  }
+});
 
-    // Mark notifications as viewed
-    socket.on("mark_as_viewed", async ({ userId, postId }) => {
-      try {
-        await pool.query(
-          `UPDATE notifications
-           SET viewed = TRUE
-           WHERE user_id = $1 AND post_id = $2`,
-          [userId, postId]
-        );
-        socket.emit("notification_viewed", { userId, postId });
-      } catch (error) {
-        console.error("Error marking notification as viewed:", error);
-      }
-    });
+// Create a new post and notifications for all users
+router.post("/create", async (req, res) => {
+  const { userId, message, url } = req.body;
 
-    // Broadcast a new notification to all users
-    socket.on("create_post_notification", async (data) => {
-      const { userId, postId, title } = data;
+  try {
+    // Insert the post into the database
+    const postResult = await pool.query(
+      `INSERT INTO post (user_id, message, music_url) VALUES ($1, $2, $3) RETURNING id`,
+      [userId, message, url]
+    );
+    const postId = postResult.rows[0].id;
 
-      try {
-        // Fetch all users except the post creator
-        const usersResult = await pool.query(`SELECT id FROM users WHERE id != $1`, [userId]);
-        const users = usersResult.rows;
+    // Fetch all users except the post creator
+    const usersResult = await pool.query(`SELECT id FROM users WHERE id != $1`, [userId]);
+    const users = usersResult.rows;
 
-        // Create notifications for each user
-        const notifications = users.map((user) =>
-          pool.query(
-            `INSERT INTO notifications (user_id, post_id, title, viewed)
-             VALUES ($1, $2, $3, FALSE)`,
-            [user.id, postId, title]
-          )
-        );
+    // Create notifications for each user\
+    const title = "New Post Notification";
+    const notifications = users.map((user) =>
+    pool.query(
+      `INSERT INTO notifications (user_id, post_id, title, viewed)
+       VALUES ($1, $2, $3, FALSE)`,
+      [user.id, postId, title]
+    )
+  );
 
-        await Promise.all(notifications);
+    await Promise.all(notifications);
 
-        // Broadcast the notification to all connected clients
-        io.emit("new_post_notification", { postId, title });
-      } catch (error) {
-        console.error("Error creating notifications:", error);
-      }
-    });
+    res.status(201).json({ success: true, message: "Post created and notifications sent." });
+  } catch (error) {
+    console.error("Error creating post or notifications:", error);
+    res.status(500).json({ error: "Failed to create post and notifications." });
+  }
+});
 
-    // Handle disconnection
-    socket.on("disconnect", (reason) => {
-      console.log(`Socket.IO: User disconnected with ID: ${socket.id}. Reason: ${reason}`);
-    });
-  });
-
-  // Debug server-level events
-  server.on("error", (err) => {
-    console.error("Socket.IO Server Error:", err.message, err.stack);
-  });
-};
+export default router;
