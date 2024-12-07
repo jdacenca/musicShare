@@ -9,9 +9,10 @@ router.get("/", async (req, res) => {
 
   try {
     const query = `
-    SELECT n.*, p.message, p.music_url
+    SELECT n.*, p.message, p.music_url, u.name, u.username, u.status, u.profile_pic_url
     FROM notifications n
     JOIN post p ON n.post_id = p.id
+    JOIN users u ON u.id = p.user_id
     WHERE n.user_id = $1 AND n.viewed = $2
     ORDER BY n.created_at DESC
   `;

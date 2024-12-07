@@ -6,6 +6,7 @@ const initialState = {
   posts: [],
   trendingMusic: [],
   recommendations: [],
+  notifications: [],
   authToken: null,
   currentUser: null,
   openPopup: null,
@@ -29,6 +30,9 @@ const appSlice = createSlice({
     },
     setRecommendations: (state, action) => {
       state.recommendations = action.payload;
+    },
+    setNotifications: (state, action) => {
+      state.notifications = action.payload;
     },
     setAuthToken: (state, action) => {
       state.authToken = action.payload;
@@ -61,6 +65,7 @@ export const {
   setPosts,
   setTrendingMusic,
   setRecommendations,
+  setNotifications,
   setAuthToken,
   setCurrentUser,
   setOpenPopup,

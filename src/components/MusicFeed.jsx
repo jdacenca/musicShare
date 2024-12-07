@@ -8,11 +8,9 @@ import {
   useState,
 } from "../CommonImports";
 import spotify from "../assets/images/spotify.jpg";
-import user1 from "../assets/images/user1.jpg";
 import { setPosts, setRecommendations } from "../redux/slice";
 import "../styles/MusicFeed.css";
 import MusicPost from "./MusicPost";
-import NameCard from "./NameCard";
 import PostPopup from "./PostPopup";
 
 function MusicFeed() {
@@ -144,16 +142,10 @@ function MusicFeed() {
           isDarkMode ? "dark-mode" : ""
         }`}
       >
-        <NameCard
-          user={{
-            time: "Now",
-          }}
-          isCurrentUser="true"
-        />
         <div className="d-flex flex-row align-items-center">
           <div className="w-100 flex-grow-1">
             <textarea
-              className={`feed-post-input w-100 ${
+              className={`feed-post-input w-100 mb-0 ${
                 isDarkMode ? "dark-mode" : ""
               }`}
               placeholder="What's on your mind today?"
@@ -179,12 +171,8 @@ function MusicFeed() {
       </div>
 
       {posts.slice(0, 15).map((post, index) => (
-        <div className="m-4">
-          <MusicPost
-            key={post.id}
-            post={post}
-            onDelete={() => onPostDelete(post.id)}
-          />
+        <div className="m-4" key={post.id}>
+          <MusicPost post={post} onDelete={() => onPostDelete(post.id)} />
         </div>
       ))}
     </>
