@@ -65,14 +65,111 @@ export const insertPost = async function(req, res) {
     const { userId, message, musicUrl } = req.body;
     try {
         //generate select query
-        let query = `INSERT INTO post (message, music_url, no_of_likes, user_id) VALUES ($1, $2, $3, $4) RETURNING id`;
-        let result = await client.query(query, [message, musicUrl, 0, userId]);
-        return res.status(200).send(result.rows[0]);   
+        const query = `INSERT INTO post (message, music_url, no_of_likes, user_id) VALUES ($1, $2, $3, $4) RETURNING id`;
+        const postResult = await client.query(query, [message, musicUrl, 0, userId]);
+        const postId = postResult.rows[0].id;  
+
+        // Create notifications for all users except the creator
+        await createNotificationsForPost(postId, userId);
+
+        return res.status(200).send({"success": true, postId});
     } catch (err) {
-        console.log("Error in running query: " + err);
-        return res.status(500).send("Internal Server Error");
+        console.log("Error creating post or notifications: " + err);
+        return res.status(500).send("Failed to create post or notifications.");
     } 
 }
+
+// Create notifications for all users except the post creator
+export const createNotificationsForPost = async function (postId, userId) {
+    try {
+      // Fetch all users except the post creator
+      const usersResult = await client.query(`SELECT id FROM users WHERE id != $1`, [userId]);
+      const users = usersResult.rows;
+  
+      if (users.length === 0) {
+        console.log("No users found to notify.");
+        return; // No notifications to create
+      }
+  
+      // Define a default notification title
+      const title = "New Post Notification";
+  
+      // Insert notifications for each user
+      const notifications = users.map((user) =>
+        client.query(
+          `INSERT INTO notifications (user_id, post_id, title, viewed)
+           VALUES ($1, $2, $3, FALSE)`,
+          [user.id, postId, title]
+        )
+      );
+  
+      await Promise.all(notifications); // Wait for all notifications to be inserted
+      console.log("Notifications created successfully.");
+    } catch (error) {
+      console.error("Error creating notifications:", error);
+      throw error; 
+    }
+  };
+  
+  // Fetch notifications for a specific user
+export const getNotifications = async function(req, res) {
+    const { userId, viewed } = req.query;
+
+    if (!userId) {
+        return res.status(400).send({ error: "User ID is required." });
+    }
+
+    try {
+        const viewedCondition = viewed !== undefined ? "AND n.viewed = $2" : "";
+        const query = `
+        SELECT 
+            n.id AS notification_id,
+            n.created_at AS notification_time,
+            p.message AS post_message,
+            p.music_url,
+            u.username AS user_name
+        FROM notifications n
+        JOIN post p ON n.post_id = p.id
+        JOIN users u ON p.user_id = u.id
+        WHERE n.user_id = $1 ${viewedCondition}
+        ORDER BY n.created_at DESC;
+        `;
+
+        const values = viewed !== undefined
+            ? [userId, viewed === "true"]
+            : [userId];
+
+        const result = await client.query(query, values);
+
+        return res.status(200).send(result.rows);
+    } catch (error) {
+        console.error("Error fetching notifications:", error);
+        return res.status(500).send("Failed to fetch notifications.");
+    }
+};
+  
+  // Mark notifications as viewed
+  export const markNotificationsAsViewed = async function (req, res) {
+    const { notificationIds } = req.body;
+  
+    if (!notificationIds || !Array.isArray(notificationIds) || notificationIds.length === 0) {
+      return res.status(400).send({
+        success: false,
+        error: "Invalid input: 'notificationIds' must be a non-empty array.",
+      });
+    }
+  
+    try {
+      const query = `UPDATE notifications SET viewed = TRUE WHERE id = ANY($1)`;
+      const result = await client.query(query, [notificationIds]);
+  
+      return res.status(200).send({ success: true, updatedIds: notificationIds });
+    } catch (error) {
+      console.error("Error marking notifications as viewed:", error);
+      return res.status(500).send("Failed to update notifications.");
+    }
+  };
+  
 
 // Sample call -- let r = await updatePostMessage('PST000003', 'Soooooooooo addicted to this song!')
 // Returns the number of inserted value to indicate success else, null
