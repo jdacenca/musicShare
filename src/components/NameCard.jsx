@@ -13,7 +13,7 @@ const NameCard = ({ user, isCurrentUser = false, showName = true }) => {
       {showName && (
         <div>
           <h4 className="user-name">
-            {isCurrentUser ? currentUser.username : user?.username}
+            {isCurrentUser ? currentUser.fullname : user?.username}
           </h4>
           <p className="user-role">
             {title ? title + ". " + user?.time : user?.time}

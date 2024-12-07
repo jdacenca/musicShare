@@ -1,6 +1,7 @@
 import React from "react";
 import { useSelector } from "react-redux";
 import "../styles/LiveCard.css";
+import { Headphones } from "react-feather";
 import NameCard from "./NameCard";
 
 const LiveCard = () => {
@@ -23,7 +24,9 @@ const LiveCard = () => {
               isCurrentUser="true"
             />
           </div>
-          <div className="ms-auto ps-4 align-self-start"></div>
+          <div className="ms-auto ps-4 align-self-start">
+          <Headphones/>
+          </div>
         </div>
 
         <div className="live-card-body">
