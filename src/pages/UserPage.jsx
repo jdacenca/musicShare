@@ -46,6 +46,7 @@ const UserPage = () => {
   const [displayName, setDisplayName] = useState("");
   const [bio, setBio] = useState("");
   const [profilePic, setProfilePic] = useState("");
+  const [posts, setPosts] = useState([]);
   const [postCount, setPostCount] = useState(12);
   const [followersCount, setFollowersCount] = useState(345);
   const [followingCount, setFollowingCount] = useState(200);
@@ -73,6 +74,125 @@ const UserPage = () => {
     setDisplayName(currentUser.fullname);
     setBio(currentUser.status);
     setProfilePic(currentUser.profilePic);
+
+    async function fetchPosts() {
+      let postsArray = [];
+
+      try {
+        const apiPosts = await fetch(apiUrl + "/user/post", {
+          method: "POST",
+          headers: {
+            Accept: "application/json",
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            userId: currentUser.userId,
+            sort: "DESC",
+          }),
+        });
+        const userPosts = await apiPosts.json();
+
+        userPosts.forEach((x) => {
+          let timeAgo = moment(x.created_timestamp).fromNow();
+          //timeAgo = timeAgo.replace('in','');
+          let item = {
+            id: x.id,
+            userId: x.user_id,
+            username: x.name,
+            profilePic: x.profile_pic_url,
+            title: x.status,
+            time: timeAgo,
+            userImage: currentUser.profilePic,
+            description: x.message,
+            likes: x.no_of_likes,
+            comments: [],
+            canApiDelete: currentUser.userId == x.user_id ? true : false,
+          };
+
+          if (x.music_url && x.music_url.indexOf("spotify") !== -1) {
+            item.spotifyUrl = x.music_url;
+          } else {
+            item.videoUrl = x.music_url;
+          }
+          postsArray.push(item);
+        })
+
+        dispatch(setPosts(postsArray));
+      } catch (err) {
+        console.log("Error");
+        console.log(err);
+      }
+    }
+
+    async function fetchPostCount() {
+      try {
+        const apiPosts = await fetch(apiUrl + "/user/post/count", {
+          method: "POST",
+          headers: {
+            Accept: "application/json",
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            userId: currentUser.userId,
+          }),
+        });
+        const apiPostCount = await apiPosts.json();
+
+        //console.log(apiPostCount)
+        setPostCount(parseInt(apiPostCount.count, 10))
+      } catch (err) {
+        console.log("Error");
+        console.log(err);
+      }
+    }
+
+    async function fetchFollowingCount() {
+      try {
+        const apiFollow = await fetch(apiUrl + "/user/following/count", {
+          method: "POST",
+          headers: {
+            Accept: "application/json",
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            userId: currentUser.userId,
+          }),
+        });
+        const apiFollowingCount = await apiFollow.json();
+
+        setFollowingCount(parseInt(apiFollowingCount.count, 10))
+      } catch (err) {
+        console.log("Error");
+        console.log(err);
+      }
+    }
+
+    async function fetchFollowerCount() {
+      try {
+        const apiFollow = await fetch(apiUrl + "/user/follower/count", {
+          method: "POST",
+          headers: {
+            Accept: "application/json",
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            userId: currentUser.userId,
+          }),
+        });
+        const apiFollowerCount = await apiFollow.json();
+
+        console.log(apiFollowerCount)
+        setFollowersCount(parseInt(apiFollowerCount.count, 10))
+      } catch (err) {
+        console.log("Error");
+        console.log(err);
+      }
+    }
+
+    fetchPosts();
+    fetchPostCount();
+    fetchFollowingCount();
+    fetchFollowerCount();
   }, []);
 
   useEffect(() => {

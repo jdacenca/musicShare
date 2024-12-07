@@ -52,7 +52,7 @@ const NavBar = () => {
         });
         const apiFollowingData = await apiFollowing.json();
 
-        console.log(apiFollowingData)
+        //console.log(apiFollowingData)
         apiFollowingData.forEach((x) => {
           followingList.push(x);
         });
