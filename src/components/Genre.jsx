@@ -1,3 +1,4 @@
+import { useSelector, useDispatch, apiUrl } from "../CommonImports";
 import React, { useState } from 'react';
 import '../styles/Genre.css';
 import pop from '../assets/images/pop.png';
@@ -16,24 +17,24 @@ import rock from '../assets/images/rock.png';
 import worldmusic from '../assets/images/worldmusic.png';
 
 
-
-
 const Genre = () => {
   const [selectedGenres, setSelectedGenres] = useState([]);
+  const currentUser = useSelector((state) => state.beatSnapApp.currentUser);
+  const dispatch = useDispatch();
 
   const genres = [
-    { name: 'POP', image: pop },
-    { name: 'HIP POP', image: hiphop },
-    { name: 'INSTRUMENTAL', image: instrumental },
-    { name: 'JAZZ', image: jazz },
-    { name: 'COUNTRY', image: country},
-    { name: 'FUNK', image: funk },
-    { name: 'INDIE', image: indie},
-    { name: 'CLASSICAL', image: classical },
-    { name: 'ALTERNATIVE', image: alternative },
-    { name: 'BLUES', image: blues },
-    { name: 'ROCK', image: rock },
-    { name: 'WORLD MUSIC', image: worldmusic  }
+    { name: 'Pop', image: pop },
+    { name: 'Hip Hop', image: hiphop },
+    { name: 'Instrumental', image: instrumental },
+    { name: 'Jazz', image: jazz },
+    { name: 'Country', image: country},
+    { name: 'Funk', image: funk },
+    { name: 'Indie', image: indie},
+    { name: 'Classical', image: classical },
+    { name: 'Alternative', image: alternative },
+    { name: 'Blues', image: blues },
+    { name: 'Rock', image: rock },
+    { name: 'World Music', image: worldmusic  }
   ];
 
   const toggleGenreSelection = (genreName) => {
@@ -42,6 +43,31 @@ const Genre = () => {
         ? prevSelected.filter(genre => genre !== genreName)
         : [...prevSelected, genreName]
     );
+  };
+
+  const handleGenreSave = async () => {
+    console.log(selectedGenres)
+
+    if (selectedGenres.lenght === 0) {
+      alert('Please select a genre!.');
+      return;
+    }
+
+    const response = await fetch(apiUrl + "/user/genre", {
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      method: "POST",
+      body: JSON.stringify({"userId": currentUser.userId, "genre": selectedGenres})
+    });
+    const data = await response.json();
+
+    if (response.status == 200) {
+      alert('Saved!');
+      navigate('/home');
+    } else {
+      alert('Login failed...');
+    }
   };
 
   return (
@@ -57,34 +83,33 @@ const Genre = () => {
       </div>
       <div>
       </div>
-      <div className="right-section">
-        <div className="genre-options">
-          <div className="genre-grid">
-            {genres.map((genre) => (
-              <div 
-                key={genre.name} 
-                className={`genre-card ${selectedGenres.includes(genre.name) ? 'selected' : ''}`}
-                onClick={() => toggleGenreSelection(genre.name)}
-              >
-                <img 
-                  src={genre.image} 
-                  alt={genre.name} 
-                  className={selectedGenres.includes(genre.name) ? 'dimmed' : ''}
-                />
-                <h3>{genre.name}</h3>
-                {selectedGenres.includes(genre.name) && (
-                  <div className="tick-mark">✓</div>
-                )}
-              </div>
-            ))}
+        <div className="right-section">
+          <div className="genre-options">
+            <div className="genre-grid">
+              {genres.map((genre) => (
+                <div 
+                  key={genre.name} 
+                  className={`genre-card ${selectedGenres.includes(genre.name) ? 'selected' : ''}`}
+                  onClick={() => toggleGenreSelection(genre.name)}
+                >
+                  <img 
+                    src={genre.image} 
+                    alt={genre.name} 
+                    className={selectedGenres.includes(genre.name) ? 'dimmed' : ''}
+                  />
+                  <h3>{genre.name}</h3>
+                  {selectedGenres.includes(genre.name) && (
+                    <div className="tick-mark">✓</div>
+                  )}
+                </div>
+              ))}
+            </div>
           </div>
+          <div className="genre-actions">
+            <button className="def-button" onClick={handleGenreSave}>Save</button>
+          </div>
+          <a href="#" className="def-skip">Skip this step</a>
         </div>
-        <div className="genre-actions">
-          <button className="genre-button">Create</button>
-          <button className="genre-button">Cancel</button>
-          <a href="#" className="genre-skip">Skip this step</a>
-        </div>
-      </div>
     </div>
   );
 };

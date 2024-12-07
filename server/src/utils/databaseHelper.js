@@ -284,9 +284,24 @@ export const getUserGenre = async function(req, res) {
 
 export const insertUserGenre = async function(req, res) {
 
-    const { userId, genreId } = req.body;
+    const { userId, genre } = req.body;
     try {
-        let query = util.format('INSERT INTO user_music_genre (user_id, music_genre_id) VALUES (\'%s\', %d)', userId, genreId);
+
+        // Delete the current genre chosen
+        let delQuery = "DELETE FROM user_music_genre WHERE user_id='" + userId + "'";
+        let delResult = await client.query({
+            //rowMode: 'array',
+            text: delQuery
+        });
+
+        // generate the insert values
+        const values = [];
+        genre.forEach((g) => {
+            values.push( "('" + userId + "', '" + g.toLowerCase() + "')")
+        })
+
+        let query = "INSERT INTO user_music_genre (user_id, music_genre) VALUES " + values.join(",");
+        console.log(query)
         let result = await client.query({
                 //rowMode: 'array',
                 text: query

@@ -40,7 +40,7 @@ const SignUpPage = () => {
 
     if (response.status == 201) {
       alert('Sign up successful! Redirecting to login page...');
-      navigate('/login');
+      navigate('/genre');
     } else {
       alert('Creating new account failed...');
     }
@@ -175,7 +175,7 @@ const SignUpPage = () => {
               marginTop: '10px',
             }}
           >
-            Next
+            Create
           </button>
         </form>
 

@@ -18,7 +18,9 @@ import { databaseConnect,
   getPostCount,
   getUserFollowers,
   getUserFollowing,
-  getAllUserPost } from "./utils/databaseHelper.js";
+  getAllUserPost,
+  getUserGenre,
+  insertUserGenre } from "./utils/databaseHelper.js";
 import { uploadPhoto } from "./utils/storePhotos.js";
 import { sendEmail } from "./utils/sendEmail.js";
 import { router, databasePoolConnect, authenticateToken } from "./utils/authRoutes.js";
@@ -73,6 +75,8 @@ app.post("/post/like/update", updatePostLike); // {postId:'PST000003', noOfLikes
 app.delete("/post", deletePostMessage); // {postId:'ACC0000002'}
 
 app.post("/user/post", getAllUserPost);
+app.get("/user/genre", getUserGenre);
+app.post("/user/genre", insertUserGenre);
 app.post("/user/resetpassword", sendEmail);
 app.post("/user/update", updateUser);
 app.post("/user/post/count", getPostCount);
