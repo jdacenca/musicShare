@@ -147,6 +147,57 @@ export const getNotifications = async function(req, res) {
         return res.status(500).send("Failed to fetch notifications.");
     }
 };
+
+export const getDetailsByUsername = async function (req, res) {
+  const { username } = req.query;
+
+  if (!username) {
+    return res.status(400).send({ error: "username is required." });
+  }
+
+  let userResult;
+  try {
+    userResult = await client.query(
+      `
+        SELECT 
+            u.profile_pic_url AS "profilePic",
+            u.status,
+            u.name AS fullname,
+            u.username,
+            u.id as "userId"
+        FROM users u
+        WHERE u.username = $1
+        `,
+      [username]
+    );
+    if (!userResult || userResult.rows.length == 0) {
+      return res.status(400).send({ error: "invalid username." });
+    }
+  } catch (error) {
+    console.error("Error fetching user:", error);
+    return res.status(500).send({ error: "unable to fetch user." });
+  }
+
+  let postResult;
+
+  try {
+    postResult = await client.query(
+      `
+         SELECT *
+         FROM post 
+         WHERE is_deleted=\'false\' and user_id = $1
+         `,
+      [userResult.rows[0].userId])
+    ;
+  } catch (error) {
+    console.error("Error fetching posts", error);
+  }
+
+  return res.status(200).send({
+    user: userResult.rows[0],
+    posts: postResult && postResult.rows ? postResult.rows : [],
+  });
+};
   
   // Mark notifications as viewed
   export const markNotificationsAsViewed = async function (req, res) {

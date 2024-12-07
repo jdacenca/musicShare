@@ -42,7 +42,7 @@ function MusicPost({ post, onDelete, cardType = "large" }) {
     if (commentText) {
       setComments([
         ...comments,
-        { username: "current_user", text: commentText },
+        { username: currentUser.fullname , text: commentText },
       ]);
       setCommentText("");
     }
@@ -121,7 +121,9 @@ function MusicPost({ post, onDelete, cardType = "large" }) {
 
   return (
     <div
-      className={`music-post card shadow-xss rounded-xxl border-0 p-4 ${
+      className={`music-post card shadow-xss rounded-xxl border-0  ${
+        cardType === 'large' ? "p-4" : ""
+      }  ${
         isDarkMode ? "dark-mode" : ""
       }`}
     >

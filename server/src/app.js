@@ -14,7 +14,8 @@ import { databaseConnect,
   updatePostLike,
   deletePostMessage,
   updateUser,
-  getUserConnections } from "./utils/databaseHelper.js";
+  getUserConnections,
+  getDetailsByUsername } from "./utils/databaseHelper.js";
 import { uploadPhoto } from "./utils/storePhotos.js";
 import { sendEmail } from "./utils/sendEmail.js";
 import { router, databasePoolConnect, authenticateToken } from "./utils/authRoutes.js";
@@ -71,6 +72,7 @@ app.post("/user/resetpassword", sendEmail);
 app.post("/user/update", updateUser);
 app.post("/user/following", getUserConnections);
 app.post("/user/uploadpic", upload.single('image'), uploadPhoto);
+app.get("/user/get", getDetailsByUsername);
 
 app.use("/auth", router); // auth routes
 app.use("/api/notifications", notificationsRoutes);
