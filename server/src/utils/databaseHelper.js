@@ -29,7 +29,7 @@ export const databaseDisconnect = async function() {
 // POST
 //------------------------------------------------------------
 // Sample call -- let r = await getPost('ACC0000002', 'ASC');
-export const getPost = async function(req, res) {
+export const getPostWithFollowing = async function(req, res) {
     const { userId, sort } = req.body;
     try {
 
@@ -52,6 +52,42 @@ export const getPost = async function(req, res) {
                 text: query
             });
         return res.status(200).send(result.rows);
+    } catch (err) {
+        console.log("Error in running query: " + err);
+        return res.status(500).send("Internal Server Error");
+    } 
+}
+
+export const getAllUserPost = async function(req, res) {
+    const { userId, sort } = req.body;
+    try {
+        //generate select query
+        let query = "SELECT p.*, u.name, u.username, u.status, u.profile_pic_url from post p inner join users u on p.user_id=u.id where p.user_id='" + userId + "' and p.is_deleted=false ORDER BY p.created_timestamp " + sort;
+
+        console.log(query)
+        let result = await client.query({
+                //rowMode: 'array',
+                text: query
+            });
+        return res.status(200).send(result.rows);
+    } catch (err) {
+        console.log("Error in running query: " + err);
+        return res.status(500).send("Internal Server Error");
+    } 
+}
+
+export const getPostCount = async function(req, res) {
+    const { userId, sort } = req.body;
+    try {
+        //generate select query
+        let query = 'SELECT COUNT(*) from post where user_id=\'' + userId + "\' and is_deleted=false";
+
+        let result = await client.query({
+                //rowMode: 'array',
+                text: query
+            });
+        //console.log(result.rows)
+        return res.status(200).send(result.rows[0]);
     } catch (err) {
         console.log("Error in running query: " + err);
         return res.status(500).send("Internal Server Error");
@@ -317,8 +353,47 @@ export const getUserConnections = async function(req, res) {
                 text: query
             });
 
-        console.log(result.rows)
+        //console.log(result.rows)
         return res.status(200).send(result.rows);
+    } catch (err) {
+        console.log("Error in running query: " + err);
+        return res.status(500).send("Internal Server Error");
+    } 
+}
+
+export const getUserFollowing = async function(req, res) {
+
+    const { userId } = req.body;
+    try {
+        //generate select query
+        let query = 'SELECT COUNT(*) from user_connection where user_id=\'' + userId + "\'";
+        let result = await client.query({
+                //rowMode: 'array',
+                text: query
+            });
+
+        //console.log(result.rows)
+        return res.status(200).send(result.rows[0]);
+    } catch (err) {
+        console.log("Error in running query: " + err);
+        return res.status(500).send("Internal Server Error");
+    } 
+}
+
+
+export const getUserFollowers = async function(req, res) {
+
+    const { userId } = req.body;
+    try {
+        //generate select query
+        let query = 'SELECT COUNT(*) from user_connection where following_id=\'' + userId + "\'";
+        let result = await client.query({
+                //rowMode: 'array',
+                text: query
+            });
+
+        //console.log(result.rows)
+        return res.status(200).send(result.rows[0]);
     } catch (err) {
         console.log("Error in running query: " + err);
         return res.status(500).send("Internal Server Error");

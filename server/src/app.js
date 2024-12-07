@@ -8,13 +8,17 @@ import { spotifyGenreRecommendation } from "./utils/spotifyGenreRecommendation.j
 import { youtubeMusic } from "./utils/youTubeSearchMusicCategory.js";
 import { databaseConnect,
   databaseDisconnect,
-  getPost,
+  getPostWithFollowing,
   insertPost,
   updatePostMessage,
   updatePostLike,
   deletePostMessage,
   updateUser,
-  getUserConnections } from "./utils/databaseHelper.js";
+  getUserConnections,
+  getPostCount,
+  getUserFollowers,
+  getUserFollowing,
+  getAllUserPost } from "./utils/databaseHelper.js";
 import { uploadPhoto } from "./utils/storePhotos.js";
 import { sendEmail } from "./utils/sendEmail.js";
 import { router, databasePoolConnect, authenticateToken } from "./utils/authRoutes.js";
@@ -63,12 +67,17 @@ app.get("/spotify/trending", spotifyGlobalTopHits);
 app.get("/spotify/recommendations", spotifyGenreRecommendation);
 app.get("/youtube/music/search", youtubeMusic);
 app.post("/post/create", insertPost); // {userId:'ACC0000002', message:'Look at this song! <3', url:'https://open.spotify.com/track/3yfqSUWxFvZELEM4PmlwIR'} 
-app.post("/posts", getPost); // {userId:'ACC0000002', sort:'ASC'}
+app.post("/posts", getPostWithFollowing); // {userId:'ACC0000002', sort:'ASC'}
 app.post("/post/update", updatePostMessage); // {postId:'PST000003', message:'Soooooooooo addicted to this song!'}
 app.post("/post/like/update", updatePostLike); // {postId:'PST000003', noOfLikes:123}
 app.delete("/post", deletePostMessage); // {postId:'ACC0000002'}
+
+app.post("/user/post", getAllUserPost);
 app.post("/user/resetpassword", sendEmail);
 app.post("/user/update", updateUser);
+app.post("/user/post/count", getPostCount);
+app.post("/user/following/count", getUserFollowing);
+app.post("/user/follower/count", getUserFollowers);
 app.post("/user/following", getUserConnections);
 app.post("/user/uploadpic", upload.single('image'), uploadPhoto);
 
