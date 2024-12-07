@@ -65,15 +65,9 @@ function MusicFeed() {
           let item = {
             id: x.id,
             userId: x.user_id,
-            username:
-              currentUser.userId == x.user_id
-                ? currentUser.fullname
-                : x.user_id,
-            profilePic:
-              currentUser.userId == x.user_id
-                ? currentUser?.profilePic
-                : x.profilePic,
-            title: "",
+            username: x.name,
+            profilePic: x.profile_pic_url,
+            title: x.status,
             time: timeAgo,
             userImage: currentUser.profilePic,
             description: x.message,
@@ -90,7 +84,7 @@ function MusicFeed() {
           postsArray.push(item);
         });
 
-        //dispatch(setPosts(postsArray)); 
+        //dispatch(setPosts(postsArray));
       } catch {}
 
       let len = postsArray.length;
@@ -177,12 +171,15 @@ function MusicFeed() {
           )}
         </div>
       </div>
+
       {posts.slice(0, 15).map((post, index) => (
-        <MusicPost
-          key={post.id}
-          post={post}
-          onDelete={() => onPostDelete(post.id)}
-        />
+        <div className="m-4">
+          <MusicPost
+            key={post.id}
+            post={post}
+            onDelete={() => onPostDelete(post.id)}
+          />
+        </div>
       ))}
     </>
   );

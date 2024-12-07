@@ -1,3 +1,4 @@
+  
   .nav-links {
     display: flex;
     flex-direction: column;
@@ -18,7 +19,6 @@
     width: 80%;
     display: flex;
     flex-direction: column;
-    gap: 2rem;
     margin-top: 110px;
   }
 
@@ -304,3 +304,41 @@
     transition: background-color 0.3s ease;
   }
 
+  .userpage-header-container {
+    background-color: #ffffff;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 16px;
+    margin-bottom: 16px;
+    transition: background-color 0.3s ease, color 0.3s ease;
+  }
+  
+  .userpage-header-container.dark-mode {
+    background-color: #181818;
+    border-color: #444;
+    color: #ffffff;
+  }
+  
+  .userpage-user-info {
+    display: flex;
+  }
+  
+  .userpage-user-avatar {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    object-fit: cover;
+    flex-shrink: 0;
+  }
+  
+  .userpage-user-name {
+    margin: 0;
+    font-size: 24px;
+    font-weight: 600;
+  }
+
+  .userpage-user-role {
+    margin: 0;
+    font-size: 16px;
+    color: #888;
+  }

@@ -101,7 +101,7 @@
 }
 
 /* Light Mode Variables */
-body {
+.app-container {
     --popup-bg: #ffffff;
     --text-color: #000000;
     --subtext-color: #666666;
@@ -114,7 +114,7 @@ body {
 }
 
 /* Dark Mode Variables */
-body.dark-mode {
+.app-container.dark-mode {
     --popup-bg: #2e2e2e;
     --text-color: #ffffff;
     --subtext-color: #bbbbbb;

@@ -239,7 +239,7 @@ const Settings = () => {
                 </div>
 
                 {/* Right Sidebar */}
-                <div className="d-none d-md-block col-md-3">
+                <div className="d-none d-md-block col-md-3 trending-container">
                     <SideBar />
                 </div>
             </div>
