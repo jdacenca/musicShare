@@ -84,7 +84,7 @@ function MusicFeed() {
           postsArray.push(item);
         });
 
-        //dispatch(setPosts(postsArray)); 
+        //dispatch(setPosts(postsArray));
       } catch {}
 
       let len = postsArray.length;
@@ -171,12 +171,15 @@ function MusicFeed() {
           )}
         </div>
       </div>
+
       {posts.slice(0, 15).map((post, index) => (
-        <MusicPost
-          key={post.id}
-          post={post}
-          onDelete={() => onPostDelete(post.id)}
-        />
+        <div className="m-4">
+          <MusicPost
+            key={post.id}
+            post={post}
+            onDelete={() => onPostDelete(post.id)}
+          />
+        </div>
       ))}
     </>
   );

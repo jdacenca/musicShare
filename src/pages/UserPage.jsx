@@ -12,8 +12,9 @@ import Header from "../components/Header";
 import NavBar from "../components/Navbar";
 import { User, ChevronUp, ChevronDown } from "lucide-react";
 import LiveCard from "../components/LiveCard";
-import { PlusCircle  } from "react-feather";
+import { PlusCircle } from "react-feather";
 import PostPopup from "../components/PostPopup";
+import MusicPost from "../components/MusicPost";
 
 import "../styles/Userpage.css";
 import { setCurrentUser } from "../redux/slice";
@@ -22,6 +23,7 @@ const UserPage = () => {
   const navigate = useNavigate();
   const isDarkMode = useSelector((state) => state.beatSnapApp.isDarkMode);
   const currentUser = useSelector((state) => state.beatSnapApp.currentUser);
+  const posts = useSelector((state) => state.beatSnapApp.posts);
   const dispatch = useDispatch();
 
   // User details from localStorage with default values
@@ -263,15 +265,31 @@ const UserPage = () => {
             <PostPopup onClose={() => setCreatePostPopupVisible(false)} />
           )}
 
-          {showLiveCard && (<LiveCard />)}
+          {showLiveCard && <LiveCard />}
 
           {/* Share Post Section */}
-          <div className="posts-container">
-            <h3>Share Your Post</h3>
-            <p>When you share posts, they will appear on your profile.</p>
-            <button className="userpage-button share-photo-btn">
-              Share Post
-            </button>
+          <div
+            className={`userpage-posts-container ${
+              isDarkMode ? "dark-mode" : ""
+            }`}
+          >
+            {posts && posts.length > 0 ? (
+              <div className="d-flex flex-row">
+                {posts.slice(0, 3).map((post, index) => (
+                  <div className="me-4">
+                     <MusicPost
+                    key={post.id}
+                    post={post}
+                    onDelete={() => onPostDelete(post.id)}
+                    cardType="small"
+                  />
+                    </div>
+                 
+                ))}
+              </div>
+            ) : (
+              <p>When you share posts, they will appear on your profile.</p>
+            )}
           </div>
 
           {/* Edit Profile Modal */}

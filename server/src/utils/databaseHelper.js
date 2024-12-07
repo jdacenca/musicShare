@@ -47,7 +47,7 @@ export const getPost = async function(req, res) {
         users.push('\'' + userId + '\'')
         await resultConnections.rows.forEach((user) => users.push('\'' + user.following_id + '\''));
         //generate select query
-        let query = 'SELECT p.*, u.name, u.username, u.status, u.profile_pic_url from post p inner join users u on p.user_id=u.id where p.user_id in (' + users.join(',') + ") and p.is_deleted='false' ORDER BY u.created_timestamp " + sort;
+        let query = 'SELECT p.*, u.name, u.username, u.status, u.profile_pic_url from post p inner join users u on p.user_id=u.id where p.user_id in (' + users.join(',') + ") and p.is_deleted='false' ORDER BY p.created_timestamp " + sort;
         console.log(query)
         let result = await client.query({
                 //rowMode: 'array',

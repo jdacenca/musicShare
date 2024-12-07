@@ -50,6 +50,7 @@ function Header() {
 
   // Attach and detach the event listener
   useEffect(() => {
+    document.body.classList.toggle("dark-mode", isDarkMode);
     document.addEventListener("mousedown", handleClickOutside);
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
@@ -74,8 +75,8 @@ function Header() {
           <Notification />
 
           {/* Dark Mode Toggle */}
-          <div className="icon-container mx-3" onClick={toggleDarkModeHandler}>
-            <Moon size={24} className="header-icon" />
+          <div className="icon-container mx-4" onClick={toggleDarkModeHandler}>
+            <Moon className="header-icon" /> 
           </div>
 
           {/* User Profile Icon */}
