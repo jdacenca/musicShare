@@ -122,6 +122,19 @@ const SearchPopup = ({ isOpen, closePopup }) => {
             <X size={20} />
           </button>
         </div>
+        <div className="profile-suggestions">
+            {profiles.map((profile, index) => (
+              <div key={index} className="suggestion-item" onClick={() => {
+                goToUserPage(profile.username)
+              }}>
+                <div className="sub-item" key={index}>
+                  <img src={profile.profilePic} alt="User" className="user-avatar" />
+                  <span>{profile.name}</span>
+                  <span>{profile.followers}</span>
+                </div>
+              </div>
+            ))}
+          </div>
         <div className="search-suggestions">
           {suggestions.map((suggestion, index) => (
             <div key={index} className="suggestion-item" onClick={() => {
@@ -136,19 +149,7 @@ const SearchPopup = ({ isOpen, closePopup }) => {
             </div>
           ))}
 
-          <div className="profile-suggestions">
-            {profiles.map((profile, index) => (
-              <div key={index} className="suggestion-item" onClick={() => {
-                goToUserPage(profile.username)
-              }}>
-                <div className="sub-item" key={index}>
-                  <img src={profile.profilePic} alt="User" className="user-avatar" />
-                  <span>{profile.name}</span>
-                  <span>{profile.followers}</span>
-                </div>
-              </div>
-            ))}
-          </div>
+          
         </div>
       </div>
     </div>
