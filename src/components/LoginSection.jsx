@@ -53,6 +53,7 @@ const LoginSection = () => {
         "fullname": data.user.fullname, 
         "status": data.user.status,
         "birthday": data.user.birthday,
+        "email": data.user.email,
         "profilePic": data.user.profilePic + '?t=' + Date.now()  // to reload image
       }));
       navigate('/home');

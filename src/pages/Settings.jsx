@@ -11,16 +11,17 @@ import "../styles/Homepage.css";
 
 const Settings = () => {
     const isDarkMode = useSelector((state) => state.beatSnapApp.isDarkMode);
+    const currentUser = useSelector((state) => state.beatSnapApp.currentUser);
     const navigate = useNavigate();
     const dispatch = useDispatch();
     const [activeTab, setActiveTab] = useState('profile');
     const [notification, setNotification] = useState({ show: false, message: '', type: '' });
     const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
     const [formData, setFormData] = useState({
-        username: '',
-        email: '',
-        bio: '',
-        profilePicture: '',
+        username: currentUser.username,
+        email: currentUser.email,
+        bio: currentUser.status,
+        profilePicture: currentUser.profilePic,
         notificationPreferences: {
             email: true,
             push: true
@@ -47,10 +48,8 @@ const Settings = () => {
     };
 
     const toggleDarkModeHandler = () => {
-        console.log(isDarkMode)
         dispatch(toggleDarkMode());
         document.body.classList.toggle("dark-mode", !isDarkMode);
-        console.log(isDarkMode)
     };
 
     const handleDeleteAccount = async () => {
