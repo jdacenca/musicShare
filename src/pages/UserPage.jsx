@@ -96,7 +96,7 @@ const UserPage = () => {
         const res = await fetch(
           apiUrl +
             "/user/get?username=" +
-            (otherUser ? otherUser : userDetails.username)
+            (otherUser ? otherUser : currentUser.username)
         );
         let data = await res.json();
 
@@ -315,7 +315,7 @@ const UserPage = () => {
                     </div>
 
                     <div className="d-flex flex-row gap-5">
-                      {otherUser !== currentUser.username ? (
+                      {otherUser && (otherUser !== currentUser.username) ? (
                         <>
                           <button
                             className="btn btn-primary align-self-center text-nowrap"
