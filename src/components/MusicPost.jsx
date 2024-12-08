@@ -23,7 +23,7 @@ function MusicPost({ post, onDelete, cardType = "large" }) {
   const [showShareMenu, setShowShareMenu] = useState(false); // Tracks whether the menu is visible
   const [snackbarVisible, setSnackbarVisible] = useState(false);
 
-  let link = post.videoUrl ? post.videoUrl : post.spotifyUrl;
+  const link = `${window.location.protocol}//${window.location.host}/post?id=${post.id}`;
 
   const currentUser = useSelector((state) => state.beatSnapApp.currentUser);
   const popupRef = useRef(null);
