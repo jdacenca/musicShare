@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { toggleDarkMode } from "../redux/slice";
 import { useNavigate } from 'react-router-dom';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import Header from '../components/Header';
 import NavBar from '../components/Navbar';
 import SideBar from '../components/SideBar';
@@ -11,10 +12,10 @@ import "../styles/Homepage.css";
 const Settings = () => {
     const isDarkMode = useSelector((state) => state.beatSnapApp.isDarkMode);
     const navigate = useNavigate();
+    const dispatch = useDispatch();
     const [activeTab, setActiveTab] = useState('profile');
     const [notification, setNotification] = useState({ show: false, message: '', type: '' });
     const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
-    const [language, setLanguage] = useState('English');
     const [formData, setFormData] = useState({
         username: '',
         email: '',
@@ -43,6 +44,13 @@ const Settings = () => {
                 type: 'error'
             });
         }
+    };
+
+    const toggleDarkModeHandler = () => {
+        console.log(isDarkMode)
+        dispatch(toggleDarkMode());
+        document.body.classList.toggle("dark-mode", !isDarkMode);
+        console.log(isDarkMode)
     };
 
     const handleDeleteAccount = async () => {
@@ -147,20 +155,6 @@ const Settings = () => {
                     {activeTab === 'account' && (
                         <div>
                             <section className="mb-4">
-                                <h2 className="h5">Language</h2>
-                                <select 
-                                    className="form-select"
-                                    value={language}
-                                    onChange={(e) => setLanguage(e.target.value)}
-                                >
-                                    <option value="English">English (English)</option>
-                                    <option value="Chinese">中文 (Chinese)</option>
-                                    <option value="Spanish">Español (Spanish)</option>
-                                </select>
-                                <p className="text-muted small mt-2">Changes will be applied after restarting the app</p>
-                            </section>
-
-                            <section className="mb-4">
                                 <h2 className="h5">Delete Account</h2>
                                 {!showDeleteConfirm ? (
                                     <button
@@ -206,6 +200,7 @@ const Settings = () => {
                                         type="checkbox"
                                         id="darkMode"
                                         checked={isDarkMode}
+                                        onChange={toggleDarkModeHandler}
                                     />
                                     <label className="form-check-label" htmlFor="darkMode">
                                         Dark Mode
