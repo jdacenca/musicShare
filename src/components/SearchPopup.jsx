@@ -13,38 +13,68 @@ import { useNavigate } from "react-router-dom";
 const SearchPopup = ({ isOpen, closePopup }) => {
   const navigate = useNavigate();
   const isDarkMode = useSelector((state) => state.beatSnapApp.isDarkMode);
-
+  const currentUser = useSelector((state) => state.beatSnapApp.currentUser);
   const [searchQuery, setSearchQuery] = useState("");
   const [suggestions, setSuggestions] = useState([]);
-  const sug = ["Imagine", "Imagine Dragons", "Imagine Scenarios"];
+  const [profiles, setProfiles] = useState([]);
+
+  /*const suggestions = ["Imagine", "Imagine Dragons", "Imagine Scenarios"];
   const profiles = [
     { name: "imaginedragons", followers: "8.9M Following" },
     { name: "imaginescenarios", followers: "1M Following" },
-  ];
+  ];*/
 
   const handleSearchChange = async (e) => {
     setSuggestions([]); // Reset the value to empty
+    setProfiles([]);
+    let searchValue = e.target.value;
     setSearchQuery(e.target.value);
 
-    let suggestions = []
+    let profiles = []
     const userSearch = await fetch(apiUrl + "/search/user", {
       headers: {
         'Content-Type': 'application/json'
       },
       method: "POST",
-      body: JSON.stringify({"keyword": searchQuery})
+      body: JSON.stringify({"keyword": searchValue, "currentUsername": currentUser.username})
     });
-    const data = await userSearch.json();
+    const profileData = await userSearch.json();
 
-    data.forEach((u) => {
-      suggestions.push({
+    profileData.forEach((u) => {
+      profiles.push({
         id: u.id,
         name: u.name,
         username: u.username,
         profilePic: u.profile_pic_url,
+        page_link: '/userpage?username=' + u.username
       });
     });
 
+    console.log(searchQuery)
+    console.log(currentUser.userId)
+    let suggestions = []
+    const postSearch = await fetch(apiUrl + "/search/post", {
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      method: "POST",
+      body: JSON.stringify({"keyword": searchValue, "userId": currentUser.userId})
+    });
+    const postData = await postSearch.json();
+
+    postData.forEach((p) => {
+      suggestions.push({
+        id: p.id,
+        name: p.name,
+        username: p.username,
+        profilePic: p.profile_pic_url,
+        status: p.status,
+        message: p.message.length > 20 ? p.message.slice(0,22) + "..." : p.message,
+        page_link: '/userpage?username=' + p.username
+      });
+    });
+
+    setProfiles(profiles)
     setSuggestions(suggestions)
   };
 
@@ -101,17 +131,20 @@ const SearchPopup = ({ isOpen, closePopup }) => {
               <div className="sub-item" key={index}>
                 <img src={suggestion.profilePic} alt="User" className="user-avatar" />
                 <span>{suggestion.name}</span>
+                <span>{suggestion.message}</span>
               </div>
             </div>
           ))}
           <div className="see-more">See more...</div>
           <div className="profile-suggestions">
             {profiles.map((profile, index) => (
-              <div key={index} className="profile-item">
-                <div className="profile-avatar" />
+              <div key={index} className="profile-item" onClick={() => {
+                goToUserPage(profile.username)
+              }}>
+                <img src={profile.profilePic} alt="User" className="user-avatar" />
                 <div>
-                  <p className="profile-name">{profile.name}</p>
-                  <p className="profile-followers">{profile.followers}</p>
+                  <span>{profile.name}</span>
+                  <span>{profile.followers}</span>
                 </div>
               </div>
             ))}

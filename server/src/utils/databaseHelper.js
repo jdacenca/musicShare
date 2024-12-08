@@ -436,11 +436,11 @@ export const updateUser = async function(req, res) {
 
 export const searchSingleUser = async function(req, res) {
 
-    const { keyword } = req.body;
+    const { keyword, currentUsername } = req.body;
     try {
         //generate select query
-        let query = `SELECT id, username, name, date_of_birth, email, status, profile_pic_url from users where LOWER(name) like $1 or LOWER(username) like $2`;
-        let result = await client.query(query, ["%" + keyword.toLowerCase() + "%", "%" + keyword.toLowerCase() + "%"]);
+        let query = `SELECT id, username, name, date_of_birth, email, status, profile_pic_url from users where (LOWER(name) like $1 or LOWER(username) like $2) and username != $3 LIMIT 5`;
+        let result = await client.query(query, ["%" + keyword.toLowerCase() + "%", "%" + keyword.toLowerCase() + "%", currentUsername]);
         
         //console.log(result.rows)
         return res.status(200).send(result.rows); 
@@ -453,13 +453,26 @@ export const searchSingleUser = async function(req, res) {
 
 export const searchPost = async function(req, res) {
 
-    const { keyword } = req.body;
+    const { keyword, userId } = req.body;
     try {
+        let queryUserConnections = 'SELECT following_id from user_connection ucon inner join users uacc on ucon.following_id = uacc.id where ucon.user_id=\'' + userId + "\'";
+        let resultConnections = await client.query({
+                //rowMode: 'array',
+                text: queryUserConnections
+            });
+        
+        let users = []
+        users.push('\'' + userId + '\'')
+        await resultConnections.rows.forEach((user) => users.push('\'' + user.following_id + '\''));
+
+        console.log(users.join(','))
+        console.log("%" + keyword.toLowerCase() + "%")
         //generate select query
-        let query = `SELECT * from users where LOWER(message) like %$1%`;
+        let strUsers = users.join(',');
+        let query = `SELECT p.message, u.name, u.username, u.status, u.profile_pic_url, u.id from post p inner join users u on p.user_id=u.id where p.user_id in (${strUsers}) and LOWER($1) like '%i%' and p.is_deleted=false ORDER BY p.created_timestamp DESC LIMIT 5`;
         let result = await client.query(query, ["%" + keyword.toLowerCase() + "%"]);
         
-        // console.log(result.rows)
+        console.log(result.rows)
         return res.status(200).send(result.rows); 
     } catch (err) {
         console.log("Error in running query: " + err);
