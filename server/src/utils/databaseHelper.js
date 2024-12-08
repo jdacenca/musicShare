@@ -357,6 +357,39 @@ export const updateUser = async function(req, res) {
     } 
 }
 
+export const searchSingleUser = async function(req, res) {
+
+    const { keyword } = req.body;
+    try {
+        //generate select query
+        let query = `SELECT id, username, name, date_of_birth, email, status, profile_pic_url from users where LOWER(name) like $1 or LOWER(username) like $2`;
+        let result = await client.query(query, ["%" + keyword.toLowerCase() + "%", "%" + keyword.toLowerCase() + "%"]);
+        
+        //console.log(result.rows)
+        return res.status(200).send(result.rows); 
+        
+    } catch (err) {
+        console.log("Error in running query: " + err);
+        return res.status(500).send("Internal Server Error");
+    } 
+}
+
+export const searchPost = async function(req, res) {
+
+    const { keyword } = req.body;
+    try {
+        //generate select query
+        let query = `SELECT * from users where LOWER(message) like %$1%`;
+        let result = await client.query(query, ["%" + keyword.toLowerCase() + "%"]);
+        
+        // console.log(result.rows)
+        return res.status(200).send(result.rows); 
+    } catch (err) {
+        console.log("Error in running query: " + err);
+        return res.status(500).send("Internal Server Error");
+    } 
+}
+
 export const getUserConnections = async function(req, res) {
 
     const { userId } = req.query;
