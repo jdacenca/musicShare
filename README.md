@@ -24,7 +24,7 @@ Login Page
 ![image](https://github.com/user-attachments/assets/0c4b65c0-c297-4ffc-89f1-976473dd083a)
 
 Home Page
-![image](https://github.com/user-attachments/assets/7e155d94-95e6-4373-be80-4bd70f2fa1ff)
+![image](https://github.com/user-attachments/assets/3922676d-ecc3-4d98-bf93-5544947c2609)
 ** Trending on the rght side are fetched directly from world hits in spotify
 
 User Page
