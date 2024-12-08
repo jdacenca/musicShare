@@ -77,7 +77,7 @@ export const getAllUserPost = async function(req, res) {
 }
 
 export const getPostCount = async function(req, res) {
-    const { userId, sort } = req.body;
+    const { userId } = req.query;
     try {
         //generate select query
         let query = 'SELECT COUNT(*) from post where user_id=\'' + userId + "\' and is_deleted=false";
@@ -359,7 +359,7 @@ export const updateUser = async function(req, res) {
 
 export const getUserConnections = async function(req, res) {
 
-    const { userId } = req.body;
+    const { userId } = req.query;
     try {
         //generate select query
         let query = 'SELECT ucon.following_id, uacc.name, uacc.profile_pic_url from user_connection ucon inner join users uacc on ucon.following_id = uacc.id where ucon.user_id=\'' + userId + "\'";
@@ -376,9 +376,9 @@ export const getUserConnections = async function(req, res) {
     } 
 }
 
-export const getUserFollowing = async function(req, res) {
+export const getUserFollowingCount = async function(req, res) {
 
-    const { userId } = req.body;
+    const { userId } = req.query;
     try {
         //generate select query
         let query = 'SELECT COUNT(*) from user_connection where user_id=\'' + userId + "\'";
@@ -396,9 +396,9 @@ export const getUserFollowing = async function(req, res) {
 }
 
 
-export const getUserFollowers = async function(req, res) {
+export const getUserFollowersCount = async function(req, res) {
 
-    const { userId } = req.body;
+    const { userId } = req.query;
     try {
         //generate select query
         let query = 'SELECT COUNT(*) from user_connection where following_id=\'' + userId + "\'";

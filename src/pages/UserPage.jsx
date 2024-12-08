@@ -114,15 +114,14 @@ const UserPage = () => {
 
     async function fetchPostCount() {
       try {
-        const apiPosts = await fetch(apiUrl + "/user/post/count", {
-          method: "POST",
+        const apiPosts = await fetch(apiUrl + "/user/post/count?" + new URLSearchParams({
+          userId: currentUser.userId
+        }), {
+          method: "GET",
           headers: {
             Accept: "application/json",
             "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            userId: currentUser.userId,
-          }),
+          }
         });
         const apiPostCount = await apiPosts.json();
         
@@ -136,15 +135,14 @@ const UserPage = () => {
 
     async function fetchFollowingCount() {
       try {
-        const apiFollow = await fetch(apiUrl + "/user/following/count", {
-          method: "POST",
+        const apiFollow = await fetch(apiUrl + "/user/following/count?"+ new URLSearchParams({
+          userId: currentUser.userId
+        }), {
+          method: "GET",
           headers: {
             Accept: "application/json",
             "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            userId: currentUser.userId,
-          }),
+          }
         });
         const apiFollowingCount = await apiFollow.json();
         
@@ -157,15 +155,14 @@ const UserPage = () => {
 
     async function fetchFollowerCount() {
       try {
-        const apiFollow = await fetch(apiUrl + "/user/follower/count", {
-          method: "POST",
+        const apiFollow = await fetch(apiUrl + "/user/follower/count?" + new URLSearchParams({
+          userId: currentUser.userId
+        }), {
+          method: "GET",
           headers: {
             Accept: "application/json",
             "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            userId: currentUser.userId,
-          }),
+          }
         });
         const apiFollowerCount = await apiFollow.json();
         

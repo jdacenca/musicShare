@@ -40,15 +40,14 @@ const NavBar = () => {
     async function fetchFollowing() {
       let followingList = [];
       try {
-        const apiFollowing = await fetch(apiUrl + "/user/following", {
-          method: "POST",
+        const apiFollowing = await fetch(apiUrl + "/user/following?" + new URLSearchParams({
+          userId: currentUser.userId
+        }), {
+          method: "GET",
           headers: {
             Accept: "application/json",
             "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            userId: currentUser.userId,
-          }),
+          }
         });
         const apiFollowingData = await apiFollowing.json();
 
