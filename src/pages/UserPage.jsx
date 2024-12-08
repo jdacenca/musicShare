@@ -81,7 +81,7 @@ const UserPage = () => {
   useEffect(() => {
     async function fetchUserDetails() {
       try {
-        const res = await fetch(apiUrl + "/user/get?username=" + userDetails.username);
+        const res = await fetch(apiUrl + "/user/get?username=" + (otherUser ? otherUser : userDetails.username));
         let data = await res.json();
 
         let formattedData = {
@@ -113,15 +113,13 @@ const UserPage = () => {
           followingCount: data.followingCount,
         };
         setUserDetails(formattedData);
-
-        console.log(formattedData);
       } catch (e) {
         console.log(e);
       }
     }
 
     fetchUserDetails();
-  }, []);
+  }, [otherUser]);
 
   // Handle file input for profile picture
   const handleProfilePicChange = async (e) => {
