@@ -42,7 +42,7 @@ function MusicPost({ post, onDelete, cardType = "large" }) {
     if (commentText) {
       setComments([
         ...comments,
-        { username: "current_user", text: commentText },
+        { username: currentUser.fullname , text: commentText },
       ]);
       setCommentText("");
     }
@@ -121,7 +121,9 @@ function MusicPost({ post, onDelete, cardType = "large" }) {
 
   return (
     <div
-      className={`music-post card shadow-xss rounded-xxl border-0 p-4 ${
+      className={`music-post card shadow-xss rounded-xxl border-0  ${
+        cardType === 'large' ? "p-4" : ""
+      }  ${
         isDarkMode ? "dark-mode" : ""
       }`}
     >
@@ -179,7 +181,7 @@ function MusicPost({ post, onDelete, cardType = "large" }) {
         {post.videoUrl ? (
           <iframe
             width={cardType === "large" ? "100%" : ""}
-            height={cardType === "large" ? "300px" : "200px"} 
+            height={cardType === "large" ? "300px" : "150px"} 
             src={post.videoUrl}
             title="YouTube video player"
             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
@@ -189,7 +191,7 @@ function MusicPost({ post, onDelete, cardType = "large" }) {
           <iframe
             src={`${post.spotifyUrl}`}
             width={cardType === "large" ? "100%" : ""}
-            height={cardType === "large" ? "360px" : "200px"} 
+            height={cardType === "large" ? "360px" : "150px"} 
             allow="encrypted-media"
             allowFullScreen
             title="Spotify player"

@@ -91,6 +91,7 @@ app.get("/user/follower/count", getUserFollowersCount);
 app.get("/user/following", getUserConnections);
 
 app.post("/user/uploadpic", upload.single('image'), uploadPhoto);
+app.get("/user/get", getDetailsByUsername);
 
 app.use("/auth", router); // auth routes
 app.use("/api/notifications", notificationsRoutes);

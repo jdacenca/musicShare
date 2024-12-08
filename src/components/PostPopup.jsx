@@ -9,7 +9,6 @@ import {
 import "../styles/PostPopup.css";
 import { Search, X } from "react-feather";
 import NameCard from "./NameCard";
-import user1 from "../assets/images/user1.jpg";
 import { setPosts } from "../redux/slice";
 
 const PostPopup = ({
