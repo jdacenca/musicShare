@@ -1,0 +1,15 @@
+/* Left Section */
+  .left-section {
+    background: url('../assets/images/background.png') center/cover no-repeat;
+    color: white;
+    display: flex;
+    height: 100%;
+    width: 40%;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  .logo {
+    text-align: center;
+  }
