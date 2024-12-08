@@ -81,6 +81,9 @@ const UserPage = () => {
   const [isCreatePostPopupVisible, setCreatePostPopupVisible] = useState(false);
   const [showLiveCard, setShowLiveCard] = useState(false);
 
+  const [followingNo, setFollowingNo] = useState(0);
+  const [followersNo, setFollowersNo] = useState(0);
+
   useEffect(() => {
     // Load user details from localStorage on component mount
     setUserId(currentUser.userId);
@@ -129,6 +132,8 @@ const UserPage = () => {
           followingCount: data.followingCount,
         };
         setUserDetails(formattedData);
+        setFollowingNo(data.followingCount);
+        setFollowersNo(data.followersCount);
       } catch (e) {
         console.log(e);
       }
@@ -221,6 +226,7 @@ const UserPage = () => {
       }),
     });
 
+    setFollowersNo(followersNo-1);
     dispatch(setUnfollowing(id));
   };
 
@@ -249,7 +255,7 @@ const UserPage = () => {
         ...following,
       ])
     );
-
+    setFollowersNo(followersNo+1);
   };
 
   const handleSaveChanges = async () => {
@@ -389,10 +395,10 @@ const UserPage = () => {
                         Posts
                       </div>
                       <div>
-                        <strong>{userDetails.followersCount}</strong> Followers
+                        <strong>{followersNo}</strong> Followers
                       </div>
                       <div>
-                        <strong>{userDetails.followingCount}</strong> Following
+                        <strong>{followingNo}</strong> Following
                       </div>
                     </div>
                     <div>
