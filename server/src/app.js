@@ -22,7 +22,8 @@ import { databaseConnect,
   getUserGenre,
   insertUserGenre,
   searchSingleUser,
-  searchPost } from "./utils/databaseHelper.js";
+  searchPost,
+  getDetailsByUsername } from "./utils/databaseHelper.js";
 import { uploadPhoto } from "./utils/storePhotos.js";
 import { sendEmail } from "./utils/sendEmail.js";
 import { router, databasePoolConnect, authenticateToken } from "./utils/authRoutes.js";
