@@ -16,8 +16,8 @@ import { databaseConnect,
   updateUser,
   getUserConnections,
   getPostCount,
-  getUserFollowers,
-  getUserFollowing,
+  getUserFollowersCount,
+  getUserFollowingCount,
   getAllUserPost,
   getUserGenre,
   insertUserGenre,
@@ -75,15 +75,18 @@ app.post("/post/update", updatePostMessage); // {postId:'PST000003', message:'So
 app.post("/post/like/update", updatePostLike); // {postId:'PST000003', noOfLikes:123}
 app.delete("/post", deletePostMessage); // {postId:'ACC0000002'}
 
-app.post("/user/post", getAllUserPost);
+
 app.get("/user/genre", getUserGenre);
 app.post("/user/genre", insertUserGenre);
+app.post("/user/post", getAllUserPost);
 app.post("/user/resetpassword", sendEmail);
 app.post("/user/update", updateUser);
-app.post("/user/post/count", getPostCount);
-app.post("/user/following/count", getUserFollowing);
-app.post("/user/follower/count", getUserFollowers);
-app.post("/user/following", getUserConnections);
+
+app.get("/user/post/count", getPostCount);
+app.get("/user/following/count", getUserFollowingCount);
+app.get("/user/follower/count", getUserFollowersCount);
+app.get("/user/following", getUserConnections);
+
 app.post("/user/uploadpic", upload.single('image'), uploadPhoto);
 app.get("/user/get", getDetailsByUsername);
 
