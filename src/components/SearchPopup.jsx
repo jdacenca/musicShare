@@ -4,6 +4,7 @@ import {
   useSelector,
   useRef,
   useEffect,
+  apiUrl
 } from "../CommonImports";
 import { Search, X } from "react-feather";
 import "../styles/SearchPopup.css";
@@ -12,14 +13,37 @@ const SearchPopup = ({ isOpen, closePopup }) => {
   const isDarkMode = useSelector((state) => state.beatSnapApp.isDarkMode);
 
   const [searchQuery, setSearchQuery] = useState("");
-  const suggestions = ["Imagine", "Imagine Dragons", "Imagine Scenarios"];
+  const [suggestions, setSuggestions] = useState([]);
+  const sug = ["Imagine", "Imagine Dragons", "Imagine Scenarios"];
   const profiles = [
     { name: "imaginedragons", followers: "8.9M Following" },
     { name: "imaginescenarios", followers: "1M Following" },
   ];
 
-  const handleSearchChange = (e) => {
+  const handleSearchChange = async (e) => {
+    setSuggestions([]); // Reset the value to empty
     setSearchQuery(e.target.value);
+
+    let suggestions = []
+    const userSearch = await fetch(apiUrl + "/search/user", {
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      method: "POST",
+      body: JSON.stringify({"keyword": searchQuery})
+    });
+    const data = await userSearch.json();
+
+    data.forEach((u) => {
+      suggestions.push({
+        id: u.id,
+        name: u.name,
+        username: u.username,
+        profilePic: u.profile_pic_url,
+      });
+    });
+
+    setSuggestions(suggestions)
   };
 
   const popupRef = useRef(null);
@@ -64,7 +88,10 @@ const SearchPopup = ({ isOpen, closePopup }) => {
           {suggestions.map((suggestion, index) => (
             <div key={index} className="suggestion-item">
               <Search size={16} />
-              <span>{suggestion}</span>
+              <div className="sub-item" key={index}>
+                <img src={suggestion.profilePic} alt="User" className="user-avatar" />
+                <span>{suggestion.name}</span>
+              </div>
             </div>
           ))}
           <div className="see-more">See more...</div>
