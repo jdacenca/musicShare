@@ -129,20 +129,20 @@ const SearchPopup = ({ isOpen, closePopup }) => {
             }}>
               <Search size={16} />
               <div className="sub-item" key={index}>
-                <img src={suggestion.profilePic} alt="User" className="user-avatar" />
+                <img src={suggestion.profilePic} alt="Post" className="user-avatar" />
                 <span>{suggestion.name}</span>
                 <span>{suggestion.message}</span>
               </div>
             </div>
           ))}
-          <div className="see-more">See more...</div>
+
           <div className="profile-suggestions">
             {profiles.map((profile, index) => (
-              <div key={index} className="profile-item" onClick={() => {
+              <div key={index} className="suggestion-item" onClick={() => {
                 goToUserPage(profile.username)
               }}>
-                <img src={profile.profilePic} alt="User" className="user-avatar" />
-                <div>
+                <div className="sub-item" key={index}>
+                  <img src={profile.profilePic} alt="User" className="user-avatar" />
                   <span>{profile.name}</span>
                   <span>{profile.followers}</span>
                 </div>

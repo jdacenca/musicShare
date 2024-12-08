@@ -594,3 +594,20 @@ export const follow = async function (req, res) {
     return res.status(500).send("Failed to update.");
   }
 };
+
+export const unfollow = async function (req, res) {
+    const { user_id, following_id } = req.body;
+    try {
+  
+        await client.query(
+            `DELETE FROM user_connection where following_id=$1 and user_id=$2 RETURNING id`,
+            [following_id, user_id]
+        );
+  
+     
+      return res.status(200).send({ success: true });
+    } catch (err) {
+      console.log("Error following user: " + err);
+      return res.status(500).send("Failed to update.");
+    }
+  };

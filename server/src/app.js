@@ -25,7 +25,9 @@ import { databaseConnect,
   searchPost,
   getDetailsByUsername,
   getPost,
-  follow} from "./utils/databaseHelper.js";
+  follow,
+  unfollow
+} from "./utils/databaseHelper.js";
 import { uploadPhoto } from "./utils/storePhotos.js";
 import { sendEmail } from "./utils/sendEmail.js";
 import { router, databasePoolConnect, authenticateToken } from "./utils/authRoutes.js";
@@ -94,6 +96,7 @@ app.get("/user/following/count", getUserFollowingCount);
 app.get("/user/follower/count", getUserFollowersCount);
 app.get("/user/following", getUserConnections);
 app.post("/user/follow", follow);
+app.post("/user/unfollow", unfollow);
 
 app.post("/user/uploadpic", upload.single('image'), uploadPhoto);
 app.get("/user/get", getDetailsByUsername);

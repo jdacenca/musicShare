@@ -16,7 +16,7 @@ import PostPopup from "../components/PostPopup";
 import MusicPost from "../components/MusicPost";
 import { useSearchParams } from "react-router-dom";
 import moment from "moment";
-import {setFollowing} from "../redux/slice";
+import {setFollowing, setUnfollowing} from "../redux/slice";
 
 import "../styles/Userpage.css";
 import { setCurrentUser } from "../redux/slice";
@@ -54,6 +54,8 @@ const UserPage = () => {
     if (x.username === otherUser ) isFollowing = true;
   });
 
+  console.log(currentUser.username)
+  console.log(otherUser)
   if(currentUser.username === otherUser) {
     isFollowing = true;
   }
@@ -203,6 +205,27 @@ const UserPage = () => {
     followUser(userDetails.user.userId);
   };
 
+  const handleUnfollowClick = () => {
+    setFollowed(false);
+    unFollowUser(userDetails.user.userId);
+  };
+
+  const unFollowUser = async (id) => {
+    const resp = await fetch(apiUrl + "/user/unfollow", {
+      method: "POST",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        following_id: id,
+        user_id: currentUser.userId,
+      }),
+    });
+
+    dispatch(setUnfollowing(id));
+  };
+
   const followUser = async (id) => {
     const resp = await fetch(apiUrl + "/user/follow", {
       method: "POST",
@@ -228,6 +251,8 @@ const UserPage = () => {
         ...following,
       ])
     );
+
+    console.log(following)
   };
 
   const handleSaveChanges = async () => {
@@ -324,7 +349,9 @@ const UserPage = () => {
                             Message
                           </button>
                           {(isFollowing || followed ) ? (
-                            <button className="btn btn-secondary align-self-center text-nowrap">
+                            <button className="btn btn-secondary align-self-center text-nowrap"
+                            onClick={handleUnfollowClick}
+                            >
                               Following
                             </button>
                           ) : (
