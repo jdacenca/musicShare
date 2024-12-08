@@ -472,13 +472,12 @@ export const getUserConnections = async function(req, res) {
     const { userId } = req.query;
     try {
         //generate select query
-        let query = 'SELECT ucon.following_id, uacc.name, uacc.profile_pic_url from user_connection ucon inner join users uacc on ucon.following_id = uacc.id where ucon.user_id=\'' + userId + "\'";
+        let query = 'SELECT distinct ucon.following_id, uacc.name, uacc.username, uacc.profile_pic_url from user_connection ucon inner join users uacc on ucon.following_id = uacc.id where ucon.user_id=\'' + userId + "\'";
         let result = await client.query({
                 //rowMode: 'array',
                 text: query
             });
 
-        //console.log(result.rows)
         return res.status(200).send(result.rows);
     } catch (err) {
         console.log("Error in running query: " + err);
@@ -549,5 +548,36 @@ export const getPost = async function (req, res) {
   } catch (error) {
     console.error("Error fetching posts", error);
     return res.status(500).send("Internal Server Error");
+  }
+};
+
+export const follow = async function (req, res) {
+  const { user_id, following_id } = req.body;
+  try {
+
+    //to avoid duplicate inserts
+    let postResult = await client.query(
+        `
+             SELECT following_id
+             FROM user_connection 
+             WHERE following_id = $1 and user_id = $2
+             `,
+        [following_id, user_id]
+      );
+
+    if(postResult?.rows[0]?.following_id){
+        return res.status(200).send({ success: true });
+    } else {
+        await client.query(
+            `INSERT into user_connection (following_id, user_id) VALUES ($1, $2) RETURNING id`,
+            [following_id, user_id]
+          );
+    }
+
+   
+    return res.status(200).send({ success: true });
+  } catch (err) {
+    console.log("Error following user: " + err);
+    return res.status(500).send("Failed to update.");
   }
 };

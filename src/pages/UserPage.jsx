@@ -16,6 +16,7 @@ import PostPopup from "../components/PostPopup";
 import MusicPost from "../components/MusicPost";
 import { useSearchParams } from "react-router-dom";
 import moment from "moment";
+import {setFollowing} from "../redux/slice";
 
 import "../styles/Userpage.css";
 import { setCurrentUser } from "../redux/slice";
@@ -25,6 +26,7 @@ const UserPage = () => {
   const navigate = useNavigate();
   const isDarkMode = useSelector((state) => state.beatSnapApp.isDarkMode);
   const currentUser = useSelector((state) => state.beatSnapApp.currentUser);
+  const following = useSelector((state) => state.beatSnapApp.following);
   const posts = useSelector((state) => state.beatSnapApp.posts);
   const [searchParams, setSearchParams] = useSearchParams();
   const otherUser = searchParams.get("username");
@@ -45,6 +47,16 @@ const UserPage = () => {
           followingCount: null,
         }
   );
+  const [followed, setFollowed] = useState(false);
+
+  let isFollowing = false;
+  following.forEach((x) => {
+    if (x.username === otherUser ) isFollowing = true;
+  });
+
+  if(currentUser.username === otherUser) {
+    isFollowing = true;
+  }
 
   // User details from localStorage with default values
   const [userId, setUserId] = useState("");
@@ -81,7 +93,11 @@ const UserPage = () => {
   useEffect(() => {
     async function fetchUserDetails() {
       try {
-        const res = await fetch(apiUrl + "/user/get?username=" + (otherUser ? otherUser : userDetails.username));
+        const res = await fetch(
+          apiUrl +
+            "/user/get?username=" +
+            (otherUser ? otherUser : userDetails.username)
+        );
         let data = await res.json();
 
         let formattedData = {
@@ -183,7 +199,35 @@ const UserPage = () => {
   };
 
   const handleFollowClick = () => {
-    navigate("/follow");
+    setFollowed(true);
+    followUser(userDetails.user.userId);
+  };
+
+  const followUser = async (id) => {
+    const resp = await fetch(apiUrl + "/user/follow", {
+      method: "POST",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        following_id: id,
+        user_id: currentUser.userId,
+      }),
+    });
+
+    dispatch(
+      setFollowing([
+        {
+          following_id: id,
+          user_id: currentUser.userId,
+          username: userDetails.username,
+          name: userDetails.user.name,
+          profile_pic_url: userDetails.user.profilePic
+        },
+        ...following,
+      ])
+    );
   };
 
   const handleSaveChanges = async () => {
@@ -271,7 +315,7 @@ const UserPage = () => {
                     </div>
 
                     <div className="d-flex flex-row gap-5">
-                      {otherUser ? (
+                      {otherUser !== currentUser.username ? (
                         <>
                           <button
                             className="btn btn-primary align-self-center text-nowrap"
@@ -279,12 +323,18 @@ const UserPage = () => {
                           >
                             Message
                           </button>
-                          <button
-                            className="btn btn-primary align-self-center text-nowrap"
-                            onClick={handleFollowClick}
-                          >
-                            Follow
-                          </button>
+                          {(isFollowing || followed ) ? (
+                            <button className="btn btn-secondary align-self-center text-nowrap">
+                              Following
+                            </button>
+                          ) : (
+                            <button
+                              className="btn btn-primary align-self-center text-nowrap"
+                              onClick={handleFollowClick}
+                            >
+                              Follow
+                            </button>
+                          )}
                         </>
                       ) : (
                         <>
@@ -315,12 +365,10 @@ const UserPage = () => {
                         Posts
                       </div>
                       <div>
-                        <strong>{userDetails.followersCount}</strong>{" "}
-                        Followers
+                        <strong>{userDetails.followersCount}</strong> Followers
                       </div>
                       <div>
-                        <strong>{userDetails.followingCount}</strong>{" "}
-                        Following
+                        <strong>{userDetails.followingCount}</strong> Following
                       </div>
                     </div>
                     <div>

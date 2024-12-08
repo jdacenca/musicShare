@@ -40,15 +40,20 @@ const NavBar = () => {
     async function fetchFollowing() {
       let followingList = [];
       try {
-        const apiFollowing = await fetch(apiUrl + "/user/following?" + new URLSearchParams({
-          userId: currentUser.userId
-        }), {
-          method: "GET",
-          headers: {
-            Accept: "application/json",
-            "Content-Type": "application/json",
+        const apiFollowing = await fetch(
+          apiUrl +
+            "/user/following?" +
+            new URLSearchParams({
+              userId: currentUser.userId,
+            }),
+          {
+            method: "GET",
+            headers: {
+              Accept: "application/json",
+              "Content-Type": "application/json",
+            },
           }
-        });
+        );
         const apiFollowingData = await apiFollowing.json();
 
         //console.log(apiFollowingData)
@@ -57,8 +62,7 @@ const NavBar = () => {
         });
 
         dispatch(setFollowing(followingList));
-      }
-      catch (err) {
+      } catch (err) {
         console.log("Error:");
         console.log(err);
       }
@@ -70,7 +74,7 @@ const NavBar = () => {
       }
     };
 
-    fetchFollowing()
+    fetchFollowing();
     document.addEventListener("keydown", handleShortcut);
     return () => document.removeEventListener("keydown", handleShortcut);
   }, []);
@@ -116,10 +120,20 @@ const NavBar = () => {
       {showFriends && (
         <div className="sub-menu">
           {following.slice(0, 15).map((following, index) => (
-            <div className="sub-item" key={index}>
-            <img src={following.profile_pic_url} alt="User" className="user-avatar" />
-            <span>{following.name}</span>
-          </div>
+            <div
+              className="sub-item"
+              key={index}
+              onClick={() =>
+                navigate("/userpage?username=" + following.username)
+              }
+            >
+              <img
+                src={following.profile_pic_url}
+                alt="User"
+                className="user-avatar"
+              />
+              <span>{following.name}</span>
+            </div>
           ))}
         </div>
       )}
