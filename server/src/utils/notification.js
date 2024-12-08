@@ -22,7 +22,8 @@ router.get("/", async (req, res) => {
     n.title AS notification_title,
     p.message AS post_message,
     p.music_url,
-    u.username AS user_name
+    u.username AS user_name,
+    u.name, u.status, u.profile_pic_url
     FROM notifications n
     JOIN post p ON n.post_id = p.id
     JOIN users u ON p.user_id = u.id
