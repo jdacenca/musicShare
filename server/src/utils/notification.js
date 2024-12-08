@@ -17,6 +17,7 @@ router.get("/", async (req, res) => {
     const viewedCondition = viewed !== undefined ? "AND n.viewed = $2" : "";
     const query = `
     SELECT 
+    n.post_id,
     n.id AS notification_id,
     n.created_at AS notification_time,
     n.title AS notification_title,

@@ -524,3 +524,30 @@ export const getUserFollowersCount = async function(req, res) {
         return res.status(500).send("Internal Server Error");
     } 
 }
+
+export const getPost = async function (req, res) {
+  const { id } = req.query;
+
+  let postResult;
+
+  if (!id) {
+    return res.status(200).send("invalid request");
+  }
+
+  try {
+    postResult = await client.query(
+      `
+           SELECT p.*, u.name, u.username, u.status, u.profile_pic_url
+           FROM post p
+           JOIN users u on u.id = p.user_id
+           WHERE p.is_deleted=\'false\' and p.id = $1
+           `,
+      [id]
+    );
+
+    return res.status(200).send(postResult.rows[0]);
+  } catch (error) {
+    console.error("Error fetching posts", error);
+    return res.status(500).send("Internal Server Error");
+  }
+};

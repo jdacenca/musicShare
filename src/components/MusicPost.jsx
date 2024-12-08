@@ -235,7 +235,7 @@ function MusicPost({ post, onDelete, cardType = "large" }) {
       {/* Comments Section */}
       {showComments && (
         <div className="post-comments-section">
-          {comments.map((comment, index) => (
+          {comments?.map((comment, index) => (
             <Comment key={index} comment={comment} />
           ))}
           <form className="post-form-section" onSubmit={handleCommentSubmit}>

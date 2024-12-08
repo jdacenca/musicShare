@@ -23,7 +23,8 @@ import { databaseConnect,
   insertUserGenre,
   searchSingleUser,
   searchPost,
-  getDetailsByUsername } from "./utils/databaseHelper.js";
+  getDetailsByUsername,
+  getPost} from "./utils/databaseHelper.js";
 import { uploadPhoto } from "./utils/storePhotos.js";
 import { sendEmail } from "./utils/sendEmail.js";
 import { router, databasePoolConnect, authenticateToken } from "./utils/authRoutes.js";
@@ -76,6 +77,7 @@ app.post("/posts", getPostWithFollowing); // {userId:'ACC0000002', sort:'ASC'}
 app.post("/post/update", updatePostMessage); // {postId:'PST000003', message:'Soooooooooo addicted to this song!'}
 app.post("/post/like/update", updatePostLike); // {postId:'PST000003', noOfLikes:123}
 app.delete("/post", deletePostMessage); // {postId:'ACC0000002'}
+app.get("/post/get", getPost); // {postId:'ACC0000002'}
 
 app.post("/search/user", searchSingleUser);
 app.post("/search/post", searchPost);

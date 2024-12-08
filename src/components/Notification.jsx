@@ -7,34 +7,15 @@ import {
   useEffect,
   useDispatch,
 } from "../CommonImports";
+import { useNavigate } from "react-router-dom";
 import { Bell, X } from "react-feather"; // Import Bell icon
 import "../styles/Notification.css";
 import NameCard from "./NameCard";
 import { setNotifications } from "../redux/slice";
 import moment from "moment";
 
-const sanitizeYouTubeLink = (url) => {
-  try {
-    const urlObj = new URL(url);
-
-    // Check if it's a YouTube embed link
-    if (
-      urlObj.hostname === "www.youtube.com" &&
-      urlObj.pathname.includes("/embed/")
-    ) {
-      const videoId = urlObj.pathname.split("/embed/")[1];
-      return `https://www.youtube.com/watch?v=${videoId}`;
-    }
-
-    // If not an embed link, return the original URL
-    return url;
-  } catch (error) {
-    console.error("Invalid URL:", url);
-    return url; // Return original URL if parsing fails
-  }
-};
-
 function Notification() {
+  const navigate = useNavigate();
   const dispatch = useDispatch();
   const isDarkMode = useSelector((state) => state.beatSnapApp.isDarkMode);
   const currentUser = useSelector((state) => state.beatSnapApp.currentUser);
@@ -52,7 +33,6 @@ function Notification() {
             `/api/notifications?userId=${currentUser.userId}&viewed=false`
         );
         const data = await response.json();
-        console.log("Fetched notifications:", data);
         dispatch(setNotifications(data));
       } catch (error) {
         console.error("Error fetching notifications:", error);
@@ -92,14 +72,21 @@ function Notification() {
       document.removeEventListener("mousedown", handleClickOutside);
     };
   }, []);
+
   const handleClickOutside = (event) => {
     if (popupRef.current && !popupRef.current.contains(event.target)) {
       setShowNotifications(false);
     }
   };
+
   // Toggle visibility of notifications
   const toggleNotifications = () => {
     setShowNotifications((prevState) => !prevState);
+  };
+
+  const goToPost = (id) => {
+    setShowNotifications(false);
+    navigate("/post?id=" + id);
   };
 
   return (
@@ -117,7 +104,12 @@ function Notification() {
           {notifications.length > 0 ? (
             <>
               {notifications.slice(0, 4).map((notification) => (
-                <div key={notification.id} className="notification-item mb-2">
+                <div key={notification.notification_id} className="notification-item mb-2" onClick={() => {
+                  markAsViewed(notification.notification_id);
+                  goToPost(notification.post_id);
+                }
+                 
+                }>
                   <div className="d-flex flex-row">
                     <NameCard
                       user={{

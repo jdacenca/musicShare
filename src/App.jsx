@@ -10,6 +10,7 @@ import SearchPopup from './components/SearchPopup';
 import PostPopup from './components/PostPopup';
 import ChangePassword from './pages/ChangePassword';
 import Genre from './components/Genre';
+import PostPage from './pages/PostPage';
 
 const App = () => {
   return (
@@ -26,7 +27,7 @@ const App = () => {
         <Route path="/create" element={<PostPopup />} />
         <Route path="/changepassword" element={<ChangePassword />} />
         <Route path="/genre" element={<Genre/>} />
-
+        <Route path="/post" element={<PostPage/>} />
       </Routes>
     </Router>
   );

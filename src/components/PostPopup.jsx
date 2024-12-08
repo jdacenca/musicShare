@@ -80,7 +80,7 @@ const PostPopup = ({
         userId: currentUser.userId,
         title: "",
         time: "Now",
-        userImage: currentUser.userImage,
+        profilePic: currentUser.profilePic,
         description: postContent,
         likes: 0,
         comments: [],

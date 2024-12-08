@@ -2,7 +2,6 @@ import React, { useEffect, useRef, useState } from "react";
 import { Moon } from "react-feather";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import user1 from "../assets/images/defaultuser.png";
 import logo from "../assets/images/logo.svg";
 import { toggleDarkMode } from "../redux/slice";
 import "../styles/Header.css";
