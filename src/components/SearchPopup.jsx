@@ -8,8 +8,10 @@ import {
 } from "../CommonImports";
 import { Search, X } from "react-feather";
 import "../styles/SearchPopup.css";
+import { useNavigate } from "react-router-dom";
 
 const SearchPopup = ({ isOpen, closePopup }) => {
+  const navigate = useNavigate();
   const isDarkMode = useSelector((state) => state.beatSnapApp.isDarkMode);
 
   const [searchQuery, setSearchQuery] = useState("");
@@ -61,6 +63,12 @@ const SearchPopup = ({ isOpen, closePopup }) => {
     };
   }, []);
 
+
+  const goToUserPage = (username) => {
+    closePopup();
+    navigate("/userpage?username=" + username);
+  };
+
   if (!isOpen) return null; // Don't render if closed
 
   return (
@@ -86,7 +94,9 @@ const SearchPopup = ({ isOpen, closePopup }) => {
         </div>
         <div className="search-suggestions">
           {suggestions.map((suggestion, index) => (
-            <div key={index} className="suggestion-item">
+            <div key={index} className="suggestion-item" onClick={() => {
+              goToUserPage(suggestion.username)
+            }}>
               <Search size={16} />
               <div className="sub-item" key={index}>
                 <img src={suggestion.profilePic} alt="User" className="user-avatar" />
