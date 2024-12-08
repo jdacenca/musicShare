@@ -26,7 +26,9 @@ import { databaseConnect,
   getDetailsByUsername,
   getPost,
   follow,
-  unfollow
+  unfollow,
+  insertComment,
+  getComment
 } from "./utils/databaseHelper.js";
 import { uploadPhoto } from "./utils/storePhotos.js";
 import { sendEmail } from "./utils/sendEmail.js";
@@ -97,6 +99,8 @@ app.get("/user/follower/count", getUserFollowersCount);
 app.get("/user/following", getUserConnections);
 app.post("/user/follow", follow);
 app.post("/user/unfollow", unfollow);
+app.get("/post/comment", getComment);
+app.post("/post/comment", insertComment);
 
 app.post("/user/uploadpic", upload.single('image'), uploadPhoto);
 app.get("/user/get", getDetailsByUsername);

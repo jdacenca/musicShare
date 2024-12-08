@@ -611,3 +611,36 @@ export const unfollow = async function (req, res) {
       return res.status(500).send("Failed to update.");
     }
   };
+
+export const insertComment = async function(req, res) {
+
+    const { postId, comment, userId } = req.body;
+
+    try {
+        let query = `INSERT INTO comments (post_id, comment, user_id, created_timestamp) VALUES ($1, $2, $3, NOW())`;
+        let result = await client.query(query, [postId, comment, userId]);
+
+        return res.status(200).send({"affectedRows": result.rowCount}); 
+    } catch (err) {
+        console.log("Error in running query: " + err);
+        return res.status(500).send("Internal Server Error");
+    } 
+}
+
+export const getComment = async function(req, res) {
+
+    const { postId } = req.query;
+
+    try {
+        let query = `SELECT p.id, u.profile_pic_url, u.name, com.comment, com.created_timestamp FROM comments com 
+	inner join post p on com.post_id=p.id
+	inner join users u on com.user_id=u.id
+	where post_id=$1`;
+        let result = await client.query(query, [postId]);
+
+        return res.status(200).send(result.rows); 
+    } catch (err) {
+        console.log("Error in running query: " + err);
+        return res.status(500).send("Internal Server Error");
+    } 
+}

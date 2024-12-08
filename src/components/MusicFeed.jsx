@@ -47,16 +47,8 @@ function MusicFeed() {
             sort: "DESC",
           }),
         });
-        const apiPostsData = await apiPosts.json();
 
-        // "id": "PST000043",
-        // "message": "test",
-        // "music_url": "",
-        // "created_timestamp": "2024-12-01T06:33:39.331Z",
-        // "updated_timestamp": null,
-        // "no_of_likes": 0,
-        // "user_id": "ACC0000014",
-        // "is_deleted": false
+        const apiPostsData = await apiPosts.json();
 
         apiPostsData.forEach((x) => {
           let timeAgo = moment(x.created_timestamp).fromNow();

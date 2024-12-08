@@ -4,12 +4,14 @@ import {
   useRef,
   useEffect,
   useSelector,
+  apiUrl
 } from "../CommonImports";
 import { Heart, MessageCircle, MoreHorizontal, Share2, X } from "react-feather";
 import "../styles/MusicPost.css";
 import Comment from "./Comment";
 import PostPopup from "./PostPopup";
 import NameCard from "./NameCard";
+import moment from "moment";
 
 function MusicPost({ post, onDelete, cardType = "large" }) {
   const isDarkMode = useSelector((state) => state.beatSnapApp.isDarkMode);
@@ -32,24 +34,108 @@ function MusicPost({ post, onDelete, cardType = "large" }) {
   const [isPostPopupVisible, setPostPopupVisible] = useState(false);
   const [isPostDelete, setPostDelete] = useState(false);
 
+  moment.locale('en', {
+    relativeTime : {
+        future: "%s",
+        past:   "%ss",
+        s:  "%ss",
+        m:  "%dm",
+        mm: "%dm",
+        h:  "%dh",
+        hh: "%dh",
+        d:  "%dd",
+        dd: "%dd",
+        M:  "%dm",
+        MM: "%dm",
+        y:  "$dy",
+        yy: "%dy"
+    }
+});
+
   const handleLikeToggle = () => {
     setLikes(isLiked ? likes - 1 : likes + 1); // Increment or decrement likes
     setIsLiked(!isLiked); // Toggle like state
   };
 
-  const handleCommentSubmit = (e) => {
+  useEffect(() => { console.log(comments) }, [comments])
+
+  const handleCommentSubmit = async (e) => {
     e.preventDefault();
-    if (commentText) {
-      setComments([
-        ...comments,
-        { username: currentUser.fullname , text: commentText },
-      ]);
-      setCommentText("");
+
+    try {
+      if (!commentText) {
+        alert('Please enter your comment.');
+        return;
+      }
+  
+      const response = await fetch(apiUrl + "/post/comment", {
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        method: "POST",
+        body: JSON.stringify({"postId": post.id, "comment": commentText, userId: currentUser.userId})
+      });
+  
+      const data = await response.json();
+      
+      if (response.status == 200) {
+        if (commentText) {
+          let oldList = [...comments, { username: currentUser.fullname , text: commentText }]
+          //setComments(oldList);
+  
+          setCommentText("");
+        }
+  
+      } else  {
+        alert('Unable to post comment!');
+        return;
+      }
+    } catch (err) {
+      console.log("Error");
+      console.log(err);
     }
+    
   };
 
-  const toggleComments = () => setShowComments(!showComments);
+  const toggleComments = async () => {
+    try {
+      let commentList = [];
+      const result = await fetch(apiUrl + "/post/comment?" + new URLSearchParams({
+        postId: post.id
+      }), {
+        method: "GET",
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+        }
+      });
 
+      if (result.status == 200) {
+        const data = await result.json();
+        
+        data.forEach((x) => {
+          let timeAgo = moment(x.created_timestamp).fromNow();
+
+          let postComment = {
+            postId: x.id,
+            name: x.name,
+            comment: {username:x.name, text:x.comment},
+            profilePic: x.profile_pic_url,
+            time: timeAgo,
+          };
+
+          commentList.push(postComment)
+        })
+      }
+      
+      setComments(commentList);
+    } catch (err) {
+      console.log("Error");
+      console.log(err);
+    }
+  
+    setShowComments(!showComments);
+  }
   const handleAction = (action) => {
     setShowMenu(false); // Close the menu
     switch (action) {
@@ -119,6 +205,7 @@ function MusicPost({ post, onDelete, cardType = "large" }) {
     };
   }, []);
 
+  console.log(comments)
   return (
     <div
       className={`music-post card shadow-xss rounded-xxl border-0  ${
@@ -236,7 +323,11 @@ function MusicPost({ post, onDelete, cardType = "large" }) {
       {showComments && (
         <div className="post-comments-section">
           {comments?.map((comment, index) => (
-            <Comment key={index} comment={comment} />
+            <div className="sub-item" key={index}>
+              <img src={comment.profilePic} alt="User" className="user-avatar" />
+              <Comment key={index} comment={comment.comment} />
+              <span className="com-time">{comment.time}</span>
+            </div>
           ))}
           <form className="post-form-section" onSubmit={handleCommentSubmit}>
             <div className="w-100 d-flex flex-row align-items-center mt-4">
