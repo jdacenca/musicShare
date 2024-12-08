@@ -46,12 +46,9 @@ const SearchPopup = ({ isOpen, closePopup }) => {
         name: u.name,
         username: u.username,
         profilePic: u.profile_pic_url,
-        page_link: '/userpage?username=' + u.username
       });
     });
 
-    console.log(searchQuery)
-    console.log(currentUser.userId)
     let suggestions = []
     const postSearch = await fetch(apiUrl + "/search/post", {
       headers: {
@@ -62,15 +59,15 @@ const SearchPopup = ({ isOpen, closePopup }) => {
     });
     const postData = await postSearch.json();
 
+    console.log(postData)
     postData.forEach((p) => {
       suggestions.push({
-        id: p.id,
+        id: p.post_id,
         name: p.name,
         username: p.username,
         profilePic: p.profile_pic_url,
         status: p.status,
         message: p.message.length > 20 ? p.message.slice(0,22) + "..." : p.message,
-        page_link: '/userpage?username=' + p.username
       });
     });
 
@@ -97,6 +94,9 @@ const SearchPopup = ({ isOpen, closePopup }) => {
   const goToUserPage = (username) => {
     closePopup();
     navigate("/userpage?username=" + username);
+  };
+  const goToPost = (id) => {
+    navigate("/post?id=" + id);
   };
 
   if (!isOpen) return null; // Don't render if closed
@@ -125,7 +125,7 @@ const SearchPopup = ({ isOpen, closePopup }) => {
         <div className="search-suggestions">
           {suggestions.map((suggestion, index) => (
             <div key={index} className="suggestion-item" onClick={() => {
-              goToUserPage(suggestion.username)
+              goToPost(suggestion.id)
             }}>
               <Search size={16} />
               <div className="sub-item" key={index}>
