@@ -16,7 +16,7 @@ import PostPopup from "../components/PostPopup";
 import MusicPost from "../components/MusicPost";
 import { useSearchParams } from "react-router-dom";
 import moment from "moment";
-import {setFollowing} from "../redux/slice";
+import {setFollowing, setUnfollowing} from "../redux/slice";
 
 import "../styles/Userpage.css";
 import { setCurrentUser } from "../redux/slice";
@@ -81,6 +81,9 @@ const UserPage = () => {
   const [isCreatePostPopupVisible, setCreatePostPopupVisible] = useState(false);
   const [showLiveCard, setShowLiveCard] = useState(false);
 
+  const [followingNo, setFollowingNo] = useState(0);
+  const [followersNo, setFollowersNo] = useState(0);
+
   useEffect(() => {
     // Load user details from localStorage on component mount
     setUserId(currentUser.userId);
@@ -129,6 +132,8 @@ const UserPage = () => {
           followingCount: data.followingCount,
         };
         setUserDetails(formattedData);
+        setFollowingNo(data.followingCount);
+        setFollowersNo(data.followersCount);
       } catch (e) {
         console.log(e);
       }
@@ -203,6 +208,28 @@ const UserPage = () => {
     followUser(userDetails.user.userId);
   };
 
+  const handleUnfollowClick = () => {
+    setFollowed(false);
+    unFollowUser(userDetails.user.userId);
+  };
+
+  const unFollowUser = async (id) => {
+    const resp = await fetch(apiUrl + "/user/unfollow", {
+      method: "POST",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        following_id: id,
+        user_id: currentUser.userId,
+      }),
+    });
+
+    setFollowersNo(followersNo-1);
+    dispatch(setUnfollowing(id));
+  };
+
   const followUser = async (id) => {
     const resp = await fetch(apiUrl + "/user/follow", {
       method: "POST",
@@ -222,12 +249,13 @@ const UserPage = () => {
           following_id: id,
           user_id: currentUser.userId,
           username: userDetails.username,
-          name: userDetails.user.name,
+          name: userDetails.user.fullname,
           profile_pic_url: userDetails.user.profilePic
         },
         ...following,
       ])
     );
+    setFollowersNo(followersNo+1);
   };
 
   const handleSaveChanges = async () => {
@@ -324,7 +352,9 @@ const UserPage = () => {
                             Message
                           </button>
                           {(isFollowing || followed ) ? (
-                            <button className="btn btn-secondary align-self-center text-nowrap">
+                            <button className="btn btn-secondary align-self-center text-nowrap"
+                            onClick={handleUnfollowClick}
+                            >
                               Following
                             </button>
                           ) : (
@@ -365,10 +395,10 @@ const UserPage = () => {
                         Posts
                       </div>
                       <div>
-                        <strong>{userDetails.followersCount}</strong> Followers
+                        <strong>{followersNo}</strong> Followers
                       </div>
                       <div>
-                        <strong>{userDetails.followingCount}</strong> Following
+                        <strong>{followingNo}</strong> Following
                       </div>
                     </div>
                     <div>

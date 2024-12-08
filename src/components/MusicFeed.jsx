@@ -33,6 +33,7 @@ function MusicFeed() {
 
   useEffect(() => {
     async function fetchTimelineData() {
+
       let postsArray = [];
       try {
         const apiPosts = await fetch(apiUrl + "/posts", {
@@ -92,16 +93,16 @@ function MusicFeed() {
           method: "POST",
         });
 
-        console.log((currentUser.interest).join(','))
+        let interests = currentUser.interest.length > 0 ? (currentUser.interest).join(',') : "world-music";
         const recommendations = await fetch(
-          apiUrl + "/spotify/recommendations?genre=" + (currentUser.interest).join(',')
+          apiUrl + "/spotify/recommendations?genre=" + interests
         );
         const recommendationsData = await recommendations.json();
         dispatch(setRecommendations(recommendationsData));
 
         // Only load 3 recommendations
         recommendationsData?.tracks.items.forEach((x) => {
-          if (count < 4) {
+          if (count < 10) {
             postsArray.push({
               id: len + count,
               username: "Spotify",
@@ -118,6 +119,7 @@ function MusicFeed() {
 
           count++;
         });
+
       } catch (err) {
         console.log("Error:");
         console.log(err);
@@ -128,6 +130,7 @@ function MusicFeed() {
 
     fetchTimelineData();
   }, [dispatch]);
+
 
   return (
     <>
@@ -164,11 +167,11 @@ function MusicFeed() {
         </div>
       </div>
 
-      {posts.slice(0, 15).map((post, index) => (
-        <div className="m-4" key={post.id}>
-          <MusicPost post={post} onDelete={() => onPostDelete(post.id)} />
-        </div>
-      ))}
+        {posts.map((post, index) => (
+          <div className="m-4" key={post.id}>
+            <MusicPost post={post} onDelete={() => onPostDelete(post.id)} />
+          </div>
+        ))}
     </>
   );
 }

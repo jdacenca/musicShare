@@ -469,7 +469,7 @@ export const searchPost = async function(req, res) {
         console.log("%" + keyword.toLowerCase() + "%")
         //generate select query
         let strUsers = users.join(',');
-        let query = `SELECT p.message, u.name, u.username, u.status, u.profile_pic_url, u.id from post p inner join users u on p.user_id=u.id where p.user_id in (${strUsers}) and LOWER($1) like '%i%' and p.is_deleted=false ORDER BY p.created_timestamp DESC LIMIT 5`;
+        let query = `SELECT p.id as post_id, p.message, u.name, u.username, u.status, u.profile_pic_url, u.id from post p inner join users u on p.user_id=u.id where p.user_id in (${strUsers}) and LOWER($1) like '%i%' and p.is_deleted=false ORDER BY p.created_timestamp DESC LIMIT 5`;
         let result = await client.query(query, ["%" + keyword.toLowerCase() + "%"]);
         
         console.log(result.rows)
@@ -594,3 +594,20 @@ export const follow = async function (req, res) {
     return res.status(500).send("Failed to update.");
   }
 };
+
+export const unfollow = async function (req, res) {
+    const { user_id, following_id } = req.body;
+    try {
+  
+        await client.query(
+            `DELETE FROM user_connection where following_id=$1 and user_id=$2 RETURNING id`,
+            [following_id, user_id]
+        );
+  
+     
+      return res.status(200).send({ success: true });
+    } catch (err) {
+      console.log("Error following user: " + err);
+      return res.status(500).send("Failed to update.");
+    }
+  };

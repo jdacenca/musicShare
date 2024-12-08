@@ -13,6 +13,7 @@ const initialState = {
   createPostData: {
     text: "",
   },
+  following: [],
 };
 
 const appSlice = createSlice({
@@ -46,6 +47,9 @@ const appSlice = createSlice({
     setFollowing: (state, action) => {
       state.following = action.payload;
     },
+    setUnfollowing: (state, action) => {
+      state.following = state.following.filter(user => user.following_id !== action.payload);
+    },
     setCreatePostData: (state, action) => {
       state.createPostData = action.payload;
     },
@@ -71,6 +75,7 @@ export const {
   setOpenPopup,
   setCreatePostData,
   setFollowing,
+  setUnfollowing,
   clearCreatePostData,
 } = appSlice.actions;
 
