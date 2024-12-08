@@ -8,7 +8,7 @@ import { spotifyGenreRecommendation } from "./utils/spotifyGenreRecommendation.j
 import { youtubeMusic } from "./utils/youTubeSearchMusicCategory.js";
 import { databaseConnect,
   databaseDisconnect,
-  getPost,
+  getPostWithFollowing,
   insertPost,
   updatePostMessage,
   updatePostLike,

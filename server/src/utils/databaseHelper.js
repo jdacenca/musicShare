@@ -223,15 +223,41 @@ export const getDetailsByUsername = async function (req, res) {
          FROM post 
          WHERE is_deleted=\'false\' and user_id = $1
          `,
-      [userResult.rows[0].userId])
-    ;
+      [userResult.rows[0].userId]
+    );
   } catch (error) {
     console.error("Error fetching posts", error);
+  }
+
+  let followingResult;
+
+  try {
+    followingResult = await client.query({
+      text:
+        "SELECT COUNT(*) from user_connection where user_id='" + userResult.rows[0].userId + "'",
+    });
+  } catch (err) {
+    console.log("Error in running query: " + err);
+  }
+
+  let followersResult;
+
+  try {
+    followersResult = await client.query({
+      text:
+        "SELECT COUNT(*) from user_connection where following_id='" +
+        userResult.rows[0].userId +
+        "'",
+    });
+  } catch (err) {
+    console.log("Error in running query: " + err);
   }
 
   return res.status(200).send({
     user: userResult.rows[0],
     posts: postResult && postResult.rows ? postResult.rows : [],
+    followersCount: followersResult?.rows ? followersResult.rows[0].count : 0,
+    followingCount: followingResult?.rows ? followingResult.rows[0].count : 0,
   });
 };
   
