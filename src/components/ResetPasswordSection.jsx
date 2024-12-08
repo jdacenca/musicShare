@@ -35,14 +35,9 @@ const ResetPasswordSection = () => {
     }
     
   };
-  return (
-    
-    <div className="right-section">
+  return (   
+    <div className="register-section">
       <h2>Reset Password</h2>
-      <p>
-        Trouble with logging in? Enter your email address and we’ll
-        send you a link to get back into your account.
-      </p>
       <form
         onSubmit={handleResetPassword}
       >
@@ -61,13 +56,13 @@ const ResetPasswordSection = () => {
         </button>
       </form>
       <div className="additional-options">
-        <p>
-        Already have an account?
-        <span onClick={() => navigate('/login')} >
-          <a href="#">Login to your account</a>
-        </span> 
+        <p className="login-link">
+          Already have an account? {' '}
+          <span onClick={()=> navigate('/login')}>
+            Login to your account
+          </span>
         </p>
-        <p>or</p>
+        <p className="divider">or</p>
         <div className="social-login">
           <button className="btn-google">Sign in with Google</button>
           <button className="btn-facebook">Sign in with Facebook</button>
