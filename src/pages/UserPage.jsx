@@ -54,8 +54,6 @@ const UserPage = () => {
     if (x.username === otherUser ) isFollowing = true;
   });
 
-  console.log(currentUser.username)
-  console.log(otherUser)
   if(currentUser.username === otherUser) {
     isFollowing = true;
   }
@@ -245,14 +243,13 @@ const UserPage = () => {
           following_id: id,
           user_id: currentUser.userId,
           username: userDetails.username,
-          name: userDetails.user.name,
+          name: userDetails.user.fullname,
           profile_pic_url: userDetails.user.profilePic
         },
         ...following,
       ])
     );
 
-    console.log(following)
   };
 
   const handleSaveChanges = async () => {
