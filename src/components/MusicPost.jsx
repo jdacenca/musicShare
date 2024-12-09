@@ -17,7 +17,7 @@ function MusicPost({ post, onDelete, cardType = "large" }) {
   const isDarkMode = useSelector((state) => state.beatSnapApp.isDarkMode);
 
   const [isLiked, setIsLiked] = useState(false); // Tracks whether the post is liked
-  const [likes, setLikes] = useState(post.likes);
+  const [likes, setLikes] = useState(0);
   const [comments, setComments] = useState(post.comments);
   const [commentText, setCommentText] = useState("");
   const [showComments, setShowComments] = useState(false);
@@ -52,8 +52,77 @@ function MusicPost({ post, onDelete, cardType = "large" }) {
     }
 });
 
-  const handleLikeToggle = () => {
-    setLikes(isLiked ? likes - 1 : likes + 1); // Increment or decrement likes
+useEffect(() => {
+  async function postCount() {
+    try {
+      const response = await fetch(apiUrl + "/post/like/count", {
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        method: "POST",
+        body: JSON.stringify({"postId": post.id})
+      });
+
+      const data = await response.json();
+
+      if (response.status == 200) {
+        setLikes(data.count);
+      } else {
+        console.log("Error")
+      }
+    } catch (err) {
+      console.log("Error");
+      console.log(err)
+    }
+  }
+
+  async function userPostLike() {
+    try {
+      const response = await fetch(apiUrl + "/post/like?" + new URLSearchParams({
+        postId : post.id,
+        userId: currentUser.userId
+      }), {
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        method: "GET"
+      });
+
+      const data = await response.json();
+
+      if (response.status == 200) {
+        setIsLiked(data);
+      } else {
+        console.log("Error")
+      }
+    } catch (err) {
+      console.log("Error");
+      console.log(err)
+    }
+  }
+
+  userPostLike();
+  postCount();
+}, []);
+
+  const handleLikeToggle = async () => {
+    const response = await fetch(apiUrl + "/post/like/update", {
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      method: "POST",
+      body: JSON.stringify({"postId": post.id, userId: currentUser.userId})
+    });
+
+    const data = await response.json();
+      
+    if (response.status == 200) {
+
+    } else {
+      console.log("Error")
+    }
+
+    setLikes(isLiked ? parseInt(likes) - 1 : parseInt(likes) + 1); // Increment or decrement likes
     setIsLiked(!isLiked); // Toggle like state
   };
 
@@ -80,10 +149,8 @@ function MusicPost({ post, onDelete, cardType = "large" }) {
       
       if (response.status == 200) {
         if (commentText) {
-          let oldList = [...comments, { username: currentUser.fullname , text: commentText }]
-          //setComments(oldList);
-  
-          setCommentText("");
+          toggleComments(false);
+          setCommentText("")
         }
   
       } else  {
@@ -97,7 +164,7 @@ function MusicPost({ post, onDelete, cardType = "large" }) {
     
   };
 
-  const toggleComments = async () => {
+  const toggleComments = async (isClose) => {
     try {
       let commentList = [];
       const result = await fetch(apiUrl + "/post/comment?" + new URLSearchParams({
@@ -134,7 +201,10 @@ function MusicPost({ post, onDelete, cardType = "large" }) {
       console.log(err);
     }
   
-    setShowComments(!showComments);
+    if (isClose) {
+      setShowComments(!showComments);
+    }
+    
   }
   const handleAction = (action) => {
     setShowMenu(false); // Close the menu
@@ -205,7 +275,6 @@ function MusicPost({ post, onDelete, cardType = "large" }) {
     };
   }, []);
 
-  console.log(comments)
   return (
     <div
       className={`music-post card shadow-xss rounded-xxl border-0  ${
@@ -323,10 +392,12 @@ function MusicPost({ post, onDelete, cardType = "large" }) {
       {showComments && (
         <div className="post-comments-section">
           {comments?.map((comment, index) => (
-            <div className="sub-item" key={index}>
-              <img src={comment.profilePic} alt="User" className="user-avatar" />
-              <Comment key={index} comment={comment.comment} />
-              <span className="com-time">{comment.time}</span>
+            <div className="comment-line">
+              <div className="sub-item" key={index}>
+                <img src={comment.profilePic} alt="User" className="user-avatar" />
+                <Comment key={index} comment={comment.comment} />
+                <span className="com-time">{comment.time}</span>
+              </div>
             </div>
           ))}
           <form className="post-form-section" onSubmit={handleCommentSubmit}>

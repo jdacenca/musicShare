@@ -32,12 +32,11 @@ export const databaseDisconnect = async function() {
 export const getPostWithFollowing = async function(req, res) {
     const { userId, sort } = req.body;
     try {
-
-        // Get all connections
         //generate select query
-        let queryUserConnections = 'SELECT following_id from user_connection ucon inner join users uacc on ucon.following_id = uacc.id where ucon.user_id=\'' + userId + "\'";
+        let queryUserConnections = `SELECT following_id from user_connection ucon 
+                                    inner join users uacc on ucon.following_id = uacc.id 
+                                    where ucon.user_id='${userId}'`;
         let resultConnections = await client.query({
-                //rowMode: 'array',
                 text: queryUserConnections
             });
         
@@ -304,14 +303,29 @@ export const updatePostMessage = async function(req, res) {
 // Returns the number of inserted value to indicate success else, null
 export const updatePostLike = async function(req, res) {
 
-    const { postId, noOfLikes } = req.body;
+    const { postId, userId } = req.body;
+
+    if (postId == undefined || userId == undefined) {
+        return res.status(400).send({"affectedRows": 0});
+    }
+
     try {
-        //generate select query
-        let query = util.format('UPDATE post SET no_of_likes=%d, updated_timestamp=NOW() where id=\'%s\'', noOfLikes, postId);
-        let result = await client.query({
-                //rowMode: 'array',
-                text: query
-            });
+        // Check first if there is already an entry
+        let checkEntry = `SELECT is_liked FROM likes where post_id=$1 and user_id=$2`;
+        let isFound = await client.query(checkEntry, [postId, userId]);
+
+        let query = ""
+        let like = true;
+        if (isFound.rowCount > 0) {
+            query = `UPDATE likes SET is_liked=$3  where post_id=$1 and user_id=$2`;
+            like = isFound.rows[0].is_liked ? false : true
+        } else {
+            //generate insert query
+            query = `INSERT INTO likes (post_id, user_id, is_liked) VALUES ($1, $2, $3)`;
+        }
+        
+        let result = await client.query(query, [postId, userId, like]);
+
         return res.status(200).send({"affectedRows": result.rowCount}); 
     } catch (err) {
         console.log("Error in running query: " + err);
@@ -319,6 +333,39 @@ export const updatePostLike = async function(req, res) {
     } 
 }
 
+export const getPostLikesCount = async function(req, res) {
+
+    const { postId } = req.body;
+    try {
+        // Check first if there is already an entry
+        let checkEntry = `SELECT COUNT(*) FROM likes where post_id=$1 and is_liked=true`;
+        let count = await client.query(checkEntry, [postId]);
+
+        return res.status(200).send(count.rows[0]); 
+    } catch (err) {
+        console.log("Error in running query: " + err);
+        return res.status(500).send("Internal Server Error");
+    } 
+}
+
+export const getPostUserLike = async function(req, res) {
+
+    const { postId, userId } = req.query;
+    try {
+        // Check first if there is already an entry
+        let checkEntry = `SELECT is_liked FROM likes where post_id=$1 and user_id=$2`;
+        let response = await client.query(checkEntry, [postId, userId]);
+
+        if (response.rowCount > 0) {
+            return res.status(200).send(response.rows[0].is_liked);
+        }
+
+        return res.status(200).send(false); 
+    } catch (err) {
+        console.log("Error in running query: " + err);
+        return res.status(500).send("Internal Server Error");
+    } 
+}
 
 // Does a soft delete on the post, and returns the number of affected rows.
 export const deletePostMessage = async function(req, res) {
@@ -378,7 +425,7 @@ export const insertUserGenre = async function(req, res) {
         })
 
         let query = "INSERT INTO user_music_genre (user_id, music_genre) VALUES " + values.join(",");
-        console.log(query)
+
         let result = await client.query({
                 //rowMode: 'array',
                 text: query
@@ -418,7 +465,6 @@ export const updateUser = async function(req, res) {
                 text: checkUsernameQuery
             });
         
-        console.log(isFound.rows[0].id)
         if (isFound.rowCount == 0 || (isFound.rows[0].id === userId )) {
             let query = `UPDATE users SET name=$1, username=$2, status=$3, profile_pic_url=$4  where id=$5`;
             let result = await client.query(query, [name, username, status, profilePicURL, userId]);
@@ -442,7 +488,6 @@ export const searchSingleUser = async function(req, res) {
         let query = `SELECT id, username, name, date_of_birth, email, status, profile_pic_url from users where (LOWER(name) like $1 or LOWER(username) like $2) and username != $3 LIMIT 5`;
         let result = await client.query(query, ["%" + keyword.toLowerCase() + "%", "%" + keyword.toLowerCase() + "%", currentUsername]);
         
-        //console.log(result.rows)
         return res.status(200).send(result.rows); 
         
     } catch (err) {
@@ -465,14 +510,11 @@ export const searchPost = async function(req, res) {
         users.push('\'' + userId + '\'')
         await resultConnections.rows.forEach((user) => users.push('\'' + user.following_id + '\''));
 
-        console.log(users.join(','))
-        console.log("%" + keyword.toLowerCase() + "%")
         //generate select query
         let strUsers = users.join(',');
         let query = `SELECT p.id as post_id, p.message, u.name, u.username, u.status, u.profile_pic_url, u.id from post p inner join users u on p.user_id=u.id where p.user_id in (${strUsers}) and LOWER($1) like '%i%' and p.is_deleted=false ORDER BY p.created_timestamp DESC LIMIT 5`;
         let result = await client.query(query, ["%" + keyword.toLowerCase() + "%"]);
         
-        console.log(result.rows)
         return res.status(200).send(result.rows); 
     } catch (err) {
         console.log("Error in running query: " + err);
@@ -509,7 +551,6 @@ export const getUserFollowingCount = async function(req, res) {
                 text: query
             });
 
-        //console.log(result.rows)
         return res.status(200).send(result.rows[0]);
     } catch (err) {
         console.log("Error in running query: " + err);
@@ -529,7 +570,6 @@ export const getUserFollowersCount = async function(req, res) {
                 text: query
             });
 
-        //console.log(result.rows)
         return res.status(200).send(result.rows[0]);
     } catch (err) {
         console.log("Error in running query: " + err);
