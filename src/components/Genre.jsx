@@ -47,7 +47,7 @@ const Genre = () => {
   };
 
   const handleSkip = async () => {
-    navigate('/home');
+    navigate('/login');
   }
 
   const handleGenreSave = async () => {
