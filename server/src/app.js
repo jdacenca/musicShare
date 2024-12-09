@@ -26,7 +26,11 @@ import { databaseConnect,
   getDetailsByUsername,
   getPost,
   follow,
-  unfollow
+  unfollow,
+  insertComment,
+  getComment,
+  getPostLikesCount,
+  getPostUserLike
 } from "./utils/databaseHelper.js";
 import { uploadPhoto } from "./utils/storePhotos.js";
 import { sendEmail } from "./utils/sendEmail.js";
@@ -79,6 +83,8 @@ app.post("/post/create", insertPost); // {userId:'ACC0000002', message:'Look at 
 app.post("/posts", getPostWithFollowing); // {userId:'ACC0000002', sort:'ASC'}
 app.post("/post/update", updatePostMessage); // {postId:'PST000003', message:'Soooooooooo addicted to this song!'}
 app.post("/post/like/update", updatePostLike); // {postId:'PST000003', noOfLikes:123}
+app.post("/post/like/count", getPostLikesCount);
+app.get("/post/like", getPostUserLike);
 app.delete("/post", deletePostMessage); // {postId:'ACC0000002'}
 app.get("/post/get", getPost); // {postId:'ACC0000002'}
 
@@ -97,6 +103,8 @@ app.get("/user/follower/count", getUserFollowersCount);
 app.get("/user/following", getUserConnections);
 app.post("/user/follow", follow);
 app.post("/user/unfollow", unfollow);
+app.get("/post/comment", getComment);
+app.post("/post/comment", insertComment);
 
 app.post("/user/uploadpic", upload.single('image'), uploadPhoto);
 app.get("/user/get", getDetailsByUsername);

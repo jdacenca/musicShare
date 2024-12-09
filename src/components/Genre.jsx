@@ -1,5 +1,6 @@
-import { useSelector, useDispatch, apiUrl } from "../CommonImports";
+import { useSelector, apiUrl, useNavigate } from "../CommonImports";
 import React, { useState } from 'react';
+
 import '../styles/Genre.css';
 import pop from '../assets/images/pop.png';
 import hiphop from '../assets/images/hiphop.png';
@@ -20,7 +21,7 @@ import worldmusic from '../assets/images/worldmusic.png';
 const Genre = () => {
   const [selectedGenres, setSelectedGenres] = useState([]);
   const currentUser = useSelector((state) => state.beatSnapApp.currentUser);
-  const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const genres = [
     { name: 'Pop', image: pop },
@@ -45,6 +46,10 @@ const Genre = () => {
     );
   };
 
+  const handleSkip = async () => {
+    navigate('/login');
+  }
+
   const handleGenreSave = async () => {
     console.log(selectedGenres)
 
@@ -64,7 +69,7 @@ const Genre = () => {
 
     if (response.status == 200) {
       alert('Saved!');
-      navigate('/home');
+      navigate('/login');
     } else {
       alert('Login failed...');
     }
@@ -108,7 +113,7 @@ const Genre = () => {
           <div className="genre-actions">
             <button className="def-button" onClick={handleGenreSave}>Save</button>
           </div>
-          <a href="#" className="def-skip">Skip this step</a>
+          <a href="#" className="def-skip" onClick={handleSkip}>Skip this step</a>
         </div>
     </div>
   );

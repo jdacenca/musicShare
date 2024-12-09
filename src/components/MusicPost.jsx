@@ -4,6 +4,7 @@ import {
   useRef,
   useEffect,
   useSelector,
+  apiUrl
 } from "../CommonImports";
 import { Heart, MessageCircle, MoreHorizontal, Share2, X } from "react-feather";
 import "../styles/MusicPost.css";
@@ -11,12 +12,13 @@ import Comment from "./Comment";
 import PostPopup from "./PostPopup";
 import { useNavigate } from "react-router-dom";
 import NameCard from "./NameCard";
+import moment from "moment";
 
 function MusicPost({ post, onDelete, cardType = "large" }) {
   const isDarkMode = useSelector((state) => state.beatSnapApp.isDarkMode);
 
   const [isLiked, setIsLiked] = useState(false); // Tracks whether the post is liked
-  const [likes, setLikes] = useState(post.likes);
+  const [likes, setLikes] = useState(0);
   const [comments, setComments] = useState(post.comments);
   const [commentText, setCommentText] = useState("");
   const [showComments, setShowComments] = useState(false);
@@ -34,24 +36,178 @@ function MusicPost({ post, onDelete, cardType = "large" }) {
   const [isPostPopupVisible, setPostPopupVisible] = useState(false);
   const [isPostDelete, setPostDelete] = useState(false);
 
-  const handleLikeToggle = () => {
-    setLikes(isLiked ? likes - 1 : likes + 1); // Increment or decrement likes
+  moment.locale('en', {
+    relativeTime : {
+        future: "%s",
+        past:   "%ss",
+        s:  "%ss",
+        m:  "%dm",
+        mm: "%dm",
+        h:  "%dh",
+        hh: "%dh",
+        d:  "%dd",
+        dd: "%dd",
+        M:  "%dm",
+        MM: "%dm",
+        y:  "$dy",
+        yy: "%dy"
+    }
+});
+
+useEffect(() => {
+  async function postCount() {
+    try {
+      const response = await fetch(apiUrl + "/post/like/count", {
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        method: "POST",
+        body: JSON.stringify({"postId": post.id})
+      });
+
+      const data = await response.json();
+
+      if (response.status == 200) {
+        setLikes(data.count);
+      } else {
+        console.log("Error")
+      }
+    } catch (err) {
+      console.log("Error");
+      console.log(err)
+    }
+  }
+
+  async function userPostLike() {
+    try {
+      const response = await fetch(apiUrl + "/post/like?" + new URLSearchParams({
+        postId : post.id,
+        userId: currentUser.userId
+      }), {
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        method: "GET"
+      });
+
+      const data = await response.json();
+
+      if (response.status == 200) {
+        setIsLiked(data);
+      } else {
+        console.log("Error")
+      }
+    } catch (err) {
+      console.log("Error");
+      console.log(err)
+    }
+  }
+
+  userPostLike();
+  postCount();
+}, []);
+
+  const handleLikeToggle = async () => {
+    const response = await fetch(apiUrl + "/post/like/update", {
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      method: "POST",
+      body: JSON.stringify({"postId": post.id, userId: currentUser.userId})
+    });
+
+    const data = await response.json();
+
+    if (response.status == 200) {
+
+    } else {
+      console.log("Error")
+    }
+
+    setLikes(isLiked ? parseInt(likes) - 1 : parseInt(likes) + 1); // Increment or decrement likes
     setIsLiked(!isLiked); // Toggle like state
   };
 
-  const handleCommentSubmit = (e) => {
+  useEffect(() => { console.log(comments) }, [comments])
+
+  const handleCommentSubmit = async (e) => {
     e.preventDefault();
-    if (commentText) {
-      setComments([
-        ...comments,
-        { username: currentUser.fullname, text: commentText },
-      ]);
-      setCommentText("");
+
+    try {
+      if (!commentText) {
+        alert('Please enter your comment.');
+        return;
+      }
+
+      const response = await fetch(apiUrl + "/post/comment", {
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        method: "POST",
+        body: JSON.stringify({"postId": post.id, "comment": commentText, userId: currentUser.userId})
+      });
+
+      const data = await response.json();
+
+      if (response.status == 200) {
+        if (commentText) {
+          toggleComments(false);
+          setCommentText("")
+        }
+
+      } else  {
+        alert('Unable to post comment!');
+        return;
+      }
+    } catch (err) {
+      console.log("Error");
+      console.log(err);
     }
+
   };
 
-  const toggleComments = () => setShowComments(!showComments);
+  const toggleComments = async (isClose) => {
+    try {
+      let commentList = [];
+      const result = await fetch(apiUrl + "/post/comment?" + new URLSearchParams({
+        postId: post.id
+      }), {
+        method: "GET",
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+        }
+      });
 
+      if (result.status == 200) {
+        const data = await result.json();
+
+        data.forEach((x) => {
+          let timeAgo = moment(x.created_timestamp).fromNow();
+
+          let postComment = {
+            postId: x.id,
+            name: x.name,
+            comment: {username:x.name, text:x.comment},
+            profilePic: x.profile_pic_url,
+            time: timeAgo,
+          };
+
+          commentList.push(postComment)
+        })
+      }
+
+      setComments(commentList);
+    } catch (err) {
+      console.log("Error");
+      console.log(err);
+    }
+
+    if (isClose) {
+      setShowComments(!showComments);
+    }
+
+  }
   const handleAction = (action) => {
     setShowMenu(false); // Close the menu
     switch (action) {
@@ -182,7 +338,7 @@ function MusicPost({ post, onDelete, cardType = "large" }) {
         {post.videoUrl ? (
           <iframe
             width={cardType === "large" ? "100%" : ""}
-            height={cardType === "large" ? "300px" : "150px"}
+            height={cardType === "large" ? "300px" : "150px"} 
             src={post.videoUrl}
             title="YouTube video player"
             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
@@ -237,7 +393,13 @@ function MusicPost({ post, onDelete, cardType = "large" }) {
       {showComments && (
         <div className="post-comments-section">
           {comments?.map((comment, index) => (
-            <Comment key={index} comment={comment} />
+            <div className="comment-line">
+              <div className="sub-item" key={index}>
+                <img src={comment.profilePic} alt="User" className="user-avatar" />
+                <Comment key={index} comment={comment.comment} />
+                <span className="com-time">{comment.time}</span>
+              </div>
+            </div>
           ))}
           <form className="post-form-section" onSubmit={handleCommentSubmit}>
             <div className="w-100 d-flex flex-row align-items-center mt-4">

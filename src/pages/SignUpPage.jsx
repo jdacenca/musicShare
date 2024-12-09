@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { apiUrl } from "../CommonImports";
+import { apiUrl, useDispatch } from "../CommonImports";
+import { setCurrentUser } from "../redux/slice";
 
 const SignUpPage = () => {
   const [formData, setFormData] = useState({
@@ -12,6 +13,7 @@ const SignUpPage = () => {
   });
   const [error, setError] = useState(''); 
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   const backgroundImage = '/background.png';
 
   const handleChange = (e) => {
@@ -38,8 +40,22 @@ const SignUpPage = () => {
       body: JSON.stringify({ "username": formData.username, "password": formData.password, "email": formData.email, "name": formData.fullName, "date_of_birth": formData.dateOfBirth})
     });
 
+    const data = await response.json();
+
     if (response.status == 201) {
       alert('Sign up successful! Redirecting to login page...');
+
+      dispatch(setCurrentUser({
+        "userId": data.userId,
+        "username": formData.username, 
+        "interest": "", 
+        "fullname": formData.fullName, 
+        "status": "",
+        "birthday": formData.dateOfBirth,
+        "email": formData.email,
+        "profilePic": ""  // to reload image
+      }));
+
       navigate('/genre');
     } else {
       alert('Creating new account failed...');

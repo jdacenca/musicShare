@@ -207,6 +207,10 @@
   background-color: #444;
 }
 
+.comment-line {
+  padding: 5px;
+}
+
 .post-snackbar {
   position: fixed;
   bottom: 20px;
