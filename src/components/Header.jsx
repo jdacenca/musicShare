@@ -8,32 +8,48 @@ import "../styles/Header.css";
 import Notification from "./Notification";
 import { persistor } from "../redux/store";
 
+
+// Header component
 function Header() {
+
+  // Redux state selectors
   const isDarkMode = useSelector((state) => state.beatSnapApp.isDarkMode);
   const currentUser = useSelector((state) => state.beatSnapApp.currentUser);
+
+  // Redux dispatch function
   const dispatch = useDispatch();
+
+  // Navigation hook
   const navigate = useNavigate();
+
+  // State to toggle the visibility of the profile menu
   const [showMenu, setShowMenu] = useState(false);
+
+  // Function to toggle the menu visibility
   const toggleMenu = () => setShowMenu(!showMenu);
+
+  // Ref to track the popup element for outside click handling
   const popupRef = useRef(null);
 
+  // Function to toggle dark mode
   const toggleDarkModeHandler = () => {
     dispatch(toggleDarkMode());
-    document.body.classList.toggle("dark-mode", !isDarkMode);
+    document.body.classList.toggle("dark-mode", !isDarkMode); // Apply the dark mode class to the body element
   };
 
+  // Function to handle user actions (e.g., navigation, logout)
   const handleAction = (action) => {
     setShowMenu(false); // Close the menu
     switch (action) {
-      case "userpage":
+      case "userpage": // Navigate to the user's profile page
         navigate("/userpage");
         break;
-      case "logout":
+      case "logout": // Clear persisted state and navigate to the login screen
         persistor.purge();
         navigate("/");
         break;
       case "settings":
-        navigate("/settings"); // 替换 alert
+        navigate("/settings"); // Navigate to the settings page
         break;
       default:
         break;
@@ -50,9 +66,9 @@ function Header() {
   // Attach and detach the event listener
   useEffect(() => {
     document.body.classList.toggle("dark-mode", isDarkMode);
-    document.addEventListener("mousedown", handleClickOutside);
+    document.addEventListener("mousedown", handleClickOutside); // Add event listener for outside clicks
     return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
+      document.removeEventListener("mousedown", handleClickOutside); // Cleanup event listener on component unmount
     };
   }, []);
 
@@ -86,6 +102,7 @@ function Header() {
               className="user-avatar"
             />
           </div>
+          {/* Profile Menu Popup */}
           {showMenu && (
             <div ref={popupRef} className="profile-menu-popup">
               <ul>

@@ -14,28 +14,32 @@ import { useNavigate } from "react-router-dom";
 import NameCard from "./NameCard";
 import moment from "moment";
 
+// MusicPost Component - Displays individual music posts
 function MusicPost({ post, onDelete, cardType = "large" }) {
+  // Application states and hooks
   const isDarkMode = useSelector((state) => state.beatSnapApp.isDarkMode);
-
-  const [isLiked, setIsLiked] = useState(false); // Tracks whether the post is liked
-  const [likes, setLikes] = useState(0);
-  const [comments, setComments] = useState(post.comments);
-  const [commentText, setCommentText] = useState("");
-  const [showComments, setShowComments] = useState(false);
-  const [showMenu, setShowMenu] = useState(false); // Tracks whether the menu is visible
-  const [showShareMenu, setShowShareMenu] = useState(false); // Tracks whether the menu is visible
-  const [snackbarVisible, setSnackbarVisible] = useState(false);
   const navigate = useNavigate();
 
+  // Component states
+  const [isLiked, setIsLiked] = useState(false); // Tracks whether the post is liked
+  const [likes, setLikes] = useState(0); // Total likes count
+  const [comments, setComments] = useState(post.comments); // Post comments
+  const [commentText, setCommentText] = useState(""); // Text for a new comment
+  const [showComments, setShowComments] = useState(false); // Toggle comments visibility
+  const [showMenu, setShowMenu] = useState(false); // Tracks whether the menu is visible
+  const [showShareMenu, setShowShareMenu] = useState(false); // Tracks whether the menu is visible
+  const [snackbarVisible, setSnackbarVisible] = useState(false); // Snackbar visibility
+  const [isPostPopupVisible, setPostPopupVisible] = useState(false); // Popup visibility
+  const [isPostDelete, setPostDelete] = useState(false); // Post deletion flag
+
+  const currentUser = useSelector((state) => state.beatSnapApp.currentUser); // Current user info
+  const popupRef = useRef(null); // Reference for options menu popup
+  const sharePopupRef = useRef(null); // Reference for share menu popup
+
+   // link to the post
   const link = `${window.location.protocol}//${window.location.host}/post?id=${post.id}`;
 
-  const currentUser = useSelector((state) => state.beatSnapApp.currentUser);
-  const popupRef = useRef(null);
-  const sharePopupRef = useRef(null);
-
-  const [isPostPopupVisible, setPostPopupVisible] = useState(false);
-  const [isPostDelete, setPostDelete] = useState(false);
-
+  // Moment.js locale customization for relative time display
   moment.locale('en', {
     relativeTime : {
         future: "%s",
@@ -54,6 +58,7 @@ function MusicPost({ post, onDelete, cardType = "large" }) {
     }
 });
 
+// Fetch initial post like count and user-specific like status
 useEffect(() => {
   async function postCount() {
     try {
@@ -107,6 +112,7 @@ useEffect(() => {
   postCount();
 }, []);
 
+  // Toggle like status for the post
   const handleLikeToggle = async () => {
     const response = await fetch(apiUrl + "/post/like/update", {
       headers: {
@@ -130,6 +136,7 @@ useEffect(() => {
 
   useEffect(() => { console.log(comments) }, [comments])
 
+  // Handle comment submission
   const handleCommentSubmit = async (e) => {
     e.preventDefault();
 
@@ -166,6 +173,7 @@ useEffect(() => {
 
   };
 
+  // Fetch and toggle comments visibility
   const toggleComments = async (isClose) => {
     try {
       let commentList = [];
@@ -208,6 +216,8 @@ useEffect(() => {
     }
 
   }
+  
+  // Event handler for post actions (edit, delete, etc.)
   const handleAction = (action) => {
     setShowMenu(false); // Close the menu
     switch (action) {
@@ -231,6 +241,7 @@ useEffect(() => {
     }
   };
 
+  // Event handler for sharing actions (WhatsApp, copy link)
   const handleShareAction = (action) => {
     setShowShareMenu(false); // Close the menu
     switch (action) {

@@ -1,5 +1,6 @@
 import React from 'react';
 
+// A container for the comment
 function Comment({ comment }) {
   return (
     <div className="comment">
