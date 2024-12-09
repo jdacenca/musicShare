@@ -65,6 +65,7 @@ function MusicFeed() {
             id: x.id,
             userId: x.user_id,
             username: x.name,
+            _username : x.username,
             profilePic: x.profile_pic_url,
             title: x.status,
             time: timeAgo,

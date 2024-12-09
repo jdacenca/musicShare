@@ -9,6 +9,7 @@ import { Heart, MessageCircle, MoreHorizontal, Share2, X } from "react-feather";
 import "../styles/MusicPost.css";
 import Comment from "./Comment";
 import PostPopup from "./PostPopup";
+import { useNavigate } from "react-router-dom";
 import NameCard from "./NameCard";
 
 function MusicPost({ post, onDelete, cardType = "large" }) {
@@ -22,6 +23,7 @@ function MusicPost({ post, onDelete, cardType = "large" }) {
   const [showMenu, setShowMenu] = useState(false); // Tracks whether the menu is visible
   const [showShareMenu, setShowShareMenu] = useState(false); // Tracks whether the menu is visible
   const [snackbarVisible, setSnackbarVisible] = useState(false);
+  const navigate = useNavigate();
 
   const link = `${window.location.protocol}//${window.location.host}/post?id=${post.id}`;
 
@@ -42,7 +44,7 @@ function MusicPost({ post, onDelete, cardType = "large" }) {
     if (commentText) {
       setComments([
         ...comments,
-        { username: currentUser.fullname , text: commentText },
+        { username: currentUser.fullname, text: commentText },
       ]);
       setCommentText("");
     }
@@ -65,7 +67,8 @@ function MusicPost({ post, onDelete, cardType = "large" }) {
         setPostPopupVisible(true);
         break;
       case "account-details":
-        alert("Account details action triggered");
+        (currentUser.userId === post.userId) ?
+          navigate(`/userpage`): navigate(`/userpage?username=${post._username}`)
         break;
       default:
         break;
@@ -122,10 +125,8 @@ function MusicPost({ post, onDelete, cardType = "large" }) {
   return (
     <div
       className={`music-post card shadow-xss rounded-xxl border-0  ${
-        cardType === 'large' ? "p-4" : ""
-      }  ${
-        isDarkMode ? "dark-mode" : ""
-      }`}
+        cardType === "large" ? "p-4" : ""
+      }  ${isDarkMode ? "dark-mode" : ""}`}
     >
       {/* Post Header */}
       {cardType === "large" && (
@@ -181,7 +182,7 @@ function MusicPost({ post, onDelete, cardType = "large" }) {
         {post.videoUrl ? (
           <iframe
             width={cardType === "large" ? "100%" : ""}
-            height={cardType === "large" ? "300px" : "150px"} 
+            height={cardType === "large" ? "300px" : "150px"}
             src={post.videoUrl}
             title="YouTube video player"
             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
@@ -191,7 +192,7 @@ function MusicPost({ post, onDelete, cardType = "large" }) {
           <iframe
             src={`${post.spotifyUrl}`}
             width={cardType === "large" ? "100%" : ""}
-            height={cardType === "large" ? "360px" : "150px"} 
+            height={cardType === "large" ? "360px" : "150px"}
             allow="encrypted-media"
             allowFullScreen
             title="Spotify player"
