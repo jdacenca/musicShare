@@ -14,11 +14,15 @@ import SideBar from "../components/SideBar";
 import { setTrendingMusic } from "../redux/slice";
 import "../styles/Homepage.css";
 
+// Homepage component
 const Homepage = () => {
+  // Access Redux state to check if Dark Mode is enabled
   const isDarkMode = useSelector((state) => state.beatSnapApp.isDarkMode);
-  
+
+  // Hook to get the dispatch function for Redux actions
   const dispatch = useDispatch();
 
+  // Fetch trending music data from Spotify API on component mount
   useEffect(() => {
     async function fetchSpotifyData() {
       await fetch(apiUrl + "/spotify/connect", {
@@ -31,6 +35,7 @@ const Homepage = () => {
     fetchSpotifyData();
   }, [dispatch]);
 
+  // Render the Homepage layout
   return (
     <div
       id="app-container-id"
