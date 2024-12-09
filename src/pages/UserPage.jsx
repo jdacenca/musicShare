@@ -21,15 +21,24 @@ import {setFollowing, setUnfollowing} from "../redux/slice";
 import "../styles/Userpage.css";
 import { setCurrentUser } from "../redux/slice";
 
+// UserPage component
 const UserPage = () => {
+
+  // Hooks to manage state and navigation
   const dispatch = useDispatch();
   const navigate = useNavigate();
+
+  // Retrieving data from Redux store
   const isDarkMode = useSelector((state) => state.beatSnapApp.isDarkMode);
   const currentUser = useSelector((state) => state.beatSnapApp.currentUser);
   const following = useSelector((state) => state.beatSnapApp.following);
   const posts = useSelector((state) => state.beatSnapApp.posts);
+
+  // Get query parameters from the URL
   const [searchParams, setSearchParams] = useSearchParams();
   const otherUser = searchParams.get("username");
+
+  // Initial user details, determined by whether the page is for the current user or another user
   const [userDetails, setUserDetails] = useState(
     otherUser
       ? {
@@ -47,13 +56,17 @@ const UserPage = () => {
           followingCount: null,
         }
   );
+
+  // State for tracking if the user is followed
   const [followed, setFollowed] = useState(false);
 
+  // Check if the logged-in user is already following the other user
   let isFollowing = false;
   following.forEach((x) => {
     if (x.username === otherUser ) isFollowing = true;
   });
 
+  // Prevent follow/unfollow for self
   if(currentUser.username === otherUser) {
     isFollowing = true;
   }
@@ -78,9 +91,12 @@ const UserPage = () => {
   const [editDisplayName, setEditDisplayName] = useState("");
   const [editBio, setEditBio] = useState("");
   const [editProfilePic, setEditProfilePic] = useState("");
+
+  // States for creating a post and displaying live cards
   const [isCreatePostPopupVisible, setCreatePostPopupVisible] = useState(false);
   const [showLiveCard, setShowLiveCard] = useState(false);
 
+  // States for tracking follower and following counts
   const [followingNo, setFollowingNo] = useState(0);
   const [followersNo, setFollowersNo] = useState(0);
 
@@ -93,6 +109,7 @@ const UserPage = () => {
     setProfilePic(currentUser.profilePic);
   }, []);
 
+  // Fetch user details from the API when the otherUser changes
   useEffect(() => {
     async function fetchUserDetails() {
       try {
@@ -195,24 +212,29 @@ const UserPage = () => {
     setShowEditModal(true);
   };
 
+  // Navigate to settings page
   const handleSettingsClick = () => {
     navigate("/settings");
   };
 
+  // Navigate to messaging page
   const handleMessageClick = () => {
     navigate("/message");
   };
 
+  // Follow user functionality
   const handleFollowClick = () => {
     setFollowed(true);
     followUser(userDetails.user.userId);
   };
 
+  // Unfollow user functionality
   const handleUnfollowClick = () => {
     setFollowed(false);
     unFollowUser(userDetails.user.userId);
   };
 
+  // API call to unfollow a user
   const unFollowUser = async (id) => {
     const resp = await fetch(apiUrl + "/user/unfollow", {
       method: "POST",
@@ -230,6 +252,7 @@ const UserPage = () => {
     dispatch(setUnfollowing(id));
   };
 
+  // API call to follow a user
   const followUser = async (id) => {
     const resp = await fetch(apiUrl + "/user/follow", {
       method: "POST",
@@ -258,6 +281,7 @@ const UserPage = () => {
     setFollowersNo(followersNo+1);
   };
 
+  // Save profile changes
   const handleSaveChanges = async () => {
     const response = await fetch(apiUrl + "/user/update", {
       headers: {
