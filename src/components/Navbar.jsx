@@ -21,22 +21,30 @@ import PostPopup from "./PostPopup";
 import SearchPopup from "./SearchPopup";
 import { setFollowing } from "../redux/slice";
 
+//NavBar Component
 const NavBar = () => {
+  
+  // Access global state using selectors
   const isDarkMode = useSelector((state) => state.beatSnapApp.isDarkMode);
   const following = useSelector((state) => state.beatSnapApp.following);
   const currentUser = useSelector((state) => state.beatSnapApp.currentUser);
   const dispatch = useDispatch();
 
+  // Local component states
   const [showFriends, setShowFriends] = useState(false);
   const [isPopupVisible, setPopupVisible] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
 
   const navigate = useNavigate();
 
+  // Open the search popup
   const openSearch = () => setIsSearchOpen(true);
+  
+  // Close the search popup
   const closeSearch = () => setIsSearchOpen(false);
 
   useEffect(() => {
+    // Fetch the list of users that the current user is following
     async function fetchFollowing() {
       let followingList = [];
       try {
@@ -57,6 +65,7 @@ const NavBar = () => {
         const apiFollowingData = await apiFollowing.json();
 
         //console.log(apiFollowingData)
+        // Populate the following list
         apiFollowingData.forEach((x) => {
           followingList.push(x);
         });
@@ -74,11 +83,12 @@ const NavBar = () => {
       }
     };
 
-    fetchFollowing();
+    fetchFollowing(); // Fetch following list on component mount
     document.addEventListener("keydown", handleShortcut);
     return () => document.removeEventListener("keydown", handleShortcut);
   }, []);
 
+  // Toggle the visibility of friends list
   const toggleFriends = () => {
     setShowFriends(!showFriends);
   };
