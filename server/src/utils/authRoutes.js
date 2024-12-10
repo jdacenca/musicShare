@@ -73,8 +73,8 @@ router.post("/login", async (req, res) => {
     }
 
     // Find the user in the database
-    const query = `SELECT * FROM users WHERE username = $1`;
-    const result = await pool.query(query, [username]);
+    const query = `SELECT * FROM users WHERE username = $1 and is_deleted=$2`;
+    const result = await pool.query(query, [username, false]);
     const user = result.rows[0];
 
     if (!user) {

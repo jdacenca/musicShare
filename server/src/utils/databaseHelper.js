@@ -397,6 +397,22 @@ export const deletePostMessage = async function(req, res) {
 //------------------------------------------------------------
 // USER
 //------------------------------------------------------------
+// Does a soft delete on the post, and returns the number of affected rows.
+export const deleteUser = async function(req, res) {
+
+    const { userId } = req.body;
+    try {
+        //generate select query
+        let query = `UPDATE users SET is_deleted=$1 where id=$2`;
+        let result = await client.query(query, [true, userId]);
+        return res.status(200).send({"affectedRows": result.rowCount}); 
+
+    } catch (err) {
+        console.log("[deleteUser] Error in running query: " + err);
+        return res.status(500).send("Internal Server Error");
+    } 
+}
+
 // Sample call -- let r = await getPost('ACC0000002', 'ASC');
 // This function retrieves the users genre of choice
 export const getUserGenre = async function(req, res) {

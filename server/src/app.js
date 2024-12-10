@@ -30,7 +30,8 @@ import { databaseConnect,
   insertComment,
   getComment,
   getPostLikesCount,
-  getPostUserLike
+  getPostUserLike,
+  deleteUser
 } from "./utils/databaseHelper.js";
 import { uploadPhoto } from "./utils/storePhotos.js";
 import { sendEmail } from "./utils/sendEmail.js";
@@ -96,6 +97,7 @@ app.post("/user/genre", insertUserGenre);
 app.post("/user/post", getAllUserPost);
 app.post("/user/resetpassword", sendEmail);
 app.post("/user/update", updateUser);
+app.delete("/user/delete", deleteUser);
 
 app.get("/user/post/count", getPostCount);
 app.get("/user/following/count", getUserFollowingCount);

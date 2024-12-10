@@ -1,7 +1,14 @@
-import React, { useState, useEffect } from 'react';
+import {
+    React,
+    useState,
+    useRef,
+    useEffect,
+    useSelector,
+    apiUrl,
+    useDispatch
+  } from "../CommonImports";
 import { toggleDarkMode } from "../redux/slice";
 import { useNavigate } from 'react-router-dom';
-import { useSelector, useDispatch } from 'react-redux';
 import Header from '../components/Header';
 import NavBar from '../components/Navbar';
 import SideBar from '../components/SideBar';
@@ -54,6 +61,28 @@ const Settings = () => {
         document.body.classList.toggle("dark-mode", !isDarkMode);
     };
 
+    const softDeleteUser = async () => {
+        try {
+            const response = await fetch(apiUrl + "/user/delete", {
+              headers: {
+                'Content-Type': 'application/json'
+              },
+              method: "DELETE",
+              body: JSON.stringify({"userId": currentUser.userId})
+            });
+      
+            const data = await response.json();
+            console.log(data)
+            if (response.status == 200) {
+                alert('Account deleted!');
+            }
+          } catch (err) {
+            console.log("Error");
+            console.log(err)
+          }
+    };
+
+
     const handleDeleteAccount = async () => {
         try {
             // API call to soft delete user
@@ -86,13 +115,13 @@ const Settings = () => {
                 <div ref={scroll} className="col-12 col-md-7 p-4">
                     <h1 className="mb-4">Settings</h1>
 
-                    {notification.show && (
+                    {/*{notification.show && (
                         <Notification
                             message={notification.message}
                             type={notification.type}
                             onClose={() => setNotification({ show: false })}
                         />
-                    )}
+                    )}*/}
 
                     {/* Settings Navigation Tabs */}
                     <div className="nav nav-tabs mb-4">

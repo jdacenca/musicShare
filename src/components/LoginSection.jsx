@@ -24,28 +24,29 @@ const LoginSection = () => {
       method: "POST",
       body: JSON.stringify({"username": username, "password": password})
     });
+
     const data = await response.json();
 
-    // Get the Genre
-    const responseGenre = await fetch(apiUrl + "/user/genre?" + new URLSearchParams({
-      userId: data.user.id
-    }), 
-    {
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      method: "GET",
-    });
-    const genre = await responseGenre.json();
-    
-    // Compile the interests in an array
-    const interests = [];
-    genre.forEach((g) => {
-      interests.push(g.music_genre)
-    });
-
-    console.log(interests)
     if (response.status == 200) {
+
+      // Get the Genre
+      const responseGenre = await fetch(apiUrl + "/user/genre?" + new URLSearchParams({
+        userId: data.user.id
+      }), 
+      {
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        method: "GET",
+      });
+      const genre = await responseGenre.json();
+      
+      // Compile the interests in an array
+      const interests = [];
+      genre.forEach((g) => {
+        interests.push(g.music_genre)
+      });
+
       dispatch(setCurrentUser({
         "userId": data.user.id,
         "username": data.user.username, 
