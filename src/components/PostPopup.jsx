@@ -11,6 +11,7 @@ import { Search, X } from "react-feather";
 import NameCard from "./NameCard";
 import { setPosts } from "../redux/slice";
 
+// PostPopup component - for creating, updating, and deleting posts
 const PostPopup = ({
   type = "NEW",
   onClose,
@@ -18,6 +19,7 @@ const PostPopup = ({
   onDelete,
   postInitContent = "",
 }) => {
+  // Redux state selectors
   const posts = useSelector((state) => state.beatSnapApp.posts);
   const currentUser = useSelector((state) => state.beatSnapApp.currentUser);
   const isDarkMode = useSelector((state) => state.beatSnapApp.isDarkMode);
@@ -25,37 +27,40 @@ const PostPopup = ({
   const [youtubeData, setYoutubeData] = useState([]);
   const [showSearch, setShowSearch] = useState(false);
 
+  // Local state
   const popupRef = useRef(null);
   const [postContent, setPostContent] = useState("");
   const [musicUrl, setMusicUrl] = useState("");
   const dispatch = useDispatch();
 
+  // Handles actions based on the type of the popup (new, update, delete)
   const handleAction = () => {
     switch (type) {
       case "NEW":
         if (postContent) {
-          createPost();
+          createPost(); // Create a new post if there's content
         }
-        onClose();
+        onClose(); // Close the popup
         break;
       case "UPDATE":
         if (postContent) {
-          updatePost();
+          updatePost(); // Update an existing post if there's content
         }
-        onClose();
+        onClose(); // Close the popup
         break;
       case "DELETE":
         if (post.canApiDelete) {
-          deletePost();
+          deletePost(); // Delete the post if it can be deleted
         }
-        onDelete();
+        onDelete(); // Callback to handle post-deletion outside of this component
         break;
       default:
-        onClose();
+        onClose(); // Close the popup
         break;
     }
   };
 
+  // Function to create a new post
   const createPost = async () => {
     //api
     try {
@@ -73,7 +78,7 @@ const PostPopup = ({
       });
 
       const data = await resp.json();
-
+      // New post object structure
       let post = {
         id: data.id,
         username: currentUser.fullname,
@@ -91,6 +96,7 @@ const PostPopup = ({
     } catch {}
   };
 
+  // Function to update an existing post
   const updatePost = async () => {
     const resp = await fetch(apiUrl + "/post/update", {
       method: "POST",
@@ -119,6 +125,7 @@ const PostPopup = ({
     );
   };
 
+  // Function to delete a post
   const deletePost = async () => {
     const resp = await fetch(apiUrl + "/post", {
       method: "DELETE",
@@ -132,12 +139,14 @@ const PostPopup = ({
     });
   };
 
+  // Function to handle clicks outside the popup to close it
   const handleClickOutside = (event) => {
     if (popupRef.current && !popupRef.current.contains(event.target)) {
       onClose();
     }
   };
 
+  // Function to search for music on YouTube based on the query
   const searchYoutube = async (v) => {
     const youtubeSearch = await fetch(apiUrl + "/youtube/music/search?q=" + v);
     const youtubeSearchData = await youtubeSearch.json();
@@ -145,16 +154,19 @@ const PostPopup = ({
     setShowSearch(true);
   };
 
+  // useEffect hook for handling initialization and cleanup
   useEffect(() => {
     let initContent = type === "NEW" ? postInitContent : post.description;
     setPostContent(initContent);
 
+    // Event listener to handle clicks outside the popup
     document.addEventListener("mousedown", handleClickOutside);
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
   }, []);
 
+  // Handlers for input changes
   const handleInputChange = (event) => {
     setPostContent(event.target.value);
   };
@@ -163,21 +175,22 @@ const PostPopup = ({
     let v = e.target.value;
     setQuery(v);
     if (v) {
-      searchYoutube(v);
+      searchYoutube(v); // Search for music if input is not empty
     }
   };
 
   const handleMusicUrlInputChange = (e) => {
     let v = e.target.value;
     if (v) {
-      setMusicUrl(v);
-      setShowSearch(false);
+      setMusicUrl(v); // Set the music URL
+      setShowSearch(false); // Hide search results
     }
   };
 
   return (
     <div className="popup-overlay">
       <div className="popup-container" ref={popupRef}>
+        {/* Header Section */}
         <div className="d-flex flex-row align-items-center border-bottom border-secondary mb-4 pt-2 pb-2">
           <div className="mx-auto">
             <h5>
@@ -188,6 +201,8 @@ const PostPopup = ({
                 : "Update post"}
             </h5>
           </div>
+          {/* Name Card Section */}
+
           {type !== "DELETE" && (
             <div className="ml-auto">
               <button className="close-button" onClick={onClose}>
@@ -200,12 +215,13 @@ const PostPopup = ({
           <div>
             <NameCard
               user={{
-                time: "Now"
-              }} 
+                time: "Now",
+              }}
               isCurrentUser="true"
             />
           </div>
         )}
+        {/* Textarea and Music URL Input */}
         <div>
           <textarea
             disabled={type === "DELETE"}
@@ -225,6 +241,7 @@ const PostPopup = ({
             ></iframe>
           )}
         </div>
+        {/* Music Search and URL Input for NEW posts */}
         {type === "NEW" && (
           <div>
             <div className="search-section">
