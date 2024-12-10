@@ -11,10 +11,12 @@ import PostPopup from './components/PostPopup';
 import ChangePassword from './pages/ChangePassword';
 import Genre from './components/Genre';
 import PostPage from './pages/PostPage';
+import { ToastContainer } from 'react-toastify';
 
 const App = () => {
   return (
     <Router>
+    <ToastContainer/>
       <Routes>
         <Route path="/" element={<LoginPage />} />
         <Route path="/login" element={<LoginPage />} />

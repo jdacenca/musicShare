@@ -22,6 +22,9 @@ import "../styles/Userpage.css";
 import { setCurrentUser } from "../redux/slice";
 import useScrollToTop from '../helper/useScrollToTop';
 
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
 // UserPage component
 const UserPage = () => {
   const scroll = useScrollToTop();
@@ -301,15 +304,21 @@ const UserPage = () => {
     //const data = await response.json();
 
     if (response.status == 200) {
-      alert("User Updated");
+      toast("User Updated");
       setUsername(editUsername);
       setDisplayName(editDisplayName);
       setBio(editBio);
       setProfilePic(editProfilePic); // Ensure the profile picture is updated in main content
 
-      setUsername(editUsername);
-      setDisplayName(editDisplayName);
-      setBio(editBio);
+      dispatch(
+        setCurrentUser({
+          ...currentUser,
+          username: editUsername,
+          fullname: editDisplayName,
+          status: editBio,
+          profilePic: editProfilePic + "?t=" + Date.now(),
+        })
+      );
 
       setShowEditModal(false);
     } else {

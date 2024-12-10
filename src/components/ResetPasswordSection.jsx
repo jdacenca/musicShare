@@ -5,6 +5,8 @@ import {
   apiUrl,
 } from "../CommonImports";
 import "../styles/ResetPassword.css";
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const ResetPasswordSection = () => {
   const [email, setEmail] = useState('');
@@ -14,7 +16,7 @@ const ResetPasswordSection = () => {
     e.preventDefault();
 
     if (!email) {
-      alert('Please enter your email.');
+      toast('Please enter your email.');
       return;
     }
 
@@ -29,9 +31,9 @@ const ResetPasswordSection = () => {
 
     console.log(response.status)
     if (response.status == 200) {
-      alert('Email Sent!');
+      toast('Email Sent!');
     } else {
-      alert('Email failed!...');
+      toast('Email failed!...');
     }
     
   };

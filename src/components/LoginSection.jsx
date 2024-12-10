@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useSelector, useDispatch, apiUrl } from "../CommonImports";
 import { setCurrentUser } from "../redux/slice";
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const LoginSection = () => {
   const [username, setUsername] = useState('');
@@ -13,7 +15,7 @@ const LoginSection = () => {
     e.preventDefault();
     
     if (!username || !password) {
-      alert('Please enter your username and password.');
+      toast('Please enter your username and password.');
       return;
     }
 
@@ -59,7 +61,7 @@ const LoginSection = () => {
       }));
       navigate('/home');
     } else {
-      alert('Login failed...');
+      toast("Login failed!");
     }
   };
 

@@ -14,6 +14,9 @@ import { useNavigate } from "react-router-dom";
 import NameCard from "./NameCard";
 import moment from "moment";
 
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
 // MusicPost Component - Displays individual music posts
 function MusicPost({ post, onDelete, cardType = "large" }) {
   // Application states and hooks
@@ -142,7 +145,7 @@ useEffect(() => {
 
     try {
       if (!commentText) {
-        alert('Please enter your comment.');
+        toast('Please enter your comment.');
         return;
       }
 
@@ -163,7 +166,7 @@ useEffect(() => {
         }
 
       } else  {
-        alert('Unable to post comment!');
+        toast('Unable to post comment!');
         return;
       }
     } catch (err) {

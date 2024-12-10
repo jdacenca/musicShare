@@ -3,6 +3,10 @@ import { useNavigate } from 'react-router-dom';
 import { apiUrl, useDispatch } from "../CommonImports";
 import { setCurrentUser } from "../redux/slice";
 
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import { Toast } from 'bootstrap';
+
 const SignUpPage = () => {
   const [formData, setFormData] = useState({
     username: '',
@@ -43,7 +47,7 @@ const SignUpPage = () => {
     const data = await response.json();
 
     if (response.status == 201) {
-      alert('Sign up successful! Redirecting to login page...');
+      toast('Sign up successful! Redirecting to login page...');
 
       dispatch(setCurrentUser({
         "userId": data.userId,
@@ -58,7 +62,7 @@ const SignUpPage = () => {
 
       navigate('/genre');
     } else {
-      alert('Creating new account failed...');
+      toast('Creating new account failed...');
     }
   };
 

@@ -7,7 +7,7 @@ import {
     apiUrl,
     useDispatch
   } from "../CommonImports";
-import { toggleDarkMode } from "../redux/slice";
+import { toggleDarkMode, setCurrentUser } from "../redux/slice";
 import { useNavigate } from 'react-router-dom';
 import Header from '../components/Header';
 import NavBar from '../components/Navbar';
@@ -16,6 +16,10 @@ import Notification from '../components/Notification';
 import "bootstrap/dist/css/bootstrap.css";
 import "../styles/Homepage.css";
 import useScrollToTop from '../helper/useScrollToTop';
+
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import { current } from "@reduxjs/toolkit";
 
 const Settings = () => {
     const scroll = useScrollToTop();
@@ -28,6 +32,7 @@ const Settings = () => {
     const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
     const [formData, setFormData] = useState({
         username: currentUser.username,
+        name: currentUser.fullname,
         email: currentUser.email,
         bio: currentUser.status,
         profilePicture: currentUser.profilePic,
@@ -38,9 +43,49 @@ const Settings = () => {
         themePreference: 'light'
     });
 
+    const updateProfile = async () => {
+        try {
+            const response = await fetch(apiUrl + "/user/update", {
+                headers: {
+                  "Content-Type": "application/json",
+                },
+                method: "POST",
+                body: JSON.stringify({
+                  userId: currentUser.userId,
+                  name: formData.name,
+                  username: formData.username,
+                  status: formData.bio,
+                  profilePicURL: formData.profilePicture,
+                }),
+              });
+              //const data = await response.json();
+          
+              if (response.status == 200) {
+                toast("User Updated");
+          
+                dispatch(
+                  setCurrentUser({
+                    ...currentUser,
+                    username: formData.username,
+                    fullname: formData.name,
+                    status: formData.bio
+                  })
+                );
+          
+              } else {
+                console.log("Failed to Update");
+              }
+        } catch (err) {
+            console.log("Error")
+            console.log(err)
+        }
+    }
+
     const handleProfileUpdate = async (e) => {
         e.preventDefault();
         try {
+            updateProfile();
+
             // API call to update user profile
             setNotification({
                 show: true,
@@ -74,7 +119,7 @@ const Settings = () => {
             const data = await response.json();
             console.log(data)
             if (response.status == 200) {
-                alert('Account deleted!');
+                toast('Account deleted!');
             }
           } catch (err) {
             console.log("Error");
@@ -155,6 +200,15 @@ const Settings = () => {
                                     className="form-control"
                                     value={formData.username}
                                     onChange={(e) => setFormData({...formData, username: e.target.value})}
+                                />
+                            </div>
+                            <div className="mb-3">
+                                <label className="form-label">Name</label>
+                                <input
+                                    type="text"
+                                    className="form-control"
+                                    value={formData.name}
+                                    onChange={(e) => setFormData({...formData, name: e.target.value})}
                                 />
                             </div>
                             <div className="mb-3">

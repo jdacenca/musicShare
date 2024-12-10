@@ -6,6 +6,8 @@ import {
 } from "../CommonImports";
 import { useNavigate, useParams, useLocation } from 'react-router-dom';
 import '../styles/ChangePassword.css';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const ChangePassword = () => {
 
@@ -37,9 +39,9 @@ const ChangePassword = () => {
       setId(data.id);
 
       if (response.status == 200) {
-        alert('Token validated!');
+        toast('Token validated!');
       } else {
-        alert('Token is expired!...');
+        toast('Token is expired!...');
       }
     };
 
@@ -57,7 +59,7 @@ const ChangePassword = () => {
   const handleSaveChanges = async (e) => {
     e.preventDefault();
     if (newPassword !== confirmPassword) {
-      alert('Passwords do not match');
+      toast('Passwords do not match');
       return;
     }
     const response = await fetch(apiUrl + "/auth/change-password", {
@@ -70,10 +72,10 @@ const ChangePassword = () => {
     const data = await response.json();
 
     if (response.status == 200) {
-      alert('Password changed successfully');
+      toast('Password changed successfully');
       navigate('/login'); // Redirect to login or another page after password change
     } else {
-      alert('Failed to change password!...');
+      toast('Failed to change password!...');
     }
     
   };

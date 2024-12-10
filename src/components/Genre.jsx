@@ -17,6 +17,8 @@ import blues from '../assets/images/blues.png';
 import rock from '../assets/images/rock.png';
 import worldmusic from '../assets/images/worldmusic.png';
 
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const Genre = () => {
   const [selectedGenres, setSelectedGenres] = useState([]);
@@ -54,7 +56,7 @@ const Genre = () => {
     console.log(selectedGenres)
 
     if (selectedGenres.lenght === 0) {
-      alert('Please select a genre!.');
+      toast('Please select a genre!.');
       return;
     }
 
@@ -68,10 +70,10 @@ const Genre = () => {
     const data = await response.json();
 
     if (response.status == 200) {
-      alert('Saved!');
+      toast('Saved genre.');
       navigate('/login');
     } else {
-      alert('Login failed...');
+      toast('Encountered issue saving the genre');
     }
   };
 
