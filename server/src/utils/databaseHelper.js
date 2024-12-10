@@ -28,11 +28,12 @@ export const databaseDisconnect = async function() {
 //------------------------------------------------------------
 // POST
 //------------------------------------------------------------
-// Sample call -- let r = await getPost('ACC0000002', 'ASC');
+// This function retrives all the posts not just the one created by the user
+// but also the posts created by followed friends.
 export const getPostWithFollowing = async function(req, res) {
     const { userId, sort } = req.body;
     try {
-        //generate select query
+        // Generate select query for getting the followed friends
         let queryUserConnections = `SELECT following_id from user_connection ucon 
                                     inner join users uacc on ucon.following_id = uacc.id 
                                     where ucon.user_id='${userId}'`;
@@ -43,52 +44,52 @@ export const getPostWithFollowing = async function(req, res) {
         let users = []
         users.push('\'' + userId + '\'')
         await resultConnections.rows.forEach((user) => users.push('\'' + user.following_id + '\''));
-        //generate select query
+
+        // Generate select query to get the posts
         let query = 'SELECT p.*, u.name, u.username, u.status, u.profile_pic_url from post p inner join users u on p.user_id=u.id where p.user_id in (' + users.join(',') + ") and p.is_deleted='false' ORDER BY p.created_timestamp " + sort;
 
         let result = await client.query({
-                //rowMode: 'array',
                 text: query
             });
+
         return res.status(200).send(result.rows);
+
     } catch (err) {
-        console.log("Error in running query: " + err);
+        console.log("[getPostWithFollowing] Error in running query: " + err);
         return res.status(500).send("Internal Server Error");
     } 
 }
 
+// This function gets all the users post
 export const getAllUserPost = async function(req, res) {
     const { userId, sort } = req.body;
     try {
-        //generate select query
+        // Generate select query
         let query = "SELECT p.*, u.name, u.username, u.status, u.profile_pic_url from post p inner join users u on p.user_id=u.id where p.user_id='" + userId + "' and p.is_deleted=false ORDER BY p.created_timestamp " + sort;
 
         console.log(query)
         let result = await client.query({
-                //rowMode: 'array',
                 text: query
             });
         return res.status(200).send(result.rows);
+
     } catch (err) {
-        console.log("Error in running query: " + err);
+        console.log("[getAllUserPost] Error in running query: " + err);
         return res.status(500).send("Internal Server Error");
     } 
 }
 
+// This function retrieves the count of all the user post
 export const getPostCount = async function(req, res) {
     const { userId } = req.query;
     try {
-        //generate select query
-        let query = 'SELECT COUNT(*) from post where user_id=\'' + userId + "\' and is_deleted=false";
+        // Generate select query
+        let query = `SELECT COUNT(*) from post where user_id=$1 and is_deleted=false`;
+        let result = await client.query(query, [userId]);
 
-        let result = await client.query({
-                //rowMode: 'array',
-                text: query
-            });
-        //console.log(result.rows)
         return res.status(200).send(result.rows[0]);
     } catch (err) {
-        console.log("Error in running query: " + err);
+        console.log("[getPostCount] Error in running query: " + err);
         return res.status(500).send("Internal Server Error");
     } 
 }
@@ -99,17 +100,17 @@ export const insertPost = async function(req, res) {
 
     const { userId, message, musicUrl } = req.body;
     try {
-        //generate select query
+        // Generate select query
         const query = `INSERT INTO post (message, music_url, no_of_likes, user_id) VALUES ($1, $2, $3, $4) RETURNING id`;
         const postResult = await client.query(query, [message, musicUrl, 0, userId]);
         const postId = postResult.rows[0].id;  
 
         // Create notifications for all users except the creator
         await createNotificationsForPost(postId, userId);
-
         return res.status(200).send({"success": true, postId});
+
     } catch (err) {
-        console.log("Error creating post or notifications: " + err);
+        console.log("[insertPost] Error creating post or notifications: " + err);
         return res.status(500).send("Failed to create post or notifications.");
     } 
 }
@@ -289,18 +290,18 @@ export const updatePostMessage = async function(req, res) {
     const { postId, message } = req.body;
     
     try {
-        //generate select query
+        // Generate select query
         let query = `UPDATE post SET message=$1, updated_timestamp=NOW() where id=$2`;
         let result = await client.query(query, [message, postId]);
         return res.status(200).send({"affectedRows": result.rowCount}); 
     } catch (err) {
-        console.log("Error in running query: " + err);
+        console.log("[updatePostMessage] Error in running query: " + err);
         return res.status(500).send("Internal Server Error");
     } 
 }
 
 // Sample call -- let r = await updatePostLike('PST000003', 123)
-// Returns the number of inserted value to indicate success else, null
+// This function insert or update the post like
 export const updatePostLike = async function(req, res) {
 
     const { postId, userId } = req.body;
@@ -316,11 +317,13 @@ export const updatePostLike = async function(req, res) {
 
         let query = ""
         let like = true;
+
         if (isFound.rowCount > 0) {
+            // If there is already an entry update to invert the value
             query = `UPDATE likes SET is_liked=$3  where post_id=$1 and user_id=$2`;
             like = isFound.rows[0].is_liked ? false : true
         } else {
-            //generate insert query
+            // if there is no entry, create one
             query = `INSERT INTO likes (post_id, user_id, is_liked) VALUES ($1, $2, $3)`;
         }
         
@@ -328,26 +331,32 @@ export const updatePostLike = async function(req, res) {
 
         return res.status(200).send({"affectedRows": result.rowCount}); 
     } catch (err) {
-        console.log("Error in running query: " + err);
+        console.log("[updatePostLike] Error in running query: " + err);
         return res.status(500).send("Internal Server Error");
     } 
 }
 
+// This function gets all the post like counts
 export const getPostLikesCount = async function(req, res) {
 
     const { postId } = req.body;
     try {
-        // Check first if there is already an entry
+        // Generate a select query
         let checkEntry = `SELECT COUNT(*) FROM likes where post_id=$1 and is_liked=true`;
         let count = await client.query(checkEntry, [postId]);
 
-        return res.status(200).send(count.rows[0]); 
+        if (count.rowCount > 0) {
+            return res.status(200).send(count.rows[0]); 
+        }
+
+        return res.status(200).send({"count": 0}); 
     } catch (err) {
-        console.log("Error in running query: " + err);
+        console.log("[getPostLikesCount] Error in running query: " + err);
         return res.status(500).send("Internal Server Error");
     } 
 }
 
+// This function retrieves is the post is liked or not by specific postId and userId
 export const getPostUserLike = async function(req, res) {
 
     const { postId, userId } = req.query;
@@ -362,7 +371,7 @@ export const getPostUserLike = async function(req, res) {
 
         return res.status(200).send(false); 
     } catch (err) {
-        console.log("Error in running query: " + err);
+        console.log("[getPostUserLike] Error in running query: " + err);
         return res.status(500).send("Internal Server Error");
     } 
 }
@@ -375,12 +384,12 @@ export const deletePostMessage = async function(req, res) {
         //generate select query
         let query = util.format('UPDATE post SET is_deleted=\'true\'  where id=\'%s\'', postId);
         let result = await client.query({
-                //owMode: 'array',
                 text: query
             });
         return res.status(200).send({"affectedRows": result.rowCount}); 
+
     } catch (err) {
-        console.log("Error in running query: " + err);
+        console.log("[deletePostMessage] Error in running query: " + err);
         return res.status(500).send("Internal Server Error");
     } 
 }
@@ -389,70 +398,67 @@ export const deletePostMessage = async function(req, res) {
 // USER
 //------------------------------------------------------------
 // Sample call -- let r = await getPost('ACC0000002', 'ASC');
+// This function retrieves the users genre of choice
 export const getUserGenre = async function(req, res) {
 
     const { userId } = req.query;
     try {
         //generate select query
-        let query = 'SELECT music_genre from user_music_genre where user_id=\'' + userId + "\'";
-        let result = await client.query({
-                //rowMode: 'array',
-                text: query
-            });
+        let query = `SELECT music_genre from user_music_genre where user_id=$1`;
+        let result = await client.query(query, [userId]);
         return res.status(200).send(result.rows);
+
     } catch (err) {
-        console.log("Error in running query: " + err);
+        console.log("[getUserGenre] Error in running query: " + err);
         return res.status(500).send("Internal Server Error");
     } 
 }
 
+// This function is to insert the chosen user genre
 export const insertUserGenre = async function(req, res) {
 
     const { userId, genre } = req.body;
     try {
 
-        // Delete the current genre chosen
-        let delQuery = "DELETE FROM user_music_genre WHERE user_id='" + userId + "'";
-        let delResult = await client.query({
-            //rowMode: 'array',
-            text: delQuery
-        });
+        // Delete the current genre chosen, this is to ensure that there will be no duplicates
+        let delQuery = `DELETE FROM user_music_genre WHERE user_id=$1`;
+        let delResult = await client.query(delQuery, [userId]);
 
-        // generate the insert values
+        // Generate query to insert values
         const values = [];
         genre.forEach((g) => {
             values.push( "('" + userId + "', '" + g.toLowerCase() + "')")
         })
 
         let query = "INSERT INTO user_music_genre (user_id, music_genre) VALUES " + values.join(",");
-
         let result = await client.query({
-                //rowMode: 'array',
                 text: query
             });
         return res.status(200).send({"affectedRows": result.rowCount}); 
+
     } catch (err) {
-        console.log("Error in running query: " + err);
+        console.log("[insertUserGenre] Error in running query: " + err);
         return res.status(500).send("Internal Server Error");
     } 
 }
 
+// This function delete any user genre
 export const deleteUserGenre = async function(req, res) {
 
     const { userId, genreId } = req.body;
     try {
         let query = util.format('DELETE FROM user_music_genre where user_id=\'%s\' and music_genre_id=%d', userId, genreId);
         let result = await client.query({
-                //rowMode: 'array',
                 text: query
             });
         return res.status(200).send({"affectedRows": result.rowCount}); 
     } catch (err) {
-        console.log("Error in running query: " + err);
+        console.log("[deleteUserGenre] Error in running query: " + err);
         return res.status(500).send("Internal Server Error");
     } 
 }
 
+// This function is for updating the user
 export const updateUser = async function(req, res) {
 
     const { name, username, status, userId, profilePicURL } = req.body;
@@ -475,36 +481,36 @@ export const updateUser = async function(req, res) {
         }
         
     } catch (err) {
-        console.log("Error in running query: " + err);
+        console.log("[updateUser] Error in running query: " + err);
         return res.status(500).send("Internal Server Error");
     } 
 }
 
+// This function to do a single user search
 export const searchSingleUser = async function(req, res) {
 
     const { keyword, currentUsername } = req.body;
     try {
-        //generate select query
+        // Generate select query
+        // Change the name and username to lower case before equating to prevent any mismatch
         let query = `SELECT id, username, name, date_of_birth, email, status, profile_pic_url from users where (LOWER(name) like $1 or LOWER(username) like $2) and username != $3 LIMIT 5`;
         let result = await client.query(query, ["%" + keyword.toLowerCase() + "%", "%" + keyword.toLowerCase() + "%", currentUsername]);
         
         return res.status(200).send(result.rows); 
         
     } catch (err) {
-        console.log("Error in running query: " + err);
+        console.log("[searchSingleUser] Error in running query: " + err);
         return res.status(500).send("Internal Server Error");
     } 
 }
 
+// This function is to search for posts
 export const searchPost = async function(req, res) {
 
     const { keyword, userId } = req.body;
     try {
-        let queryUserConnections = 'SELECT following_id from user_connection ucon inner join users uacc on ucon.following_id = uacc.id where ucon.user_id=\'' + userId + "\'";
-        let resultConnections = await client.query({
-                //rowMode: 'array',
-                text: queryUserConnections
-            });
+        let queryUserConnections = `SELECT following_id from user_connection ucon inner join users uacc on ucon.following_id = uacc.id where ucon.user_id=$1`;
+        let resultConnections = await client.query(queryUserConnections, [userId]);
         
         let users = []
         users.push('\'' + userId + '\'')
@@ -512,67 +518,61 @@ export const searchPost = async function(req, res) {
 
         //generate select query
         let strUsers = users.join(',');
-        let query = `SELECT p.id as post_id, p.message, u.name, u.username, u.status, u.profile_pic_url, u.id from post p inner join users u on p.user_id=u.id where p.user_id in (${strUsers}) and LOWER($1) like '%i%' and p.is_deleted=false ORDER BY p.created_timestamp DESC LIMIT 5`;
+        let query = `SELECT p.id as post_id, p.message, u.name, u.username, u.status, u.profile_pic_url, u.id from post p inner join users u on p.user_id=u.id where p.user_id in (${strUsers}) and LOWER(p.message) like $1 and p.is_deleted=false ORDER BY p.created_timestamp DESC LIMIT 5`;
         let result = await client.query(query, ["%" + keyword.toLowerCase() + "%"]);
         
         return res.status(200).send(result.rows); 
     } catch (err) {
-        console.log("Error in running query: " + err);
+        console.log("[searchPost] Error in running query: " + err);
         return res.status(500).send("Internal Server Error");
     } 
 }
 
+// This function retrives all the following friends along with their details
 export const getUserConnections = async function(req, res) {
 
     const { userId } = req.query;
     try {
         //generate select query
-        let query = 'SELECT distinct ucon.following_id, uacc.name, uacc.username, uacc.profile_pic_url from user_connection ucon inner join users uacc on ucon.following_id = uacc.id where ucon.user_id=\'' + userId + "\'";
-        let result = await client.query({
-                //rowMode: 'array',
-                text: query
-            });
+        let query = `SELECT distinct ucon.following_id, uacc.name, uacc.username, uacc.profile_pic_url from user_connection ucon inner join users uacc on ucon.following_id = uacc.id where ucon.user_id=$1`;
+        let result = await client.query(query, [userId]);
 
         return res.status(200).send(result.rows);
     } catch (err) {
-        console.log("Error in running query: " + err);
+        console.log("[getUserConnections] Error in running query: " + err);
         return res.status(500).send("Internal Server Error");
     } 
 }
 
+// This function retrieves the user following count
 export const getUserFollowingCount = async function(req, res) {
 
     const { userId } = req.query;
     try {
         //generate select query
-        let query = 'SELECT COUNT(*) from user_connection where user_id=\'' + userId + "\'";
-        let result = await client.query({
-                //rowMode: 'array',
-                text: query
-            });
+        let query = `SELECT COUNT(*) from user_connection where user_id=$1`;
+        let result = await client.query(query, [userId]);
 
         return res.status(200).send(result.rows[0]);
+
     } catch (err) {
-        console.log("Error in running query: " + err);
+        console.log("[getUserFollowingCount] Error in running query: " + err);
         return res.status(500).send("Internal Server Error");
     } 
 }
 
-
+// This functions retrieves the followers count 
 export const getUserFollowersCount = async function(req, res) {
 
     const { userId } = req.query;
     try {
         //generate select query
-        let query = 'SELECT COUNT(*) from user_connection where following_id=\'' + userId + "\'";
-        let result = await client.query({
-                //rowMode: 'array',
-                text: query
-            });
+        let query = `SELECT COUNT(*) from user_connection where following_id=$1`;
+        let result = await client.query(query, [userId]);
 
         return res.status(200).send(result.rows[0]);
     } catch (err) {
-        console.log("Error in running query: " + err);
+        console.log("[getUserFollowersCount] Error in running query: " + err);
         return res.status(500).send("Internal Server Error");
     } 
 }
@@ -604,6 +604,7 @@ export const getPost = async function (req, res) {
   }
 };
 
+// This function creates an entry for the user follow
 export const follow = async function (req, res) {
   const { user_id, following_id } = req.body;
   try {
@@ -635,6 +636,7 @@ export const follow = async function (req, res) {
   }
 };
 
+//This function deletes the entry for the user connection to emulate the unfollow
 export const unfollow = async function (req, res) {
     const { user_id, following_id } = req.body;
     try {
@@ -647,11 +649,12 @@ export const unfollow = async function (req, res) {
      
       return res.status(200).send({ success: true });
     } catch (err) {
-      console.log("Error following user: " + err);
+      console.log("[unfollow] Error unfollowing user: " + err);
       return res.status(500).send("Failed to update.");
     }
   };
 
+// This function inserts comment
 export const insertComment = async function(req, res) {
 
     const { postId, comment, userId } = req.body;
@@ -662,11 +665,12 @@ export const insertComment = async function(req, res) {
 
         return res.status(200).send({"affectedRows": result.rowCount}); 
     } catch (err) {
-        console.log("Error in running query: " + err);
+        console.log("[insertComment] Error in running query: " + err);
         return res.status(500).send("Internal Server Error");
     } 
 }
 
+// This function gets the comment from a specific post
 export const getComment = async function(req, res) {
 
     const { postId } = req.query;
@@ -680,7 +684,7 @@ export const getComment = async function(req, res) {
 
         return res.status(200).send(result.rows); 
     } catch (err) {
-        console.log("Error in running query: " + err);
+        console.log("[getComment] Error in running query: " + err);
         return res.status(500).send("Internal Server Error");
     } 
 }
