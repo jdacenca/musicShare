@@ -13,19 +13,24 @@ import "../styles/MusicFeed.css";
 import MusicPost from "./MusicPost";
 import PostPopup from "./PostPopup";
 
+// MusicFeed Component
 function MusicFeed() {
+  // Fetch values from Redux store using useSelector hook
   const isDarkMode = useSelector((state) => state.beatSnapApp.isDarkMode);
   const currentUser = useSelector((state) => state.beatSnapApp.currentUser);
   const posts = useSelector((state) => state.beatSnapApp.posts);
   const dispatch = useDispatch();
 
+  // Local state to manage the content of the post and popup visibility
   const [postContent, setPostContent] = useState("");
   const [isPopupVisible, setPopupVisible] = useState(false);
 
+  // Handle changes in the input field for creating posts
   const handleInputChange = (event) => {
     setPostContent(event.target.value);
   };
 
+  // Handle post deletion
   const onPostDelete = (id) => {
     const newArray = posts.filter((item) => item.id !== id);
     dispatch(setPosts(newArray));
@@ -33,9 +38,10 @@ function MusicFeed() {
 
   useEffect(() => {
     async function fetchTimelineData() {
+      let postsArray = []; // Array to hold all posts data
 
-      let postsArray = [];
       try {
+        // Fetch posts for the current user from the API
         const apiPosts = await fetch(apiUrl + "/posts", {
           method: "POST",
           headers: {
@@ -44,12 +50,13 @@ function MusicFeed() {
           },
           body: JSON.stringify({
             userId: currentUser.userId,
-            sort: "DESC",
+            sort: "DESC", // Sort posts in descending order
           }),
         });
 
-        const apiPostsData = await apiPosts.json();
+        const apiPostsData = await apiPosts.json(); // Parse the response to JSON
 
+        // Loop through the fetched posts and format them for the feed
         apiPostsData.forEach((x) => {
           let timeAgo = moment(x.created_timestamp).fromNow();
           //timeAgo = timeAgo.replace('in','');
@@ -57,7 +64,7 @@ function MusicFeed() {
             id: x.id,
             userId: x.user_id,
             username: x.name,
-            _username : x.username,
+            _username: x.username,
             profilePic: x.profile_pic_url,
             title: x.status,
             time: timeAgo,
@@ -72,24 +79,33 @@ function MusicFeed() {
           } else {
             item.videoUrl = x.music_url;
           }
-          postsArray.push(item);
+          postsArray.push(item); // Add formatted post to the posts array
         });
 
         //dispatch(setPosts(postsArray));
       } catch {}
 
+      // Fetch recommendations from Spotify based on user interests
       let len = postsArray.length;
       let count = 1;
 
       try {
+        // Connect to Spotify API
         await fetch(apiUrl + "/spotify/connect", {
           method: "POST",
         });
 
-        let interests = currentUser.interest.length > 0 ? (currentUser.interest).join(',') : "world-music";
+        // Get user interests or fallback to a default genre
+        let interests =
+          currentUser.interest.length > 0
+            ? currentUser.interest.join(",")
+            : "world-music";
+
+        // Fetch Spotify recommendations based on user interests
         const recommendations = await fetch(
           apiUrl + "/spotify/recommendations?genre=" + interests
         );
+
         const recommendationsData = await recommendations.json();
         dispatch(setRecommendations(recommendationsData));
 
@@ -112,7 +128,6 @@ function MusicFeed() {
 
           count++;
         });
-
       } catch (err) {
         console.log("Error:");
         console.log(err);
@@ -124,9 +139,9 @@ function MusicFeed() {
     fetchTimelineData();
   }, [dispatch]);
 
-
   return (
     <>
+      {/* Post creation UI */}
       <div
         className={`feed-post-creator-container m-4 p-4 pb-0 ${
           isDarkMode ? "dark-mode" : ""
@@ -151,6 +166,8 @@ function MusicFeed() {
               + Create a Post
             </button>
           </div>
+          {/* Conditionally render the post creation popup */}
+
           {isPopupVisible && (
             <PostPopup
               onClose={() => setPopupVisible(false)}
@@ -159,12 +176,12 @@ function MusicFeed() {
           )}
         </div>
       </div>
-
-        {posts.map((post, index) => (
-          <div className="m-4" key={post.id}>
-            <MusicPost post={post} onDelete={() => onPostDelete(post.id)} />
-          </div>
-        ))}
+      {/* Render all posts in the feed */}
+      {posts.map((post, index) => (
+        <div className="m-4" key={post.id}>
+          <MusicPost post={post} onDelete={() => onPostDelete(post.id)} />
+        </div>
+      ))}
     </>
   );
 }
