@@ -8,8 +8,10 @@ import SideBar from '../components/SideBar';
 import Notification from '../components/Notification';
 import "bootstrap/dist/css/bootstrap.css";
 import "../styles/Homepage.css";
+import useScrollToTop from '../helper/useScrollToTop';
 
 const Settings = () => {
+    const scroll = useScrollToTop();
     const isDarkMode = useSelector((state) => state.beatSnapApp.isDarkMode);
     const currentUser = useSelector((state) => state.beatSnapApp.currentUser);
     const navigate = useNavigate();
@@ -81,7 +83,7 @@ const Settings = () => {
                 </div>
 
                 {/* Settings Content (Center Content) */}
-                <div className="col-12 col-md-7 p-4">
+                <div ref={scroll} className="col-12 col-md-7 p-4">
                     <h1 className="mb-4">Settings</h1>
 
                     {notification.show && (

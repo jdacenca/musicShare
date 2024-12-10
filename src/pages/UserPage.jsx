@@ -20,9 +20,11 @@ import {setFollowing, setUnfollowing} from "../redux/slice";
 
 import "../styles/Userpage.css";
 import { setCurrentUser } from "../redux/slice";
+import useScrollToTop from '../helper/useScrollToTop';
 
 // UserPage component
 const UserPage = () => {
+  const scroll = useScrollToTop();
 
   // Hooks to manage state and navigation
   const dispatch = useDispatch();
@@ -322,7 +324,7 @@ const UserPage = () => {
     >
       <Header />
 
-      <div className="row g-0">
+      <div ref={scroll} className="row g-0">
         {/* Sidebar */}
         <div className="d-none d-md-block p-4 pe-0 col-md-2 sidebar">
           <NavBar />
