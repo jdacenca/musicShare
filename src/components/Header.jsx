@@ -30,6 +30,7 @@ function Header() {
 
   // Ref to track the popup element for outside click handling
   const popupRef = useRef(null);
+  const popupBtnRef = useRef(null);
 
   // Function to toggle dark mode
   const toggleDarkModeHandler = () => {
@@ -58,7 +59,8 @@ function Header() {
 
   // Closes the popup when clicking outside of it
   const handleClickOutside = (event) => {
-    if (popupRef.current && !popupRef.current.contains(event.target)) {
+    if (popupRef.current && !popupRef.current.contains(event.target)
+      && popupBtnRef.current && !popupBtnRef.current.contains(event.target)) {
       setShowMenu(false);
     }
   };
@@ -95,7 +97,7 @@ function Header() {
           </div>
 
           {/* User Profile Icon */}
-          <div className="icon-container" onClick={toggleMenu}>
+          <div ref={popupBtnRef} className="icon-container" onClick={toggleMenu}>
             <img
               src={currentUser?.profilePic}
               alt="User"

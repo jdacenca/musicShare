@@ -23,6 +23,7 @@ function Notification() {
 
   const [showNotifications, setShowNotifications] = useState(false);
   const popupRef = useRef(null);
+  const popupBtnRef = useRef(null);
 
   useEffect(() => {
     // Fetch notifications from the API
@@ -74,14 +75,15 @@ function Notification() {
   }, []);
 
   const handleClickOutside = (event) => {
-    if (popupRef.current && !popupRef.current.contains(event.target)) {
+    if (popupRef.current && !popupRef.current.contains(event.target)
+        && popupBtnRef.current && !popupBtnRef.current.contains(event.target)) {
       setShowNotifications(false);
     }
   };
 
   // Toggle visibility of notifications
   const toggleNotifications = () => {
-    setShowNotifications((prevState) => !prevState);
+    setShowNotifications((showNotifications) => !showNotifications);
   };
 
   const goToPost = (id) => {
@@ -91,7 +93,7 @@ function Notification() {
 
   return (
     <div className="notification-container">
-      <div className="icon-container" onClick={toggleNotifications}>
+      <div ref={popupBtnRef} className="icon-container" onClick={toggleNotifications}>
         <Bell size={24} className="header-icon" />
         <span className="notification-count">{notifications.length}</span>
       </div>

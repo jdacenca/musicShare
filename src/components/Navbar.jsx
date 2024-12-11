@@ -3,6 +3,7 @@ import {
   React,
   useEffect,
   useState,
+  useRef,
   useSelector,
   useDispatch,
   useNavigate,
@@ -38,10 +39,16 @@ const NavBar = () => {
   const navigate = useNavigate();
 
   // Open the search popup
-  const openSearch = () => setIsSearchOpen(true);
+  const openSearch = () => {
+    setIsSearchOpen(!isSearchOpen);
+    popupBtnRef.current.focus();
+  }
   
   // Close the search popup
   const closeSearch = () => setIsSearchOpen(false);
+
+  // Ref to track the popup element
+  const popupBtnRef = useRef(null);
 
   useEffect(() => {
     // Fetch the list of users that the current user is following
@@ -101,7 +108,7 @@ const NavBar = () => {
         <span className="nav-label">Home</span>
       </div>
 
-      <div className="nav-item" onClick={openSearch}>
+      <div ref={popupBtnRef} className="nav-item" onClick={openSearch}>
         <Search className="nav-icon" />
         <span className="nav-label">Search</span>
       </div>
@@ -149,7 +156,7 @@ const NavBar = () => {
       )}
 
       {/* Search Popup */}
-      <SearchPopup isOpen={isSearchOpen} closePopup={closeSearch} />
+      {isSearchOpen && (<SearchPopup isOpen={isSearchOpen} closePopup={closeSearch} ref={popupBtnRef} />)}
     </div>
   );
 };

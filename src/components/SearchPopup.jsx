@@ -9,8 +9,9 @@ import {
 import { Search, X } from "react-feather";
 import "../styles/SearchPopup.css";
 import { useNavigate } from "react-router-dom";
+import { forwardRef } from "react";
 
-const SearchPopup = ({ isOpen, closePopup }) => {
+const SearchPopup = forwardRef((props, ref) => { //{ isOpen, closePopup, popupBtnRef }
   const navigate = useNavigate();
 
   // Access the dark mode setting and current user details from the Redux store
@@ -97,8 +98,9 @@ const SearchPopup = ({ isOpen, closePopup }) => {
 
   // Close the popup when clicking outside
   const handleClickOutside = (event) => {
-    if (popupRef.current && !popupRef.current.contains(event.target)) {
-      closePopup();
+    if (popupRef.current && !popupRef.current.contains(event.target)
+      && ref.current && !ref.current.contains(event.target)) {
+      props.closePopup();
     }
   };
 
@@ -112,7 +114,7 @@ const SearchPopup = ({ isOpen, closePopup }) => {
 
   // Navigate to a user's page
   const goToUserPage = (username) => {
-    closePopup();
+    props.closePopup();
     navigate("/userpage?username=" + username);
   };
 
@@ -121,7 +123,7 @@ const SearchPopup = ({ isOpen, closePopup }) => {
     navigate("/post?id=" + id);
   };
 
-  if (!isOpen) return null; // Don't render if closed
+  if (!props.isOpen) return null; // Don't render if closed
 
   return (
     <div
@@ -141,7 +143,7 @@ const SearchPopup = ({ isOpen, closePopup }) => {
             onChange={handleSearchChange}
             autoFocus
           />
-          <button className="close-button" onClick={closePopup}>
+          <button className="close-button" onClick={props.closePopup}>
             <X size={20} />
           </button>
         </div>
@@ -193,6 +195,6 @@ const SearchPopup = ({ isOpen, closePopup }) => {
       </div>
     </div>
   );
-};
+});
 
 export default SearchPopup;
