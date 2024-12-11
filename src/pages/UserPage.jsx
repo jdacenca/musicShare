@@ -37,7 +37,6 @@ const UserPage = () => {
   const isDarkMode = useSelector((state) => state.beatSnapApp.isDarkMode);
   const currentUser = useSelector((state) => state.beatSnapApp.currentUser);
   const following = useSelector((state) => state.beatSnapApp.following);
-  const posts = useSelector((state) => state.beatSnapApp.posts);
 
   // Get query parameters from the URL
   const [searchParams, setSearchParams] = useSearchParams();
@@ -56,7 +55,7 @@ const UserPage = () => {
       : {
           username: currentUser.username,
           user: currentUser,
-          posts: posts,
+          posts: [],
           followersCount: null,
           followingCount: null,
         }
