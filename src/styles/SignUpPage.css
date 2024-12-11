@@ -1,0 +1,96 @@
+/* 主容器样式，保持居中 */
+.signUp {
+  display: flex;
+  flex-direction: row;
+  height: 100vh;
+  width: 100vw;
+  justify-content: center; /* 水平居中 */
+  align-items: center; /* 垂直居中 */
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  background-color: #ffffff; /* 确保整个背景是白色 */
+}
+
+/* 注册部分的样式，模仿登录部分 */
+.signup-section {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background-color: #ffffff;
+  padding: 20px;
+}
+
+/* 表单样式 */
+.signup-section form {
+  display: flex;
+  flex-direction: column;
+  width: 300px; /* 与登录页面一致 */
+  gap: 15px;
+}
+
+/* 输入框样式 */
+.signup-section input {
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+/* 提交按钮样式 */
+.signup-section button {
+  padding: 10px;
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+/* 这是可选的，如果你的注册页面有类似的链接 */
+.signup-link {
+  margin-top: 20px;
+  font-size: 14px;
+  color: #333;
+}
+
+.signup-link span {
+  color: #007bff;
+  cursor: pointer;
+  text-decoration: underline;
+}
+
+/* 分割线样式，如果你需要在社交媒体登录按钮下使用 */
+.divider {
+  margin: 20px 0;
+  font-size: 12px;
+  color: #aaa;
+}
+
+/* 社交登录按钮样式 */
+.social-login {
+  display: flex;
+  gap: 10px;
+}
+
+.social-login button {
+  padding: 10px 20px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  background-color: #fff;
+  color: #333;
+  cursor: pointer;
+}
+
+.signup-section span {
+  color: #007bff; /* 调整颜色为蓝色 */
+  cursor: pointer;
+  text-decoration: underline; /* 添加下划线 */
+}
+
+.back-to-login {
+  margin-top: 40px; /* 增加顶部外边距以增加与上方元素的距离 */
+  font-size: 14px;
+  text-align: center;
+}
