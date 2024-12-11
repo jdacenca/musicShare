@@ -403,6 +403,11 @@ export const deleteUser = async function(req, res) {
     const { userId } = req.body;
     try {
         //generate select query
+        let deleteQuery = `DELETE from user_connection where user_id=$1 or following_id=$2`;
+        let deleteResult = await client.query(deleteQuery, [userId, userId]);
+        console.log(deleteResult.rowCount);
+
+        //generate select query
         let query = `UPDATE users SET is_deleted=$1 where id=$2`;
         let result = await client.query(query, [true, userId]);
         return res.status(200).send({"affectedRows": result.rowCount}); 
