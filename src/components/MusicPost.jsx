@@ -4,7 +4,8 @@ import {
   useRef,
   useEffect,
   useSelector,
-  apiUrl
+  apiUrl,
+  useDispatch,
 } from "../CommonImports";
 import { Heart, MessageCircle, MoreHorizontal, Share2, X } from "react-feather";
 import "../styles/MusicPost.css";
@@ -13,14 +14,17 @@ import PostPopup from "./PostPopup";
 import { useNavigate } from "react-router-dom";
 import NameCard from "./NameCard";
 import moment from "moment";
+import { setLiveData } from "../redux/slice";
 
-import { ToastContainer, toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 // MusicPost Component - Displays individual music posts
 function MusicPost({ post, onDelete, cardType = "large" }) {
   // Application states and hooks
+  const dispatch = useDispatch();
   const isDarkMode = useSelector((state) => state.beatSnapApp.isDarkMode);
+  const liveData = useSelector((state) => state.beatSnapApp.liveData);
   const navigate = useNavigate();
 
   // Component states
@@ -34,110 +38,123 @@ function MusicPost({ post, onDelete, cardType = "large" }) {
   const [snackbarVisible, setSnackbarVisible] = useState(false); // Snackbar visibility
   const [isPostPopupVisible, setPostPopupVisible] = useState(false); // Popup visibility
   const [isPostDelete, setPostDelete] = useState(false); // Post deletion flag
+  const [playing, setPlaying] = useState(false);
 
   const currentUser = useSelector((state) => state.beatSnapApp.currentUser); // Current user info
   const popupRef = useRef(null); // Reference for options menu popup
   const sharePopupRef = useRef(null); // Reference for share menu popup
 
-   // link to the post
+  let videoId = "";
+  if (post.videoUrl) {
+    videoId = post.videoUrl.split("/").pop();
+    console.log(post.videoUrl, videoId);
+  }
+
+  // link to the post
   const link = `${window.location.protocol}//${window.location.host}/post?id=${post.id}`;
 
   // Moment.js locale customization for relative time display
-  moment.locale('en', {
-    relativeTime : {
-        future: "%s",
-        past:   "%ss",
-        s:  "%ss",
-        m:  "%dm",
-        mm: "%dm",
-        h:  "%dh",
-        hh: "%dh",
-        d:  "%dd",
-        dd: "%dd",
-        M:  "%dm",
-        MM: "%dm",
-        y:  "$dy",
-        yy: "%dy"
-    }
-});
+  moment.locale("en", {
+    relativeTime: {
+      future: "%s",
+      past: "%ss",
+      s: "%ss",
+      m: "%dm",
+      mm: "%dm",
+      h: "%dh",
+      hh: "%dh",
+      d: "%dd",
+      dd: "%dd",
+      M: "%dm",
+      MM: "%dm",
+      y: "$dy",
+      yy: "%dy",
+    },
+  });
 
-// Fetch initial post like count and user-specific like status
-useEffect(() => {
-  async function postCount() {
-    try {
-      const response = await fetch(apiUrl + "/post/like/count", {
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        method: "POST",
-        body: JSON.stringify({"postId": post.id})
-      });
+  // Fetch initial post like count and user-specific like status
+  useEffect(() => {
+    async function postCount() {
+      try {
+        const response = await fetch(apiUrl + "/post/like/count", {
+          headers: {
+            "Content-Type": "application/json",
+          },
+          method: "POST",
+          body: JSON.stringify({ postId: post.id }),
+        });
 
-      const data = await response.json();
+        const data = await response.json();
 
-      if (response.status == 200) {
-        setLikes(data.count);
-      } else {
-        console.log("Error")
+        if (response.status == 200) {
+          setLikes(data.count);
+        } else {
+          console.log("Error");
+        }
+      } catch (err) {
+        console.log("Error");
+        console.log(err);
       }
-    } catch (err) {
-      console.log("Error");
-      console.log(err)
     }
-  }
 
-  async function userPostLike() {
-    try {
-      const response = await fetch(apiUrl + "/post/like?" + new URLSearchParams({
-        postId : post.id,
-        userId: currentUser.userId
-      }), {
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        method: "GET"
-      });
+    async function userPostLike() {
+      try {
+        const response = await fetch(
+          apiUrl +
+            "/post/like?" +
+            new URLSearchParams({
+              postId: post.id,
+              userId: currentUser.userId,
+            }),
+          {
+            headers: {
+              "Content-Type": "application/json",
+            },
+            method: "GET",
+          }
+        );
 
-      const data = await response.json();
+        const data = await response.json();
 
-      if (response.status == 200) {
-        setIsLiked(data);
-      } else {
-        console.log("Error")
+        if (response.status == 200) {
+          setIsLiked(data);
+        } else {
+          console.log("Error");
+        }
+      } catch (err) {
+        console.log("Error");
+        console.log(err);
       }
-    } catch (err) {
-      console.log("Error");
-      console.log(err)
     }
-  }
 
-  userPostLike();
-  postCount();
-}, []);
+    userPostLike();
+    postCount();
+  }, []);
 
   // Toggle like status for the post
   const handleLikeToggle = async () => {
     const response = await fetch(apiUrl + "/post/like/update", {
       headers: {
-        'Content-Type': 'application/json'
+        "Content-Type": "application/json",
       },
       method: "POST",
-      body: JSON.stringify({"postId": post.id, userId: currentUser.userId})
+      body: JSON.stringify({ postId: post.id, userId: currentUser.userId }),
     });
 
     const data = await response.json();
 
     if (response.status == 200) {
-
     } else {
-      console.log("Error")
+      console.log("Error");
     }
 
     setLikes(isLiked ? parseInt(likes) - 1 : parseInt(likes) + 1); // Increment or decrement likes
     setIsLiked(!isLiked); // Toggle like state
   };
 
-  useEffect(() => { console.log(comments) }, [comments])
+  useEffect(() => {
+    //console.log(comments);
+  }, [comments]);
 
   // Handle comment submission
   const handleCommentSubmit = async (e) => {
@@ -145,16 +162,20 @@ useEffect(() => {
 
     try {
       if (!commentText) {
-        toast('Please enter your comment.');
+        toast("Please enter your comment.");
         return;
       }
 
       const response = await fetch(apiUrl + "/post/comment", {
         headers: {
-          'Content-Type': 'application/json'
+          "Content-Type": "application/json",
         },
         method: "POST",
-        body: JSON.stringify({"postId": post.id, "comment": commentText, userId: currentUser.userId})
+        body: JSON.stringify({
+          postId: post.id,
+          comment: commentText,
+          userId: currentUser.userId,
+        }),
       });
 
       const data = await response.json();
@@ -162,33 +183,36 @@ useEffect(() => {
       if (response.status == 200) {
         if (commentText) {
           toggleComments(false);
-          setCommentText("")
+          setCommentText("");
         }
-
-      } else  {
-        toast('Unable to post comment!');
+      } else {
+        toast("Unable to post comment!");
         return;
       }
     } catch (err) {
       console.log("Error");
       console.log(err);
     }
-
   };
 
   // Fetch and toggle comments visibility
   const toggleComments = async (isClose) => {
     try {
       let commentList = [];
-      const result = await fetch(apiUrl + "/post/comment?" + new URLSearchParams({
-        postId: post.id
-      }), {
-        method: "GET",
-        headers: {
-          Accept: "application/json",
-          "Content-Type": "application/json",
+      const result = await fetch(
+        apiUrl +
+          "/post/comment?" +
+          new URLSearchParams({
+            postId: post.id,
+          }),
+        {
+          method: "GET",
+          headers: {
+            Accept: "application/json",
+            "Content-Type": "application/json",
+          },
         }
-      });
+      );
 
       if (result.status == 200) {
         const data = await result.json();
@@ -199,13 +223,13 @@ useEffect(() => {
           let postComment = {
             postId: x.id,
             name: x.name,
-            comment: {username:x.name, text:x.comment},
+            comment: { username: x.name, text: x.comment },
             profilePic: x.profile_pic_url,
             time: timeAgo,
           };
 
-          commentList.push(postComment)
-        })
+          commentList.push(postComment);
+        });
       }
 
       setComments(commentList);
@@ -217,9 +241,8 @@ useEffect(() => {
     if (isClose) {
       setShowComments(!showComments);
     }
+  };
 
-  }
-  
   // Event handler for post actions (edit, delete, etc.)
   const handleAction = (action) => {
     setShowMenu(false); // Close the menu
@@ -236,8 +259,9 @@ useEffect(() => {
         setPostPopupVisible(true);
         break;
       case "account-details":
-        (currentUser.userId === post.userId) ?
-          navigate(`/userpage`): navigate(`/userpage?username=${post._username}`)
+        currentUser.userId === post.userId
+          ? navigate(`/userpage`)
+          : navigate(`/userpage?username=${post._username}`);
         break;
       default:
         break;
@@ -291,6 +315,68 @@ useEffect(() => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
   }, []);
+
+  const playerRef = useRef(null);
+
+  useEffect(() => {
+    if (playing && liveData?.post?.id && liveData.post.id !== post.id) {
+      if (playerRef.current && playerRef.current.pauseVideo) {
+        playerRef.current.pauseVideo();
+        setPlaying(false);
+      } else {
+        console.error("Player is not ready yet or pauseVideo is unavailable.");
+      }
+    }
+  }, [liveData]);
+
+  useEffect(() => {
+    // Load the YouTube Player when the component mounts
+    if (videoId) {
+      // Function to initialize the YouTube Player
+      const loadYouTubePlayer = () => {
+        playerRef.current = new window.YT.Player(`youtube-player-${videoId}`, {
+          videoId: videoId,
+          events: {
+            onStateChange: onPlayerStateChange,
+          },
+        });
+      };
+
+      // Check if the YouTube API is already available
+      if (!window.YT || !window.YT.Player) {
+        // Load the YouTube API
+        const script = document.createElement("script");
+        script.src = "https://www.youtube.com/iframe_api";
+        script.async = true;
+        document.body.appendChild(script);
+
+        // Wait for the API to be ready
+        window.onYouTubeIframeAPIReady = loadYouTubePlayer;
+      } else {
+        // If the API is already loaded
+        loadYouTubePlayer();
+      }
+
+      return () => {
+        // Cleanup: Destroy the player when the component unmounts
+        if (playerRef.current) {
+          playerRef.current.destroy();
+        }
+      };
+    }
+  }, []);
+
+  // Event listener for state changes
+  const onPlayerStateChange = (event) => {
+    switch (event.data) {
+      case window.YT.PlayerState.PLAYING:
+        setPlaying(true);
+        dispatch(setLiveData({ post: { ...post } }));
+        break;
+      default:
+        break;
+    }
+  };
 
   return (
     <div
@@ -350,15 +436,20 @@ useEffect(() => {
       {/* Post Body */}
       <div className="post-body">
         {post.videoUrl ? (
-          <iframe
-            width={cardType === "large" ? "100%" : ""}
-            height={cardType === "large" ? "300px" : "150px"} 
-            src={post.videoUrl}
-            title="YouTube video player"
-            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-            allowFullScreen
-          ></iframe>
-        ) : post.spotifyUrl ? (
+          <div
+            id={`youtube-player-${videoId}`}
+            style={{ width: "100%", height: "300px" }}
+          ></div>
+        ) : // <iframe
+        //   ref={iframeRef}
+        //   width={cardType === "large" ? "100%" : ""}
+        //   height={cardType === "large" ? "300px" : "150px"}
+        //   src={post.videoUrl + '?enablejsapi=1'}
+        //   title="YouTube video player"
+        //   allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+        //   allowFullScreen
+        // ></iframe>
+        post.spotifyUrl ? (
           <iframe
             src={`${post.spotifyUrl}`}
             width={cardType === "large" ? "100%" : ""}
@@ -409,7 +500,11 @@ useEffect(() => {
           {comments?.map((comment, index) => (
             <div className="comment-line">
               <div className="sub-item" key={index}>
-                <img src={comment.profilePic} alt="User" className="user-avatar" />
+                <img
+                  src={comment.profilePic}
+                  alt="User"
+                  className="user-avatar"
+                />
                 <Comment key={index} comment={comment.comment} />
                 <span className="com-time">{comment.time}</span>
               </div>

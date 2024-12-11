@@ -14,6 +14,7 @@ const initialState = {
     text: "",
   },
   following: [],
+  liveData: null,
 };
 
 const appSlice = createSlice({
@@ -31,6 +32,9 @@ const appSlice = createSlice({
     },
     setRecommendations: (state, action) => {
       state.recommendations = action.payload;
+    },
+    setLiveData: (state, action) => {
+      state.liveData = action.payload;
     },
     setNotifications: (state, action) => {
       state.notifications = action.payload;
@@ -77,6 +81,7 @@ export const {
   setFollowing,
   setUnfollowing,
   clearCreatePostData,
+  setLiveData
 } = appSlice.actions;
 
 export default appSlice.reducer;
