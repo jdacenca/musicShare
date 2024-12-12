@@ -151,10 +151,13 @@ export const createNotificationsForPost = async function (postId, userId) {
 export const getNotifications = async function(req, res) {
     const { userId, viewed } = req.query;
 
+    // if no user id is provided, return an error
     if (!userId) {
         return res.status(400).send({ error: "User ID is required." });
     }
 
+    // sql query to fetch notifications for a specific user
+    // This filters notifications based on whether they have been seen or not
     try {
         const viewedCondition = viewed !== undefined ? "AND n.viewed = $2" : "";
         const query = `
@@ -171,14 +174,19 @@ export const getNotifications = async function(req, res) {
         ORDER BY n.created_at DESC;
         `;
 
+        // set the values for the query parameters
+        // if viewed is provided, set it to true
         const values = viewed !== undefined
             ? [userId, viewed === "true"]
             : [userId];
 
+        // execute the query using database client
         const result = await client.query(query, values);
 
+        // send result as a json response
         return res.status(200).send(result.rows);
     } catch (error) {
+        // if there is an error, log it and return an error response
         console.error("Error fetching notifications:", error);
         return res.status(500).send("Failed to fetch notifications.");
     }
@@ -265,7 +273,9 @@ export const getDetailsByUsername = async function (req, res) {
   export const markNotificationsAsViewed = async function (req, res) {
     const { notificationIds } = req.body;
   
+    // validate input data notificationIds must be a non-empty array
     if (!notificationIds || !Array.isArray(notificationIds) || notificationIds.length === 0) {
+        // return an error if input data is invalid
       return res.status(400).send({
         success: false,
         error: "Invalid input: 'notificationIds' must be a non-empty array.",
@@ -273,11 +283,15 @@ export const getDetailsByUsername = async function (req, res) {
     }
   
     try {
+      // sql query to mark notifications as viewed
       const query = `UPDATE notifications SET viewed = TRUE WHERE id = ANY($1)`;
+      // execute the query using database client and pass notificationIds as an array
       const result = await client.query(query, [notificationIds]);
   
+      // send success response with updated notificationIds
       return res.status(200).send({ success: true, updatedIds: notificationIds });
     } catch (error) {
+      // if there is an error, log it and return an error response
       console.error("Error marking notifications as viewed:", error);
       return res.status(500).send("Failed to update notifications.");
     }
