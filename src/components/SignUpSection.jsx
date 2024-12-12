@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch, apiUrl  } from '../CommonImports'; 
+import { setCurrentUser } from '../redux/slice'; 
 
 const SignUpSection = () => {
   const [formData, setFormData] = useState({
@@ -11,6 +12,8 @@ const SignUpSection = () => {
     email: ''
   });
 
+  const [error, setError] = useState('');
+  const dispatch = useDispatch();
   const navigate = useNavigate();
 
   const handleChange = (e) => {
@@ -23,34 +26,54 @@ const SignUpSection = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    // 添加注册逻辑
-    const response = await fetch(apiUrl + "/auth/register", {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(formData)
-    });
-  
-    const data = await response.json();  // 解析JSON响应
-  
-    if (response.status === 201) {  // 假设201是成功的状态码
-      dispatch(setCurrentUser({   // 假设你想在注册后直接登录用户
-        "userId": data.user.id,
-        "username": data.user.username, 
-        "interest": data.user.interest, 
-        "fullname": data.user.fullname, 
-        "status": data.user.status,
-        "birthday": data.user.birthday,
-        "profilePic": data.user.profilePic + '?t=' + Date.now()  // 为图片重载添加时间戳
-      }));
-      navigate('/home');  // 导航到主页
-    } else {
-      alert('Failed to create account: ' + data.message);  // 显示错误消息
+
+    // Basic validation
+    if (!formData.username || !formData.password || !formData.email) {
+      setError('Please fill out all required fields.');
+      return;
+    }
+
+    try {
+      const response = await fetch(apiUrl + "/auth/register", {
+        method: "POST",
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          username: formData.username,
+          password: formData.password,
+          email: formData.email,
+          name: formData.fullName,
+          date_of_birth: formData.dateOfBirth
+        })
+      });
+
+      if (response.status === 201) {
+        const data = await response.json();
+
+        // Dispatch to Redux store
+        dispatch(setCurrentUser({
+          userId: data.userId,
+          username: formData.username, 
+          interest: data.interest || "", 
+          fullname: formData.fullName, 
+          status: data.status || "",
+          birthday: formData.dateOfBirth,
+          email: formData.email,
+          profilePic: data.profilePicn +'?t=' + Date.now()  
+        }));
+
+        alert('Sign up successful! Redirecting to login page...');
+        navigate('/home');
+      } else {
+        alert('Creating new account failed...'+ data.message);
+      }
+    } catch (error) {
+      console.error("Error during registration:", error);
+      setError("Failed to create account. Please try again later.");
     }
   };
   
-
   return (
     <div className="signup-section">
       <h2 className="title">Sign Up</h2>
