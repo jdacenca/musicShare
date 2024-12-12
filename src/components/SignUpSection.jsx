@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch, apiUrl  } from '../CommonImports'; 
 import { setCurrentUser } from '../redux/slice'; 
+import { toast } from 'react-toastify'; 
+import 'react-toastify/dist/ReactToastify.css';
 
 const SignUpSection = () => {
   const [formData, setFormData] = useState({
@@ -55,18 +57,18 @@ const SignUpSection = () => {
         dispatch(setCurrentUser({
           userId: data.userId,
           username: formData.username, 
-          interest: data.interest || "", 
+          interest: data.interest || [], 
           fullname: formData.fullName, 
           status: data.status || "",
           birthday: formData.dateOfBirth,
           email: formData.email,
-          profilePic: data.profilePicn +'?t=' + Date.now()  
+          profilePic: 'https://wpuszkmujlxtpxdugyof.supabase.co/storage/v1/object/public/beatSnapPhotos/DEFAULT.png?t=' + Date.now()  // to load the default Picture
         }));
 
-        alert('Sign up successful! Redirecting to login page...');
-        navigate('/home');
+        toast('Sign up successful!');
+        navigate('/genre');
       } else {
-        alert('Creating new account failed...'+ data.message);
+        toast('Creating new account failed...'+ data.message);
       }
     } catch (error) {
       console.error("Error during registration:", error);

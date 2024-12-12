@@ -1,5 +1,6 @@
-import { useSelector, apiUrl, useNavigate } from "../CommonImports";
+import { useSelector, apiUrl, useNavigate, useDispatch } from "../CommonImports";
 import React, { useState } from 'react';
+import { setCurrentUser } from '../redux/slice'; 
 
 import '../styles/Genre.css';
 import pop from '../assets/images/pop.png';
@@ -27,6 +28,7 @@ const Genre = () => {
   const currentUser = useSelector((state) => state.beatSnapApp.currentUser); // Get the current user from the Redux store
 
   const navigate = useNavigate(); // Navigation hook to redirect users
+  const dispatch = useDispatch();
 
   // List of available music genres with their images
   const genres = [
@@ -55,7 +57,7 @@ const Genre = () => {
 
   // Function to skip genre selection
   const handleSkip = async () => {
-    navigate('/login');
+    navigate('/home');
   };
 
   // Function to save selected genres
@@ -79,8 +81,19 @@ const Genre = () => {
 
     // Handle server response
     if (response.status === 200) { 
+      let interest = [];
+      selectedGenres.forEach((g) => {
+        interest.push(g.toLowerCase());
+      })
+
+      // Dispatch to Redux store
+      dispatch(setCurrentUser({
+        ...currentUser,
+        interest: interest
+      }));
+
       toast('Saved genre.');
-      navigate('/login');
+      navigate('/home');
     } else {
       toast('Encountered issue saving the genre');
     }

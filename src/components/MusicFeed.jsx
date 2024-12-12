@@ -21,6 +21,7 @@ function MusicFeed() {
   const posts = useSelector((state) => state.beatSnapApp.posts);
   const dispatch = useDispatch();
 
+  console.log(currentUser)
   // Local state to manage the content of the post and popup visibility
   const [postContent, setPostContent] = useState("");
   const [isPopupVisible, setPopupVisible] = useState(false);
