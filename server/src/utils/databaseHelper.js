@@ -291,7 +291,7 @@ export const updatePostMessage = async function(req, res) {
     
     try {
         // Generate select query
-        let query = `UPDATE post SET message=$1, updated_timestamp=NOW() where id=$2`;
+        let query = `UPDATE post SET message=$1, updated_timestamp=NOW() AT TIME ZONE 'America/Toronto' where id=$2`;
         let result = await client.query(query, [message, postId]);
         return res.status(200).send({"affectedRows": result.rowCount}); 
     } catch (err) {
@@ -681,7 +681,7 @@ export const insertComment = async function(req, res) {
     const { postId, comment, userId } = req.body;
 
     try {
-        let query = `INSERT INTO comments (post_id, comment, user_id, created_timestamp) VALUES ($1, $2, $3, NOW())`;
+        let query = `INSERT INTO comments (post_id, comment, user_id, created_timestamp) VALUES ($1, $2, $3, NOW() AT TIME ZONE 'America/Toronto')`;
         let result = await client.query(query, [postId, comment, userId]);
 
         return res.status(200).send({"affectedRows": result.rowCount}); 

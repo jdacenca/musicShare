@@ -56,9 +56,9 @@ function MusicPost({ post, onDelete, cardType = "large" }) {
   // Moment.js locale customization for relative time display
   moment.locale("en", {
     relativeTime: {
-      future: "%s",
-      past: "%ss",
-      s: "%ss",
+      //future: "%d",
+      //past: "%d",
+      s: "%ds",
       m: "%dm",
       mm: "%dm",
       h: "%dh",
