@@ -7,11 +7,15 @@ import NameCard from "./NameCard";
 // LiveCard functional component
 const LiveCard = () => {
   // Accessing the liveMusic data from Redux store
-  const liveMusic = useSelector((state) => state.beatSnapApp.liveMusic);
+  const liveData = useSelector((state) => state.beatSnapApp.liveData);
   // Accessing the dark mode state from Redux store
   const isDarkMode = useSelector((state) => state.beatSnapApp.isDarkMode);
   // Accessing the current user information from Redux store
   const currentUser = useSelector((state) => state.beatSnapApp.currentUser);
+
+  if(!liveData || liveData.state !== 'playing'){
+    return <></>;
+  }
 
   return (
     // Main container for the LiveCard with conditional styling based on dark mode
@@ -43,13 +47,25 @@ const LiveCard = () => {
         {/* Card Body */}
         <div className="live-card-body">
           {/* Spotify embed player for the currently playing track */}
-          <iframe
-            src={`https://open.spotify.com/embed/album/29aSKB1qPEbN0Qf9OPSQpw`}
-            height="100px"
-            allow="encrypted-media"
-            allowFullScreen
-            title="Spotify player"
-          ></iframe>
+          {liveData.post.videoUrl ? (
+            <iframe
+              height="100px"
+              src={liveData.post.videoUrl + "?enablejsapi=1"}
+              title="YouTube video player"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+              allowFullScreen
+            ></iframe>
+          ) : liveData.post.spotifyUrl ? (
+            <iframe
+              src={`${liveData.post.spotifyUrl}`}
+              height="100px"
+              allow="encrypted-media"
+              allowFullScreen
+              title="Spotify player"
+            ></iframe>
+          ) : (
+            <></>
+          )}
         </div>
       </div>
     </div>

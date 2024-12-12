@@ -371,7 +371,7 @@ function MusicPost({ post, onDelete, cardType = "large" }) {
     switch (event.data) {
       case window.YT.PlayerState.PLAYING:
         setPlaying(true);
-        dispatch(setLiveData({ post: { ...post } }));
+        dispatch(setLiveData({ state: "playing", post: { ...post } }));
         break;
       default:
         break;
