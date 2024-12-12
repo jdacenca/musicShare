@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useDispatch, apiUrl  } from '../CommonImports'; 
 
 const SignUpSection = () => {
   const [formData, setFormData] = useState({
@@ -23,7 +24,7 @@ const SignUpSection = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     // 添加注册逻辑
-    const response = await fetch('http://localhost:5173/auth/register', {
+    const response = await fetch(apiUrl + "/auth/register", {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
