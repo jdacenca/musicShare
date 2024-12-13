@@ -25,39 +25,51 @@ Features:
 •	Youtube video restriction (Only play one video at a time)
 
 Pages:
-Login Page
+**Login Page**
+
 ![image](https://github.com/user-attachments/assets/0c4b65c0-c297-4ffc-89f1-976473dd083a)
 
-Signup Page
+**Signup Page**
+
 ![image](https://github.com/user-attachments/assets/661d203f-85c8-43d1-befa-8a0621dd89e7)
 
-Reset Password Page
+**Reset Password Page**
+
 ![image](https://github.com/user-attachments/assets/e3bb2559-2400-44de-9087-2ba448139597)
 
 Home Page
-![image](https://github.com/user-attachments/assets/3922676d-ecc3-4d98-bf93-5544947c2609)
-** Trending on the rght side are fetched directly from world hits in spotify
 
-User Page
+![image](https://github.com/user-attachments/assets/3922676d-ecc3-4d98-bf93-5544947c2609)
+** Trending on the right side are fetched directly from world hits in spotify
+
+**User Page**
+
 ![image](https://github.com/user-attachments/assets/eabfe366-4475-400e-93f7-2bca22e17cc6)
 
-Notification
+**Notification**
+
 ![image](https://github.com/user-attachments/assets/3d05a86e-f899-4a86-bb45-e01642e96b44)
 
-Friends List
+**Friends List**
+
 ![image](https://github.com/user-attachments/assets/71960604-1d47-4fad-b41a-1412cd40e222)
 
-Create Post
+**Create Post**
+
 ![image](https://github.com/user-attachments/assets/9489d76b-ab1a-426a-97e0-7f6e2f18c4d7)
 
-Like and Comment
+**Like and Comment**
+
 ![image](https://github.com/user-attachments/assets/baebf449-7b18-4472-bfe5-ec333c80ae71)
 
-Search
+**Search**
+
 ![image](https://github.com/user-attachments/assets/e3bfe3c4-caf9-4b7a-87e1-dfbe583d3b31)
 
-Dark mode
+**Dark mode**
+
 ![image](https://github.com/user-attachments/assets/6a468f6c-f29e-4c2d-95f5-d76101d49bb5)
 
-Settings
+**Settings**
+
 ![image](https://github.com/user-attachments/assets/f1456492-fd2d-4db4-ad4e-a6cb22175401)
