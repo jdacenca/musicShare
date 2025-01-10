@@ -1,4 +1,4 @@
-# musicShare
+# musicShare 
 To locally run the application:
 1. Clone the repository
 2. Execute `npm install` in the root directory
